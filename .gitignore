@@ -39,5 +39,7 @@ android/.externalNativeBuild/
 android/app/dormflow-release.keystore
 android/app/keystore.properties
 
-# Landing page (separate repo for GH Pages)
-index-5*.html
+# Allow APK and landing page in docs/ for GitHub Pages
+!docs/
+!docs/*.apk
+!docs/*.html
