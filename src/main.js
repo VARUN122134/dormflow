@@ -32,6 +32,20 @@ import adminDashboard from './pages/admin/dashboard.js';
 import userManagement from './pages/admin/users.js';
 import { adminLeaves, adminProfile } from './pages/admin/sub-pages.js';
 
+// New feature pages
+import studentMessPage from './pages/student/mess.js';
+import studentAnnouncementsPage from './pages/student/announcements.js';
+import studentPollsPage from './pages/student/polls.js';
+
+import messDashboard from './pages/mess/dashboard.js';
+import messManageMenu from './pages/mess/manage-menu.js';
+import messRatings from './pages/mess/ratings.js';
+
+import wardenAnnouncements from './pages/warden/announcements.js';
+
+import adminMess from './pages/admin/mess.js';
+import adminManage from './pages/admin/manage.js';
+
 async function boot() {
   await loadCurrentUser();
   initRouter();
@@ -63,8 +77,25 @@ registerRoute('#/admin/users', userManagement);
 registerRoute('#/admin/leaves', adminLeaves);
 registerRoute('#/admin/profile', adminProfile);
 
+// Student new routes
+registerRoute('#/student/mess', studentMessPage);
+registerRoute('#/student/announcements', studentAnnouncementsPage);
+registerRoute('#/student/polls', studentPollsPage);
+
+// Mess member routes
+registerRoute('#/mess/dashboard', messDashboard);
+registerRoute('#/mess/manage-menu', messManageMenu);
+registerRoute('#/mess/ratings', messRatings);
+
+// Warden new routes
+registerRoute('#/warden/announcements', wardenAnnouncements);
+
+// Admin new routes
+registerRoute('#/admin/mess', adminMess);
+registerRoute('#/admin/manage', adminManage);
+
 const defaultStyle = document.querySelector('link[href="/src/style.css"]');
 if (defaultStyle) defaultStyle.remove();
 
-console.log('%cDormFlow v3.0.0', 'color:#1a56db;font-size:16px;font-weight:bold;');
-console.log('%cDual-Hostel QR Outpass · Powered by Supabase', 'color:#555;font-size:12px;');
+console.log('%cUCE IT v3.0.0', 'color:#1a56db;font-size:16px;font-weight:bold;');
+console.log('%cHostel Management · Mess · Announcements · Powered by Supabase', 'color:#555;font-size:12px;');

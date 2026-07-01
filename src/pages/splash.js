@@ -12,7 +12,7 @@ export default function splashPage(app) {
         <span class="material-icons-outlined">apartment</span>
       </div>
       <div class="splash-title">University College of Engineering Ariyalur</div>
-      <div class="splash-subtitle">DormFlow</div>
+      <div class="splash-subtitle">UCE IT</div>
       <div class="splash-loader"><div class="splash-loader-bar"></div></div>
       <div class="splash-footer">Powered by MooN Software Solutions</div>
     </div>

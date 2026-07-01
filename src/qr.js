@@ -72,7 +72,7 @@ export function stopScanner(scanner) {
 
 export function parseQRData(rawString) {
   const parts = rawString.split('|');
-  if (parts.length < 6 || parts[0] !== 'DORMFLOW') return null;
+  if (parts.length < 6 || (parts[0] !== 'UCEIT' && parts[0] !== 'DORMFLOW')) return null;
   return {
     prefix: parts[0],
     passId: parts[1],

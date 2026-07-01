@@ -44,7 +44,7 @@ export default async function studentDashboard(app) {
     <header class="stitch-header">
       <div class="stitch-header-left" style="display:flex;align-items:center;gap:8px;">
         <img src="logo.png" alt="Anna University Logo" style="width: 28px; height: 28px; object-fit: contain;" />
-        <span class="stitch-brand">DormFlow</span>
+          <span class="stitch-brand">UCE IT</span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;">
         <button class="icon-btn" aria-label="notifications" style="padding:4px;">

@@ -117,9 +117,17 @@ export function renderBottomNav(activeItem, items) {
 export function studentNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/student/dashboard' },
-    { id: 'apply', icon: 'add_circle', label: 'Apply', route: '#/student/apply' },
-    { id: 'history', icon: 'history', label: 'History', route: '#/student/history' },
+    { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/student/mess' },
+    { id: 'updates', icon: 'campaign', label: 'Updates', route: '#/student/announcements' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/student/profile' },
+  ]);
+}
+
+export function messMemberNav(active) {
+  return renderBottomNav(active, [
+    { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/mess/dashboard' },
+    { id: 'menu', icon: 'edit_note', label: 'Menu', route: '#/mess/manage-menu' },
+    { id: 'ratings', icon: 'star_half', label: 'Ratings', route: '#/mess/ratings' },
   ]);
 }
 
@@ -127,7 +135,7 @@ export function wardenNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/warden/dashboard' },
     { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/warden/requests' },
-    { id: 'residents', icon: 'group', label: 'Residents', route: '#/warden/residents' },
+    { id: 'announce', icon: 'campaign', label: 'Announce', route: '#/warden/announcements' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/warden/profile' },
   ]);
 }
@@ -144,10 +152,23 @@ export function gateNav(active) {
 export function adminNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/admin/dashboard' },
-    { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/admin/leaves' },
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
-    { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
+    { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/admin/mess' },
+    { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
   ]);
+}
+
+export function renderStars(rating) {
+  let html = '<span class="star-rating">';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rating) {
+      html += '<span class="star star-filled">&#9733;</span>';
+    } else {
+      html += '<span class="star star-empty">&#9734;</span>';
+    }
+  }
+  html += '</span>';
+  return html;
 }
 
 export function renderPageHeader(title, subtitle = '', rightAction = '') {

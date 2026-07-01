@@ -37,7 +37,7 @@ export default async function leaveHistoryPage(app) {
     });
 
     app.innerHTML = `
-      ${renderPageHeader('DormFlow', '')}
+      ${renderPageHeader('UCE IT', '')}
       <div class="page">
         <h2 style="margin-bottom:var(--space-xs);">Leave History</h2>
         <p class="body-md text-muted" style="margin-bottom:var(--space-md);">

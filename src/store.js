@@ -211,7 +211,7 @@ export async function approveLeave(leaveId, wardenId) {
 
   const leave = normLeave(data);
   const passId = genId('OP');
-  const qrData = `DORMFLOW|${passId}|${leave.studentId}|${leaveId}|${leave.outDate}|${leave.inDate}`;
+  const qrData = `UCEIT|${passId}|${leave.studentId}|${leaveId}|${leave.outDate}|${leave.inDate}`;
   const { data: opData, error: opErr } = await supabase.from('outpasses').insert({
     pass_id:    passId,
     leave_id:   leaveId,
@@ -269,7 +269,7 @@ export async function getActiveOutpassByStudent(studentId) {
 
 export async function scanOutpass(qrData, securityId) {
   const parts = qrData.split('|');
-  if (parts.length < 6 || parts[0] !== 'DORMFLOW') {
+  if (parts.length < 6 || (parts[0] !== 'UCEIT' && parts[0] !== 'DORMFLOW')) {
     return { success: false, error: 'Invalid QR code format' };
   }
 
@@ -282,7 +282,7 @@ export async function scanOutpass(qrData, securityId) {
   const outpass = normOutpass(op);
 
   // Validate the full QR payload matches the stored record
-  const expectedQrData = `DORMFLOW|${outpass.passId}|${outpass.studentId}|${outpass.leaveId}|${parts[4]}|${parts[5]}`;
+  const expectedQrData = `UCEIT|${outpass.passId}|${outpass.studentId}|${outpass.leaveId}|${parts[4]}|${parts[5]}`;
   if (qrData !== expectedQrData) {
     return { success: false, error: 'QR data does not match stored outpass record' };
   }
@@ -407,3 +407,373 @@ export async function getRecentGateActivity(limit = 10) {
 }
 
 export function initStore() { }
+
+/* ========================================
+   MESS MENU OPERATIONS
+   ======================================== */
+
+function normMenu(row) {
+  return {
+    id: row.id,
+    menuDate: row.menu_date,
+    mealType: row.meal_type,
+    items: row.items,
+    createdBy: row.created_by,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function normRating(row) {
+  return {
+    id: row.id,
+    menuId: row.menu_id,
+    studentId: row.student_id,
+    rating: row.rating,
+    review: row.review,
+    createdAt: row.created_at,
+  };
+}
+
+export async function getMenuByDate(dateStr) {
+  const { data, error } = await supabase
+    .from('mess_menu')
+    .select('*')
+    .eq('menu_date', dateStr)
+    .order('meal_type');
+  if (error) throw error;
+  return (data || []).map(normMenu);
+}
+
+export async function getMenuByDateRange(start, end) {
+  const { data, error } = await supabase
+    .from('mess_menu')
+    .select('*')
+    .gte('menu_date', start)
+    .lte('menu_date', end)
+    .order('menu_date')
+    .order('meal_type');
+  if (error) throw error;
+  return (data || []).map(normMenu);
+}
+
+export async function createMenuEntry(data) {
+  const { data: result, error } = await supabase
+    .from('mess_menu')
+    .insert({
+      menu_date: data.menuDate,
+      meal_type: data.mealType,
+      items: data.items,
+      created_by: data.createdBy,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return normMenu(result);
+}
+
+export async function updateMenuEntry(id, data) {
+  const patch = {};
+  if (data.menuDate !== undefined) patch.menu_date = data.menuDate;
+  if (data.mealType !== undefined) patch.meal_type = data.mealType;
+  if (data.items !== undefined) patch.items = data.items;
+  patch.updated_at = new Date().toISOString();
+  const { data: result, error } = await supabase
+    .from('mess_menu')
+    .update(patch)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return normMenu(result);
+}
+
+export async function deleteMenuEntry(id) {
+  const { error } = await supabase.from('mess_menu').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function getRatings(menuId) {
+  const { data, error } = await supabase
+    .from('mess_ratings')
+    .select('*')
+    .eq('menu_id', menuId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(normRating);
+}
+
+export async function getMyRating(menuId, studentId) {
+  const { data, error } = await supabase
+    .from('mess_ratings')
+    .select('*')
+    .eq('menu_id', menuId)
+    .eq('student_id', studentId)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? normRating(data) : null;
+}
+
+export async function submitRating(menuId, studentId, rating, review) {
+  const { data: existing } = await supabase
+    .from('mess_ratings')
+    .select('id')
+    .eq('menu_id', menuId)
+    .eq('student_id', studentId)
+    .maybeSingle();
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from('mess_ratings')
+      .update({ rating, review })
+      .eq('id', existing.id)
+      .select()
+      .single();
+    if (error) throw error;
+    return normRating(data);
+  } else {
+    const { data, error } = await supabase
+      .from('mess_ratings')
+      .insert({ menu_id: menuId, student_id: studentId, rating, review })
+      .select()
+      .single();
+    if (error) throw error;
+    return normRating(data);
+  }
+}
+
+export async function getMenuWithStats(dateStr) {
+  const menu = await getMenuByDate(dateStr);
+  const result = [];
+  for (const item of menu) {
+    const ratings = await getRatings(item.id);
+    const avgRating = ratings.length
+      ? ratings.reduce((s, r) => s + r.rating, 0) / ratings.length
+      : 0;
+
+    // Fetch student names for ratings (reviews are anonymous - just count)
+    const ratingCount = ratings.length;
+    const ratingDistribution = [0, 0, 0, 0, 0];
+    ratings.forEach(r => { ratingDistribution[r.rating - 1]++; });
+
+    result.push({
+      ...item,
+      averageRating: Math.round(avgRating * 10) / 10,
+      ratingCount,
+      ratingDistribution,
+      ratings,  // anonymous list
+    });
+  }
+  return result;
+}
+
+
+/* ========================================
+   ANNOUNCEMENT OPERATIONS
+   ======================================== */
+
+function normAnnouncement(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    authorId: row.author_id,
+    createdAt: row.created_at,
+    type: row.type,
+    eventDate: row.event_date,
+  };
+}
+
+export async function getAnnouncements() {
+  const { data, error } = await supabase
+    .from('announcements')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(normAnnouncement);
+}
+
+export async function getAnnouncementById(id) {
+  const { data, error } = await supabase
+    .from('announcements')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return normAnnouncement(data);
+}
+
+export async function createAnnouncement(data) {
+  const { data: result, error } = await supabase
+    .from('announcements')
+    .insert({
+      title: data.title,
+      content: data.content,
+      author_id: data.authorId,
+      type: data.type || 'announcement',
+      event_date: data.eventDate || null,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return normAnnouncement(result);
+}
+
+export async function deleteAnnouncement(id) {
+  const { error } = await supabase.from('announcements').delete().eq('id', id);
+  if (error) throw error;
+}
+
+
+/* ========================================
+   POLL OPERATIONS
+   ======================================== */
+
+function normPoll(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description || '',
+    createdBy: row.created_by,
+    createdAt: row.created_at,
+    expiresAt: row.expires_at,
+    isActive: row.is_active,
+  };
+}
+
+export async function getPolls() {
+  const { data, error } = await supabase
+    .from('polls')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(normPoll);
+}
+
+export async function getPollById(id) {
+  const { data, error } = await supabase
+    .from('polls')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return normPoll(data);
+}
+
+export async function getPollOptions(pollId) {
+  const { data, error } = await supabase
+    .from('poll_options')
+    .select('*')
+    .eq('poll_id', pollId);
+  if (error) throw error;
+  return data || [];
+}
+
+export async function createPoll(data) {
+  // data: { title, description, authorId, expiresAt, options: [text, text, ...] }
+  const { data: poll, error: pollErr } = await supabase
+    .from('polls')
+    .insert({
+      title: data.title,
+      description: data.description || '',
+      created_by: data.authorId,
+      expires_at: data.expiresAt || null,
+    })
+    .select()
+    .single();
+  if (pollErr) throw pollErr;
+
+  if (data.options && data.options.length) {
+    const optionsData = data.options.map(text => ({
+      poll_id: poll.id,
+      option_text: text,
+    }));
+    const { error: optErr } = await supabase
+      .from('poll_options')
+      .insert(optionsData);
+    if (optErr) throw optErr;
+  }
+
+  return normPoll(poll);
+}
+
+export async function vote(pollId, optionId, studentId) {
+  // Check if already voted
+  const { data: existing } = await supabase
+    .from('poll_votes')
+    .select('id')
+    .eq('poll_id', pollId)
+    .eq('student_id', studentId)
+    .maybeSingle();
+  if (existing) throw new Error('You have already voted in this poll');
+
+  const { error } = await supabase.from('poll_votes').insert({
+    poll_id: pollId,
+    option_id: optionId,
+    student_id: studentId,
+  });
+  if (error) throw error;
+}
+
+export async function getPollResults(pollId) {
+  const options = await getPollOptions(pollId);
+  const { data: votes, error } = await supabase
+    .from('poll_votes')
+    .select('option_id')
+    .eq('poll_id', pollId);
+  if (error) throw error;
+
+  const totalVotes = votes ? votes.length : 0;
+  const optionVotes = {};
+  (votes || []).forEach(v => {
+    optionVotes[v.option_id] = (optionVotes[v.option_id] || 0) + 1;
+  });
+
+  return options.map(opt => ({
+    ...opt,
+    votes: optionVotes[opt.id] || 0,
+    percentage: totalVotes > 0 ? Math.round((optionVotes[opt.id] || 0) / totalVotes * 100) : 0,
+  }));
+}
+
+export async function hasVoted(pollId, studentId) {
+  const { data, error } = await supabase
+    .from('poll_votes')
+    .select('id, option_id')
+    .eq('poll_id', pollId)
+    .eq('student_id', studentId)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? { voted: true, optionId: data.option_id } : { voted: false, optionId: null };
+}
+
+export async function deletePoll(id) {
+  // Cascade deletes poll_options and poll_votes
+  const { error } = await supabase.from('polls').delete().eq('id', id);
+  if (error) throw error;
+}
+
+
+/* ========================================
+   MESS MEMBER MANAGEMENT
+   ======================================== */
+
+export async function toggleMessMember(userId, isMember) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ is_mess_member: isMember })
+    .eq('id', userId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getMessMembers() {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('is_mess_member', true);
+  if (error) throw error;
+  return (data || []).map(normProfile);
+}

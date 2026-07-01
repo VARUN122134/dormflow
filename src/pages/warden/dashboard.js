@@ -24,7 +24,7 @@ export default async function wardenDashboard(app) {
       <header class="stitch-header">
         <div class="stitch-header-left" style="display:flex;align-items:center;gap:8px;">
           <img src="logo.png" alt="Anna University Logo" style="width: 28px; height: 28px; object-fit: contain;" />
-          <span class="stitch-brand">DormFlow</span>
+          <span class="stitch-brand">UCE IT</span>
         </div>
         ${renderAvatar(user, 'stitch-avatar-sm')}
       </header>

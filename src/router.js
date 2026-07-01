@@ -1,5 +1,5 @@
 /* ========================================
-   DormFlow Router — Supabase-compatible
+   UCE IT Router — Supabase-compatible
    Hash-based SPA router with role guards
    ======================================== */
 
@@ -45,6 +45,7 @@ function matchRoute(hash) {
 // Role access map
 const roleAccess = {
   '#/student': ['student'],
+  '#/mess':    ['student'],    // additionally requires isMessMember check
   '#/warden':  ['boys_warden', 'girls_warden'],
   '#/gate':    ['security'],
   '#/admin':   ['admin'],
@@ -66,7 +67,13 @@ function checkAccess(hash, user) {
   if (!user) return false;
 
   for (const [prefix, roles] of Object.entries(roleAccess)) {
-    if (hash.startsWith(prefix)) return roles.includes(user.role);
+    if (hash.startsWith(prefix)) {
+      // Mess routes require student role + isMessMember flag
+      if (prefix === '#/mess') {
+        return roles.includes(user.role) && user.isMessMember === true;
+      }
+      return roles.includes(user.role);
+    }
   }
   return true;
 }

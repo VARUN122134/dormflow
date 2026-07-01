@@ -26,7 +26,7 @@ export default async function gateDashboard(app) {
       <div class="gate-header">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
           <img src="logo.png" alt="Anna University Logo" style="width: 36px; height: 36px; object-fit: contain;" />
-          <h1 style="margin:0;font-size:24px;font-weight:700;">DormFlow</h1>
+          <h1 style="margin:0;font-size:24px;font-weight:700;">UCE IT</h1>
         </div>
         <p>UC Engineering Ariyalur • Gate Security</p>
       </div>
@@ -204,7 +204,7 @@ export default async function gateDashboard(app) {
 
     let result = await scanOutpass(data, user.id);
 
-    if (!result.success && !data.startsWith('DORMFLOW')) {
+    if (!result.success && !data.startsWith('UCEIT') && !data.startsWith('DORMFLOW')) {
       const outpasses = await getOutpasses();
       const match = outpasses.find(o => o.passId === data);
       if (match) {

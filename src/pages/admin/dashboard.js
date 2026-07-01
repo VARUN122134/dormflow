@@ -19,7 +19,7 @@ export default async function adminDashboard(app) {
       <div style="display:flex;align-items:center;gap:12px;">
         <img src="logo.png" alt="Anna University Logo" style="width: 36px; height: 36px; object-fit: contain;" />
         <div>
-          <div class="page-header-title">DormFlow</div>
+          <div class="page-header-title">UCE IT</div>
           <div class="page-header-subtitle">System Admin</div>
         </div>
       </div>

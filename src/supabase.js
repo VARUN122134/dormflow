@@ -1,5 +1,5 @@
 /* ========================================
-   DormFlow — Supabase Client
+   UCE IT — Supabase Client
    ======================================== */
 import { createClient } from '@supabase/supabase-js';
 

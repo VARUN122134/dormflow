@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">DormFlow</string>
-    <string name="title_activity_main">DormFlow</string>
+    <string name="app_name">UCE IT</string>
+    <string name="title_activity_main">UCE IT</string>
     <string name="package_name">com.dormflow.app</string>
     <string name="custom_url_scheme">com.dormflow.app</string>
 </resources>

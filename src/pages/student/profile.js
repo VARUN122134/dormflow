@@ -7,7 +7,7 @@ export default function profilePage(app) {
   if (!user) return;
 
   app.innerHTML = `
-    ${renderPageHeader('DormFlow', '')}
+    ${renderPageHeader('UCE IT', '')}
     <div class="page">
       <div class="profile-avatar-container animate-scale-in" style="position: relative; width: 80px; height: 80px; margin: 0 auto var(--space-md); cursor: pointer; border-radius: 50%;">
         ${renderAvatar(user, 'profile-avatar-large')}
@@ -106,7 +106,7 @@ export default function profilePage(app) {
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">DormFlow v3.0.0</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.0</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -165,7 +165,7 @@ export default function profilePage(app) {
   document.getElementById('logoutBtn').addEventListener('click', () => {
     showModal(
       'Sign Out',
-      'Are you sure you want to sign out of DormFlow?',
+      'Are you sure you want to sign out of UCE IT?',
       async () => {
         await logout();
         showToast('Signed out successfully', 'info');

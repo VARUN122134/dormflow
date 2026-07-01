@@ -170,6 +170,7 @@ function normaliseProfile(row) {
     createdAt:      row.created_at,
     registrationNo: registrationNo || '',
     isApproved:     row.is_approved || false,
+    isMessMember:   row.is_mess_member || false,
   };
 }
 
@@ -179,6 +180,10 @@ export function isLoggedIn() {
 
 export function getRole() {
   return _currentProfile?.role;
+}
+
+export function isMessMember() {
+  return _currentProfile?.isMessMember === true;
 }
 
 export function getHomeRoute(role) {

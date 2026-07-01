@@ -1,5 +1,5 @@
 /* ========================================
-   DormFlow Page-Specific Styles
+   UCE IT Page-Specific Styles
    ======================================== */
 
 /* ---- Splash Screen ---- */
@@ -944,3 +944,90 @@
 
 /* ---- Spin animation for loading ---- */
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ========================================
+   MESS / MENU STYLES
+   ======================================== */
+
+.meal-tabs {
+  scrollbar-width: none;
+}
+.meal-tabs::-webkit-scrollbar { display: none; }
+
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
+}
+.star {
+  font-size: 18px;
+  line-height: 1;
+}
+.star-filled { color: #f59e0b; }
+.star-empty { color: #475569; }
+
+.star-rating-input .star {
+  cursor: pointer;
+  transition: color 0.15s, transform 0.15s;
+  user-select: none;
+}
+.star-rating-input .star:hover {
+  transform: scale(1.2);
+}
+
+/* ---- Announcement Cards ---- */
+.announcement-card {
+  transition: border-color 0.15s;
+}
+.announcement-card:hover {
+  border-color: var(--primary);
+}
+.announcement-preview {
+  line-height: 1.5;
+}
+
+/* ---- Poll Styles ---- */
+.poll-option-result {
+  transition: background 0.2s;
+}
+.poll-option-voted {
+  border: 1px solid var(--primary) !important;
+}
+.poll-option-bar {
+  transition: width 0.5s ease;
+}
+
+.poll-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.poll-option:hover {
+  background: var(--surface-variant);
+}
+
+/* ---- Toggle Switch for Mess Members ---- */
+.toggle-switch input[type="checkbox"] {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+/* ---- Stat Cards (used in mess dashboard) ---- */
+.stat-card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid var(--surface-variant);
+}
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
+}
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--outline);
+  margin-top: 4px;
+}
