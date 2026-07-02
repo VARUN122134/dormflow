@@ -10,6 +10,7 @@ function normLeave(row) {
     reason:           row.reason,
     outDate:          row.out_date,
     inDate:           row.in_date,
+    guardianContact:  row.guardian_contact || '',
     approvalStatus:   row.approval_status,
     approvedBy:       row.approved_by,
     approvedAt:       row.approved_at,
@@ -75,6 +76,18 @@ export async function getUsers() {
 export async function getUserById(id) {
   if (!id) return null;
   const { data, error } = await supabase.from('profiles').select('*').eq('id', id).single();
+  if (error) return null;
+  return normProfile(data);
+}
+
+export async function getUserByRegNo(regNo) {
+  if (!regNo) return null;
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .ilike('email', `${regNo}@%`)
+    .limit(1)
+    .maybeSingle();
   if (error) return null;
   return normProfile(data);
 }
@@ -182,7 +195,7 @@ export async function getPendingLeavesByHostel(hostelType) {
 export async function createLeave(leaveData) {
   const user = getCurrentUser();
   const leaveId = genId('LV');
-  const { data, error } = await supabase.from('leaves').insert({
+  const insertData = {
     leave_id:       leaveId,
     student_id:     user.id,
     type:           leaveData.type,
@@ -190,7 +203,11 @@ export async function createLeave(leaveData) {
     out_date:       leaveData.outDate,
     in_date:        leaveData.inDate,
     approval_status: 'Pending',
-  }).select().single();
+  };
+  if (leaveData.guardianContact) {
+    insertData.guardian_contact = leaveData.guardianContact;
+  }
+  const { data, error } = await supabase.from('leaves').insert(insertData).select().single();
   if (error) throw error;
   return normLeave(data);
 }

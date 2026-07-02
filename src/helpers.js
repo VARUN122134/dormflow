@@ -157,6 +157,7 @@ export function adminNav(active) {
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
     { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/admin/rooms' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
+    { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
   ]);
 }
 

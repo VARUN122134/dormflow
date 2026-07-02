@@ -123,6 +123,7 @@ export default function applyLeavePage(app) {
         reason: document.getElementById('leaveReason').value.trim(),
         outDate,
         inDate,
+        guardianContact: document.getElementById('guardianContact').value.trim(),
       });
 
       showToast('Leave request submitted successfully!', 'success');
