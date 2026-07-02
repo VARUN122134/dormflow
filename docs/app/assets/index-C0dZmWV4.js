@@ -36,7 +36,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
   `;let t=setTimeout(()=>{Sh()?kh(wh(Ch())):kh(`#/login`)},2800);return()=>clearTimeout(t)}var Rh=t({adminNav:()=>eg,escapeHtml:()=>Z,formatDate:()=>Vh,formatDateRange:()=>Gh,formatDateShort:()=>Hh,formatRelativeTime:()=>Wh,formatTime:()=>Uh,gateNav:()=>$h,getInitials:()=>Kh,messMemberNav:()=>Zh,refreshNotifBadge:()=>ig,renderAvatar:()=>qh,renderBottomNav:()=>Yh,renderNotifBell:()=>rg,renderPageHeader:()=>ng,renderStars:()=>tg,showModal:()=>ag,showToast:()=>Q,statusChip:()=>Jh,studentNav:()=>Xh,wardenNav:()=>Qh});n();var zh=null;function Bh(){return(!zh||!document.body.contains(zh))&&(zh=document.createElement(`div`),zh.className=`toast-container`,document.body.appendChild(zh)),zh}function Z(e){if(!e)return``;let t=document.createElement(`div`);return t.textContent=e,t.innerHTML}function Q(e,t=`info`,n=3e3){let r=Bh(),i=document.createElement(`div`);i.className=`toast toast-${t}`,i.innerHTML=`
     <span class="material-icons-outlined" style="font-size:20px">${{success:`check_circle`,error:`error`,warning:`warning`,info:`info`}[t]||`info`}</span>
     <span>${Z(e)}</span>
-  `,r.appendChild(i),setTimeout(()=>{i.style.opacity=`0`,i.style.transform=`translateY(-10px)`,i.style.transition=`all 0.3s ease`,setTimeout(()=>i.remove(),300)},n)}function Vh(e){return e?new Date(e).toLocaleDateString(`en-IN`,{month:`short`,day:`numeric`,year:`numeric`}):`—`}function Hh(e){return e?new Date(e).toLocaleDateString(`en-IN`,{month:`short`,day:`numeric`}):`—`}function Uh(e){return e?new Date(e).toLocaleTimeString(`en-IN`,{hour:`2-digit`,minute:`2-digit`,hour12:!0}):`—`}function Wh(e){if(!e)return``;let t=new Date-new Date(e),n=Math.floor(t/6e4),r=Math.floor(t/36e5),i=Math.floor(t/864e5);return n<1?`Just now`:n<60?`${n}m ago`:r<24?`${r}h ago`:i<7?`${i}d ago`:Vh(e)}function Gh(e,t){return`${Hh(e)} - ${Hh(t)}`}function Kh(e){return e?e.split(` `).map(e=>e[0]).join(``).toUpperCase().slice(0,2):`?`}function qh(e,t=`profile-avatar-large`){return e&&e.avatarUrl?`<img src="${Z(e.avatarUrl)}" class="${t}" alt="${Z(e.name||`Avatar`)}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=\\'${t}\\'>'+getInitials('${Z(e.name||``)}')+'</div>'" />`:`<div class="${t}">${Kh(e?e.name:``)}</div>`}function Jh(e){return`<span class="chip ${{Approved:`chip-approved`,Pending:`chip-pending`,Rejected:`chip-rejected`,Active:`chip-info`,Used:`chip-pending`,Completed:`chip-neutral`,IN:`chip-in`,OUT:`chip-out`}[e]||`chip-neutral`}">${Z(e)}</span>`}function Yh(e,t){return`
+  `,r.appendChild(i),setTimeout(()=>{i.style.opacity=`0`,i.style.transform=`translateY(-10px)`,i.style.transition=`all 0.3s ease`,setTimeout(()=>i.remove(),300)},n)}function Vh(e){return e?new Date(e).toLocaleDateString(`en-IN`,{month:`short`,day:`numeric`,year:`numeric`}):`—`}function Hh(e){return e?new Date(e).toLocaleDateString(`en-IN`,{month:`short`,day:`numeric`}):`—`}function Uh(e){return e?new Date(e).toLocaleTimeString(`en-IN`,{hour:`2-digit`,minute:`2-digit`,hour12:!0}):`—`}function Wh(e){if(!e)return``;let t=new Date-new Date(e),n=Math.floor(t/6e4),r=Math.floor(t/36e5),i=Math.floor(t/864e5);return n<1?`Just now`:n<60?`${n}m ago`:r<24?`${r}h ago`:i<7?`${i}d ago`:Vh(e)}function Gh(e,t){return`${Hh(e)} - ${Hh(t)}`}function Kh(e){return e?e.split(` `).map(e=>e[0]).join(``).toUpperCase().slice(0,2):`?`}function qh(e,t=`profile-avatar-large`){if(e&&e.avatarUrl){let n=Kh(e.name);return`<img src="${Z(e.avatarUrl)}" class="${t}" alt="${Z(e.name||`Avatar`)}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=\\'${t}\\'>${n}</div>'" />`}return`<div class="${t}">${Kh(e?e.name:``)}</div>`}function Jh(e){return`<span class="chip ${{Approved:`chip-approved`,Pending:`chip-pending`,Rejected:`chip-rejected`,Active:`chip-info`,Used:`chip-pending`,Completed:`chip-neutral`,IN:`chip-in`,OUT:`chip-out`}[e]||`chip-neutral`}">${Z(e)}</span>`}function Yh(e,t){return`
     <nav class="bottom-nav" id="bottomNav">
       ${t.map(t=>`
         <a href="${Z(t.route)}" class="nav-item ${e===t.id?`active`:``}" id="nav-${t.id}">
@@ -279,7 +279,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
         <button class="icon-btn" aria-label="notifications" style="padding:4px;">
           <span class="material-icons-outlined">notifications</span>
         </button>
-        <div class="stitch-avatar-sm" onclick="location.hash='#/student/profile'" style="cursor:pointer;">${Kh(t.name)}</div>
+        <a href="#/student/profile" style="text-decoration:none;color:inherit;">${qh(t,`stitch-avatar-sm`)}</a>
       </div>
     </header>
 
@@ -1306,7 +1306,7 @@ Minimum version required to store current data is: `+c+`.
       </div>
       <div style="display:flex;align-items:center;gap:var(--space-sm);">
         <span class="material-icons-outlined" style="color:var(--on-surface-variant);cursor:pointer;">notifications</span>
-        <div style="width:36px;height:36px;border-radius:50%;background:var(--primary-fixed);color:var(--primary-container);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">${Kh(t.name)}</div>
+        ${qh(t,`stitch-avatar-sm`)}
       </div>
     </header>
 
@@ -1490,7 +1490,7 @@ Minimum version required to store current data is: `+c+`.
         </div>
       </div>
       ${eg(`users`)}
-    `,document.getElementById(`userSearch`)?.addEventListener(`input`,async e=>{n=e.target.value,await a();let t=document.getElementById(`userSearch`);t&&(t.focus(),t.setSelectionRange(t.value.length,t.value.length))}),document.getElementById(`exportUsersBtn`)?.addEventListener(`click`,()=>{z_(o),Q(`Users exported to CSV`,`success`)}),document.querySelectorAll(`[data-role]`).forEach(e=>{e.addEventListener(`click`,async()=>{r=e.dataset.role,await a()})}),document.querySelectorAll(`[data-tab]`).forEach(e=>{e.addEventListener(`click`,async()=>{i=e.dataset.tab,await a()})}),document.querySelectorAll(`[data-approve]`).forEach(e=>{e.addEventListener(`click`,async()=>{let t=c.find(t=>t.id===e.dataset.approve);t&&ag(`Approve User`,`Approve <strong>${t.name}</strong>? They will be able to log in immediately after approval.`,async()=>{try{await vg(e.dataset.approve),Q(`${t.name} approved successfully`,`success`),await a()}catch(e){Q(`Failed to approve user: `+e.message,`error`)}},`Approve`,`btn-success`)})}),document.querySelectorAll(`[data-delete]`).forEach(e=>{e.addEventListener(`click`,()=>{ag(`Confirm Deletion`,`Are you sure you want to delete <strong>${c.find(t=>t.id===e.dataset.delete)?.name}</strong>? This action is permanent and will remove all associated records from the hostel database.`,async()=>{await yg(e.dataset.delete),Q(`User deleted`,`info`),await a()},`Delete`,`btn-danger`)})})}}async function Zy(e){let t=(await bg()).sort((e,t)=>new Date(t.createdAt)-new Date(e.createdAt));e.innerHTML=`
+    `,document.getElementById(`userSearch`)?.addEventListener(`input`,async e=>{n=e.target.value,await a();let t=document.getElementById(`userSearch`);t&&(t.focus(),t.setSelectionRange(t.value.length,t.value.length))}),document.getElementById(`exportUsersBtn`)?.addEventListener(`click`,()=>{z_(o),Q(`Users exported to CSV`,`success`)}),document.querySelectorAll(`[data-role]`).forEach(e=>{e.addEventListener(`click`,async()=>{r=e.dataset.role,await a()})}),document.querySelectorAll(`[data-tab]`).forEach(e=>{e.addEventListener(`click`,async()=>{i=e.dataset.tab,await a()})}),document.querySelectorAll(`[data-approve]`).forEach(e=>{e.addEventListener(`click`,async()=>{let t=c.find(t=>t.id===e.dataset.approve);t&&ag(`Approve User`,`Approve <strong>${t.name}</strong>? They will be able to log in immediately after approval.`,async()=>{try{await vg(e.dataset.approve),Q(`${t.name} approved successfully`,`success`),await a()}catch(e){Q(`Failed to approve user: `+e.message,`error`)}},`Approve`,`btn-success`)})}),document.querySelectorAll(`[data-delete]`).forEach(e=>{e.addEventListener(`click`,()=>{ag(`Confirm Deletion`,`Are you sure you want to delete <strong>${c.find(t=>t.id===e.dataset.delete)?.name}</strong>? This action is permanent and will remove all associated records from the hostel database.`,async()=>{await yg(e.dataset.delete),Q(`User deleted`,`info`),await a()},`Delete`,`btn-danger`)})})}}n();async function Zy(e){let t=(await bg()).sort((e,t)=>new Date(t.createdAt)-new Date(e.createdAt));e.innerHTML=`
     ${ng(`All Leave Requests`,`${t.length} total`)}
     <div class="page">
       <div style="display:flex;flex-direction:column;gap:var(--space-sm);" class="stagger">
@@ -1498,7 +1498,7 @@ Minimum version required to store current data is: `+c+`.
             <div class="leave-card animate-fade-in-up">
               <div class="leave-card-header">
                 <div class="leave-card-student">
-                  <div class="leave-card-avatar">${Kh(t?.name||`U`)}</div>
+                  ${qh(t,`leave-card-avatar`)}
                   <div>
                     <div class="leave-card-name">${t?.name||`Unknown`}</div>
                     <div class="leave-card-meta">${t?.hostelType||``} Hostel • ${t?.department||``}</div>
@@ -1515,7 +1515,13 @@ Minimum version required to store current data is: `+c+`.
   `}function Qy(e){let t=vh();if(!t)return;e.innerHTML=`
     ${ng(`UCE IT`,``)}
     <div class="page">
-      <div class="profile-avatar-large animate-scale-in">${Kh(t.name)}</div>
+      <div class="profile-avatar-container animate-scale-in" style="position: relative; width: 80px; height: 80px; margin: 0 auto var(--space-md); cursor: pointer; border-radius: 50%;">
+        ${qh(t,`profile-avatar-large`)}
+        <div class="avatar-edit-overlay" style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+          <span class="material-icons-outlined" style="font-size:16px;">edit</span>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
+      </div>
       <div class="profile-name">${t.name}</div>
       <div class="profile-location">System Administrator • University Central</div>
 
@@ -1579,7 +1585,7 @@ Minimum version required to store current data is: `+c+`.
       </button>
     </div>
     ${eg(`profile`)}
-  `;let n=e.querySelector(`#dev-photo`);n&&(n.onerror=function(){this.onerror=null,this.style.display=`none`;let e=document.createElement(`div`);e.style.cssText=`width:48px;height:48px;border-radius:50%;background:var(--primary-fixed);color:var(--primary-container);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-bottom:4px;`,e.textContent=`VC`,this.parentNode.insertBefore(e,this.nextSibling)}),document.getElementById(`logoutBtn`).addEventListener(`click`,()=>{ag(`Sign Out`,`Are you sure you want to sign out?`,async()=>{await _h(),Q(`Signed out`,`info`),kh(`#/login`)},`Sign Out`,`btn-danger`)}),document.getElementById(`changePwBtn`).addEventListener(`click`,async()=>{let e=document.getElementById(`cpCurrent`).value,t=document.getElementById(`cpNew`).value,n=document.getElementById(`cpConfirm`).value,r=document.getElementById(`cpError`);if(r.style.display=`none`,!e||!t||!n){r.textContent=`Please fill in all password fields`,r.style.display=`block`;return}if(t.length<6){r.textContent=`New password must be at least 6 characters`,r.style.display=`block`;return}if(t!==n){r.textContent=`New passwords do not match`,r.style.display=`block`;return}let i=document.getElementById(`changePwBtn`);i.disabled=!0,i.innerHTML=`Updating...`;try{await Th(e,t),Q(`Password updated successfully`,`success`),document.getElementById(`cpCurrent`).value=``,document.getElementById(`cpNew`).value=``,document.getElementById(`cpConfirm`).value=``}catch(e){r.textContent=e.message||`Failed to update password`,r.style.display=`block`}finally{i.disabled=!1,i.innerHTML=`<span class="material-icons-outlined" style="font-size:18px;">lock_reset</span> Update Password`}})}async function $y(e){let t=vh();if(!t)return;let n=new Date().toISOString().slice(0,10);async function r(){let r=await Wg(n),o=[`morning_tea`,`breakfast`,`lunch`,`snacks`,`dinner`],s={morning_tea:`Morning Tea`,breakfast:`Breakfast`,lunch:`Lunch`,snacks:`Snacks`,dinner:`Dinner`},c={morning_tea:`coffee`,breakfast:`free_breakfast`,lunch:`ramen_dining`,snacks:`cookies`,dinner:`dinner_dining`};e.innerHTML=`
+  `;let n=e.querySelector(`#dev-photo`);n&&(n.onerror=function(){this.onerror=null,this.style.display=`none`;let e=document.createElement(`div`);e.style.cssText=`width:48px;height:48px;border-radius:50%;background:var(--primary-fixed);color:var(--primary-container);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-bottom:4px;`,e.textContent=`VC`,this.parentNode.insertBefore(e,this.nextSibling)});let r=e.querySelector(`.profile-avatar-container`),a=e.querySelector(`#avatarInput`);r&&a&&(r.onclick=()=>a.click(),a.onchange=async n=>{let a=n.target.files[0];if(a)try{Q(`Uploading profile picture...`,`info`),r.style.opacity=`0.5`;let{uploadAvatar:n}=await i(async()=>{let{uploadAvatar:e}=await Promise.resolve().then(()=>cg);return{uploadAvatar:e}},void 0);t.avatarUrl=await n(t.id,a),Qy(e),Q(`Profile picture updated successfully`,`success`)}catch(e){console.error(e),Q(`Failed to upload picture: `+e.message,`error`),r.style.opacity=`1`}}),document.getElementById(`logoutBtn`).addEventListener(`click`,()=>{ag(`Sign Out`,`Are you sure you want to sign out?`,async()=>{await _h(),Q(`Signed out`,`info`),kh(`#/login`)},`Sign Out`,`btn-danger`)}),document.getElementById(`changePwBtn`).addEventListener(`click`,async()=>{let e=document.getElementById(`cpCurrent`).value,t=document.getElementById(`cpNew`).value,n=document.getElementById(`cpConfirm`).value,r=document.getElementById(`cpError`);if(r.style.display=`none`,!e||!t||!n){r.textContent=`Please fill in all password fields`,r.style.display=`block`;return}if(t.length<6){r.textContent=`New password must be at least 6 characters`,r.style.display=`block`;return}if(t!==n){r.textContent=`New passwords do not match`,r.style.display=`block`;return}let i=document.getElementById(`changePwBtn`);i.disabled=!0,i.innerHTML=`Updating...`;try{await Th(e,t),Q(`Password updated successfully`,`success`),document.getElementById(`cpCurrent`).value=``,document.getElementById(`cpNew`).value=``,document.getElementById(`cpConfirm`).value=``}catch(e){r.textContent=e.message||`Failed to update password`,r.style.display=`block`}finally{i.disabled=!1,i.innerHTML=`<span class="material-icons-outlined" style="font-size:18px;">lock_reset</span> Update Password`}})}async function $y(e){let t=vh();if(!t)return;let n=new Date().toISOString().slice(0,10);async function r(){let r=await Wg(n),o=[`morning_tea`,`breakfast`,`lunch`,`snacks`,`dinner`],s={morning_tea:`Morning Tea`,breakfast:`Breakfast`,lunch:`Lunch`,snacks:`Snacks`,dinner:`Dinner`},c={morning_tea:`coffee`,breakfast:`free_breakfast`,lunch:`ramen_dining`,snacks:`cookies`,dinner:`dinner_dining`};e.innerHTML=`
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
@@ -2155,7 +2161,7 @@ Minimum version required to store current data is: `+c+`.
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             ${rg()}
-            ${t.name?`<span style="font-size:13px;color:var(--on-surface-variant)">${Z(t.name.split(` `)[0])}</span>`:``}
+            <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${qh(t,`stitch-avatar-sm`)}</a>
           </div>
         </header>
 
@@ -2554,7 +2560,7 @@ Minimum version required to store current data is: `+c+`.
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             ${rg()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${Z(t.name?.split(` `)[0]||``)}</span>
+            <a href="#/warden/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${qh(t,`stitch-avatar-sm`)}</a>
           </div>
         </header>
 
@@ -2732,7 +2738,7 @@ Minimum version required to store current data is: `+c+`.
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             ${rg()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${Z(t.name?.split(` `)[0]||``)}</span>
+            <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${qh(t,`stitch-avatar-sm`)}</a>
           </div>
         </header>
 
