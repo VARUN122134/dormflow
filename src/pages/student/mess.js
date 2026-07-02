@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMenuWithStats, submitRating, getMyRating } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml, renderStars } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, renderStars, renderNotifBell } from '../../helpers.js';
 
 export default async function messPage(app) {
   const user = getCurrentUser();
@@ -20,7 +20,10 @@ export default async function messPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Mess Menu</span>
           </div>
-          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${renderNotifBell()}
+            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+          </div>
         </header>
 
         <div style="padding:16px;padding-bottom:80px;">

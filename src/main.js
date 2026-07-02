@@ -7,7 +7,7 @@ import '@fontsource/material-icons-outlined';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
-import { loadCurrentUser } from './auth.js';
+import { loadCurrentUser, getCurrentUser } from './auth.js';
 import { registerRoute, initRouter } from './router.js';
 
 import splashPage from './pages/splash.js';
@@ -46,8 +46,48 @@ import wardenAnnouncements from './pages/warden/announcements.js';
 import adminMess from './pages/admin/mess.js';
 import adminManage from './pages/admin/manage.js';
 
+// v5 feature pages
+import myRoomPage from './pages/student/my-room.js';
+import studentComplaintsPage from './pages/student/complaints.js';
+import studentAttendancePage from './pages/student/attendance.js';
+import studentNotificationsPage from './pages/student/notifications.js';
+
+import wardenRoomsPage from './pages/warden/rooms.js';
+import wardenAttendancePage from './pages/warden/attendance.js';
+
+import adminRoomsPage from './pages/admin/rooms.js';
+import adminComplaintsPage from './pages/admin/complaints.js';
+import adminNotificationsPage from './pages/admin/notifications.js';
+
+import messAttendancePage from './pages/mess/attendance.js';
+
+import { supabase } from './supabase.js';
+import { subscribeToNotifications, unsubscribeFromNotifications } from './realtime.js';
+import { showToast, refreshNotifBadge } from './helpers.js';
+
 async function boot() {
   await loadCurrentUser();
+  const user = getCurrentUser();
+  if (user) {
+    subscribeToNotifications(user.id, (notif) => {
+      showToast(`${notif.title}: ${notif.body}`, notif.type || 'info');
+    });
+    refreshNotifBadge();
+  }
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) {
+      subscribeToNotifications(session.user.id, (notif) => {
+        showToast(`${notif.title}: ${notif.body}`, notif.type || 'info');
+      });
+      refreshNotifBadge();
+    }
+    if (event === 'SIGNED_OUT') {
+      const cur = getCurrentUser();
+      if (cur) unsubscribeFromNotifications(cur.id);
+      const badge = document.getElementById('notifBadge');
+      if (badge) badge.style.display = 'none';
+    }
+  });
   initRouter();
 }
 boot();
@@ -94,8 +134,27 @@ registerRoute('#/warden/announcements', wardenAnnouncements);
 registerRoute('#/admin/mess', adminMess);
 registerRoute('#/admin/manage', adminManage);
 
+// v5 Room Management
+registerRoute('#/student/room', myRoomPage);
+registerRoute('#/warden/rooms', wardenRoomsPage);
+registerRoute('#/admin/rooms', adminRoomsPage);
+
+// v5 Complaint/Feedback
+registerRoute('#/student/complaints', studentComplaintsPage);
+registerRoute('#/admin/complaints', adminComplaintsPage);
+
+// v5 Attendance
+registerRoute('#/student/attendance', studentAttendancePage);
+registerRoute('#/warden/attendance', wardenAttendancePage);
+registerRoute('#/mess/attendance', messAttendancePage);
+
+// v5 Notifications
+registerRoute('#/notifications', studentNotificationsPage);
+registerRoute('#/admin/send-notifications', adminNotificationsPage);
+
 const defaultStyle = document.querySelector('link[href="/src/style.css"]');
 if (defaultStyle) defaultStyle.remove();
 
-console.log('%cUCE IT v3.0.0', 'color:#1a56db;font-size:16px;font-weight:bold;');
-console.log('%cHostel Management · Mess · Announcements · Powered by Supabase', 'color:#555;font-size:12px;');
+console.log('%cUCE IT v5.0.0', 'color:#1a56db;font-size:20px;font-weight:bold;');
+console.log('%cHostel Management  ·  Rooms  ·  Complaints  ·  Attendance  ·  Notifications  ·  Powered by Supabase', 'color:#555;font-size:12px;');
+console.log('%cUniversity College of Engineering, Ariyalur — IT Department', 'color:#888;font-size:11px;');

@@ -105,6 +105,30 @@ export default async function studentDashboard(app) {
 
       <div class="section-block" style="margin-top:var(--space-lg);">
         <div class="section-row">
+          <span class="section-title">Quick Access</span>
+        </div>
+        <div class="feature-grid" style="margin-bottom:var(--space-md);">
+          <a href="#/student/room" class="feature-card">
+            <span class="material-icons-outlined">meeting_room</span>
+            <div class="feature-label">My Room</div>
+          </a>
+          <a href="#/student/complaints" class="feature-card">
+            <span class="material-icons-outlined">feedback</span>
+            <div class="feature-label">Complaints</div>
+          </a>
+          <a href="#/student/attendance" class="feature-card">
+            <span class="material-icons-outlined">fact_check</span>
+            <div class="feature-label">Attendance</div>
+          </a>
+          <a href="#/notifications" class="feature-card">
+            <span class="material-icons-outlined">notifications</span>
+            <div class="feature-label">Notifications</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="section-block" style="margin-top:var(--space-lg);">
+        <div class="section-row">
           <span class="section-title">Recent Activity</span>
           <a href="#/student/history" style="font-size:13px;font-weight:500;color:var(--primary-container);">View All</a>
         </div>

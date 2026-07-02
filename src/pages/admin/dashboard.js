@@ -94,6 +94,26 @@ export default async function adminDashboard(app) {
         </div>
       </div>
 
+      <div class="section-title">Management</div>
+      <div class="feature-grid" style="margin-bottom:var(--space-lg);">
+        <a href="#/admin/rooms" class="feature-card">
+          <span class="material-icons-outlined">meeting_room</span>
+          <div class="feature-label">Room Management</div>
+        </a>
+        <a href="#/admin/complaints" class="feature-card">
+          <span class="material-icons-outlined">feedback</span>
+          <div class="feature-label">Complaints</div>
+        </a>
+        <a href="#/notifications" class="feature-card">
+          <span class="material-icons-outlined">notifications</span>
+          <div class="feature-label">Notifications</div>
+        </a>
+        <a href="#/admin/send-notifications" class="feature-card">
+          <span class="material-icons-outlined">send</span>
+          <div class="feature-label">Send Notif</div>
+        </a>
+      </div>
+
       <div class="section-title">Recent System Activity</div>
       <div class="card animate-fade-in">
         ${recentActivity.length > 0 ? recentActivity.map(a => `

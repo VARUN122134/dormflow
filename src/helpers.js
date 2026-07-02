@@ -119,6 +119,7 @@ export function studentNav(active) {
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/student/dashboard' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/student/mess' },
     { id: 'updates', icon: 'campaign', label: 'Updates', route: '#/student/announcements' },
+    { id: 'room', icon: 'meeting_room', label: 'My Room', route: '#/student/room' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/student/profile' },
   ]);
 }
@@ -135,6 +136,7 @@ export function wardenNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/warden/dashboard' },
     { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/warden/requests' },
+    { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/warden/rooms' },
     { id: 'announce', icon: 'campaign', label: 'Announce', route: '#/warden/announcements' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/warden/profile' },
   ]);
@@ -153,7 +155,7 @@ export function adminNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/admin/dashboard' },
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
-    { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/admin/mess' },
+    { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/admin/rooms' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
   ]);
 }
@@ -181,6 +183,34 @@ export function renderPageHeader(title, subtitle = '', rightAction = '') {
       ${rightAction}
     </header>
   `;
+}
+
+export function renderNotifBell() {
+  return `
+    <a href="#/notifications" style="position:relative;display:inline-flex;align-items:center;text-decoration:none;color:inherit;">
+      <span class="material-icons-outlined" style="font-size:24px;color:var(--on-surface-variant);">notifications</span>
+      <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+    </a>
+  `;
+}
+
+export function refreshNotifBadge() {
+  const badge = document.getElementById('notifBadge');
+  if (!badge) return;
+  import('./store.js').then(store => {
+    import('./auth.js').then(auth => {
+      const user = auth.getCurrentUser();
+      if (!user) { badge.style.display = 'none'; return; }
+      store.getUnreadCount(user.id).then(count => {
+        if (count > 0) {
+          badge.textContent = count > 99 ? '99+' : count;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      });
+    });
+  });
 }
 
 export function showModal(title, body, onConfirm, confirmText = 'Confirm', confirmClass = 'btn-danger') {

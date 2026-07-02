@@ -1,6 +1,7 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { navigate } from '../../router.js';
 import { studentNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { getUnreadCount } from '../../store.js';
 
 export default function profilePage(app) {
   const user = getCurrentUser();
@@ -61,6 +62,28 @@ export default function profilePage(app) {
         <div class="profile-field">
           <span class="profile-field-label">Guardian Phone</span>
           <span class="profile-field-value">${user.guardianPhone || '\u2014'}</span>
+        </div>
+      </div>
+
+      <div class="profile-section card animate-fade-in" style="margin-bottom:12px;">
+        <div class="profile-section-title" style="margin-bottom:8px;">Features</div>
+        <div class="feature-grid">
+          <a href="#/student/room" class="feature-card">
+            <span class="material-icons-outlined">meeting_room</span>
+            <div class="feature-label">My Room</div>
+          </a>
+          <a href="#/student/complaints" class="feature-card">
+            <span class="material-icons-outlined">feedback</span>
+            <div class="feature-label">Complaints</div>
+          </a>
+          <a href="#/student/attendance" class="feature-card">
+            <span class="material-icons-outlined">fact_check</span>
+            <div class="feature-label">Attendance</div>
+          </a>
+          <a href="#/notifications" class="feature-card">
+            <span class="material-icons-outlined">notifications</span>
+            <div class="feature-label">Notifications</div>
+          </a>
         </div>
       </div>
 

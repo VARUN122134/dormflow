@@ -64,6 +64,12 @@
 }
 .btn-success:hover { background: #15803d; }
 
+.btn-pending {
+  background: var(--status-warning);
+  color: #fff;
+}
+.btn-pending:hover { background: #b45309; }
+
 .btn-sm {
   padding: 8px 16px;
   font-size: var(--label-md-size);

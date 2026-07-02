@@ -1,5 +1,5 @@
 import { getCurrentUser } from '../../auth.js';
-import { getUsers, deleteUser, approveUser } from '../../store.js';
+import { getUsers, deleteUser, approveUser, exportUsersToCSV } from '../../store.js';
 import { adminNav, statusChip, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
 
 export default async function userManagement(app) {
@@ -63,9 +63,14 @@ export default async function userManagement(app) {
           </div>
         ` : ''}
 
-        <div style="position:relative;margin-bottom:var(--space-md);">
-          <span class="material-icons-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--outline);">search</span>
-          <input class="form-input" type="text" id="userSearch" placeholder="Search users..." style="padding-left:40px;" value="${search}" />
+        <div style="display:flex;gap:8px;margin-bottom:var(--space-md);">
+          <div style="position:relative;flex:1;">
+            <span class="material-icons-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--outline);">search</span>
+            <input class="form-input" type="text" id="userSearch" placeholder="Search users..." style="padding-left:40px;" value="${search}" />
+          </div>
+          <button class="btn btn-ghost btn-sm" id="exportUsersBtn" title="Export to CSV">
+            <span class="material-icons-outlined" style="font-size:20px;">file_download</span>
+          </button>
         </div>
 
         <div class="filter-tabs" id="roleFilters" style="margin-bottom:var(--space-md);">
@@ -116,6 +121,11 @@ export default async function userManagement(app) {
         input.focus();
         input.setSelectionRange(input.value.length, input.value.length);
       }
+    });
+
+    document.getElementById('exportUsersBtn')?.addEventListener('click', () => {
+      exportUsersToCSV(users);
+      showToast('Users exported to CSV', 'success');
     });
 
     document.querySelectorAll('[data-role]').forEach(tab => {

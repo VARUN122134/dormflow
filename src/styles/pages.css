@@ -1031,3 +1031,125 @@
   color: var(--outline);
   margin-top: 4px;
 }
+
+/* ========================================
+   v5 FEATURE STYLES (Room, Complaints, Attendance)
+   ======================================== */
+
+/* Room Grid */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.room-cell {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
+}
+.room-cell:hover { transform: scale(1.03); }
+.room-cell.room-available { background: var(--status-success-bg); border-color: var(--status-success); }
+.room-cell.room-occupied { background: var(--primary-fixed); border-color: var(--primary-container); }
+.room-cell.room-maintenance { background: var(--status-warning-bg); border-color: var(--status-warning); }
+.room-cell.room-number { font-size: 18px; font-weight: 700; }
+.room-cell.room-status { font-size: 11px; color: var(--on-surface-variant); }
+
+/* Feature Quick Links */
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface-container-lowest);
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  color: var(--on-surface);
+}
+.feature-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  border-color: var(--primary-container);
+}
+.feature-card .material-icons-outlined {
+  font-size: 32px;
+  color: var(--primary-container);
+}
+.feature-card.feature-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Student Result Item for attendance */
+.studentResultItem:hover {
+  background: var(--primary-fixed) !important;
+}
+
+/* Page container (used by v5 pages) */
+.page-container {
+  min-height: 100vh;
+  background: var(--surface);
+}
+
+/* Stitch header (shared with existing pages) */
+.stitch-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--surface-container-lowest);
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.stitch-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stitch-brand {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-container);
+}
+.stitch-sub {
+  font-size: 12px;
+  color: var(--on-surface-variant);
+}
+.stitch-right {
+  font-size: 13px;
+  color: var(--on-surface-variant);
+}
+
+/* Notification Badge */
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--error);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+}

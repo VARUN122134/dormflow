@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getPolls, getPollOptions, getPollResults, hasVoted, vote } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, renderNotifBell } from '../../helpers.js';
 
 export default async function pollsPage(app) {
   const user = getCurrentUser();
@@ -18,7 +18,10 @@ export default async function pollsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Polls</span>
           </div>
-          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${renderNotifBell()}
+            ${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}
+          </div>
         </header>
 
         <div style="padding:16px;padding-bottom:80px;">

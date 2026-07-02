@@ -1,7 +1,9 @@
 {
   "name": "hostel-management-system",
-  "version": "0.0.0",
+  "version": "5.0.0",
   "private": true,
+  "description": "UCE IT Hostel Management System — Rooms, Complaints, Attendance, Notifications, Mess, QR Outpass",
+  "author": "UCE IT Department",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +21,7 @@
     "@fontsource/material-icons-outlined": "^5.2.6",
     "@supabase/supabase-js": "^2.107.0",
     "chart.js": "^4.5.1",
+    "html2pdf.js": "^0.10.3",
     "html5-qrcode": "^2.3.8",
     "qrcode": "^1.5.4"
   }

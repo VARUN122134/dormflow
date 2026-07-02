@@ -105,21 +105,25 @@ export default async function wardenDashboard(app) {
           <canvas id="wardenChart" height="150"></canvas>
         </div>
 
-        <div class="section-title">Quick Announcements</div>
-        <div class="announcements-list animate-fade-in">
-          <div class="announcement-card announcement-maintenance">
-            <span class="announcement-tag">MAINTENANCE</span>
-            <p class="announcement-text">Block B water supply maintenance tomorrow 10AM–1PM.</p>
-          </div>
-          <div class="announcement-card announcement-policy">
-            <span class="announcement-tag">POLICY UPDATE</span>
-            <p class="announcement-text">New late-night entry registration starting next week.</p>
-          </div>
+        <div class="section-title">Management Tools</div>
+        <div class="feature-grid" style="margin-bottom:var(--space-lg);">
+          <a href="#/warden/rooms" class="feature-card">
+            <span class="material-icons-outlined">meeting_room</span>
+            <div class="feature-label">Rooms</div>
+          </a>
+          <a href="#/warden/attendance" class="feature-card">
+            <span class="material-icons-outlined">fact_check</span>
+            <div class="feature-label">Attendance</div>
+          </a>
+          <a href="#/notifications" class="feature-card">
+            <span class="material-icons-outlined">notifications</span>
+            <div class="feature-label">Notifications</div>
+          </a>
+          <a href="#/warden/announcements" class="feature-card">
+            <span class="material-icons-outlined">campaign</span>
+            <div class="feature-label">Announce</div>
+          </a>
         </div>
-        <a href="#" class="post-announcement-link" onclick="event.preventDefault();">
-          <span class="material-icons-outlined" style="font-size:14px;">add</span>
-          Post Announcement
-        </a>
       </div>
 
       <button class="fab" onclick="window.location.hash='#/warden/requests'" title="Leave Requests">

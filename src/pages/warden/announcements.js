@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, createAnnouncement, deleteAnnouncement, getPolls, createPoll, deletePoll, getPollOptions, getPollResults, hasVoted } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, formatDate, showModal } from '../../helpers.js';
+import { wardenNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell } from '../../helpers.js';
 
 export default async function wardenAnnouncements(app) {
   const user = getCurrentUser();
@@ -17,7 +17,10 @@ export default async function wardenAnnouncements(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Manage Announcements</span>
           </div>
-          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${renderNotifBell()}
+            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+          </div>
         </header>
 
         <div style="padding:16px;padding-bottom:80px;">

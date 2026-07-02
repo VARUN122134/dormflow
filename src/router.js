@@ -49,6 +49,7 @@ const roleAccess = {
   '#/warden':  ['boys_warden', 'girls_warden'],
   '#/gate':    ['security'],
   '#/admin':   ['admin'],
+  '#/notifications': ['student', 'boys_warden', 'girls_warden', 'admin', 'security'],
 };
 
 function getHomeRoute(role) {
@@ -80,7 +81,7 @@ function checkAccess(hash, user) {
 
 export async function handleRoute() {
   const hash = getHash();
-  const user = getCurrentUser();   // cached — set by loadCurrentUser() on boot
+  const user = getCurrentUser();
 
   // Cleanup previous page
   if (currentCleanup && typeof currentCleanup === 'function') {
