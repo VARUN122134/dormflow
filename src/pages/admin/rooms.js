@@ -1,5 +1,5 @@
 import { getCurrentUser, getRole } from '../../auth.js';
-import { getRooms, getRoomAllocations, createRoom, updateRoom, deleteRoom, allocateRoom, vacateRoom, getMaintenanceRequests, updateMaintenanceStatus, getUsers } from '../../store.js';
+import { getRooms, getRoomAllocations, createRoom, updateRoom, deleteRoom, allocateRoom, vacateRoom, getMaintenanceRequests, updateMaintenanceStatus, getUsers, getRoomById } from '../../store.js';
 import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderAvatar } from '../../helpers.js';
 
 export default async function adminRoomsPage(app) {
@@ -228,12 +228,9 @@ export default async function adminRoomsPage(app) {
             <input class="form-input" id="rNumber" placeholder="e.g. 101">
           </div>
           <div class="form-group">
-            <label class="form-label">Capacity</label>
+            <label class="form-label">Capacity (1-8)</label>
             <select class="form-input" id="rCapacity">
-              <option value="1">Single</option>
-              <option value="2" selected>Double</option>
-              <option value="3">Triple</option>
-              <option value="4">Quad</option>
+              ${[1,2,3,4,5,6,7,8].map(n => `<option value="${n}"${n===2?' selected':''}>${n} Member${n>1?'s':''}</option>`).join('')}
             </select>
           </div>
           <div class="form-group">
@@ -361,20 +358,29 @@ export default async function adminRoomsPage(app) {
     backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
   }
 
-  function showEditRoomModal(roomId) {
+  async function showEditRoomModal(roomId) {
+    const room = await getRoomById(roomId);
+    if (!room) { showToast('Room not found', 'error'); return; }
+
     const backdrop = document.createElement('div');
     backdrop.className = 'modal-backdrop';
     backdrop.innerHTML = `
       <div class="modal">
-        <div class="modal-title">Edit Room Status</div>
+        <div class="modal-title">Edit Room</div>
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Status</label>
             <select class="form-input" id="editRoomStatus">
-              <option value="available">Available</option>
-              <option value="occupied">Occupied</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="unavailable">Unavailable</option>
+              <option value="available"${room.status==='available'?' selected':''}>Available</option>
+              <option value="occupied"${room.status==='occupied'?' selected':''}>Occupied</option>
+              <option value="maintenance"${room.status==='maintenance'?' selected':''}>Maintenance</option>
+              <option value="unavailable"${room.status==='unavailable'?' selected':''}>Unavailable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Capacity (1-8)</label>
+            <select class="form-input" id="editRoomCapacity">
+              ${[1,2,3,4,5,6,7,8].map(n => `<option value="${n}"${n===room.capacity?' selected':''}>${n} Member${n>1?'s':''}</option>`).join('')}
             </select>
           </div>
         </div>
@@ -388,8 +394,9 @@ export default async function adminRoomsPage(app) {
     backdrop.querySelector('#modalCancel').onclick = () => backdrop.remove();
     backdrop.querySelector('#modalConfirm').onclick = async () => {
       const status = document.getElementById('editRoomStatus').value;
+      const capacity = parseInt(document.getElementById('editRoomCapacity').value);
       try {
-        await updateRoom(roomId, { status });
+        await updateRoom(roomId, { status, capacity });
         showToast('Room updated', 'success');
         backdrop.remove();
         render();
