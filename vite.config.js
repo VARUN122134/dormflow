@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/dormflow/app/',
+  base: './',
   build: {
     outDir: 'docs/app',
     assetsDir: 'assets',
