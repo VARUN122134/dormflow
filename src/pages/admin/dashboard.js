@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getSystemStats, getRecentGateActivity, getUsers } from '../../store.js';
-import { adminNav, formatRelativeTime, renderPageHeader, getInitials } from '../../helpers.js';
+import { adminNav, formatRelativeTime, renderPageHeader, getInitials, renderAvatar } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
 export default async function adminDashboard(app) {
@@ -25,7 +25,7 @@ export default async function adminDashboard(app) {
       </div>
       <div style="display:flex;align-items:center;gap:var(--space-sm);">
         <span class="material-icons-outlined" style="color:var(--on-surface-variant);cursor:pointer;">notifications</span>
-        <div style="width:36px;height:36px;border-radius:50%;background:var(--primary-fixed);color:var(--primary-container);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">${getInitials(user.name)}</div>
+        ${renderAvatar(user, 'stitch-avatar-sm')}
       </div>
     </header>
 

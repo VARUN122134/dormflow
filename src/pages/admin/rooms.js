@@ -1,6 +1,6 @@
 import { getCurrentUser, getRole } from '../../auth.js';
 import { getRooms, getRoomAllocations, createRoom, updateRoom, deleteRoom, allocateRoom, vacateRoom, getMaintenanceRequests, updateMaintenanceStatus, getUsers } from '../../store.js';
-import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell } from '../../helpers.js';
+import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderAvatar } from '../../helpers.js';
 
 export default async function adminRoomsPage(app) {
   const user = getCurrentUser();
@@ -28,7 +28,7 @@ export default async function adminRoomsPage(app) {
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             ${renderNotifBell()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+            <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>
         </header>
 

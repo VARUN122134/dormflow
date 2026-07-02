@@ -1,7 +1,7 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { getLeaves } from '../../store.js';
 import { navigate } from '../../router.js';
-import { adminNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader } from '../../helpers.js';
+import { adminNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
 
 export async function adminLeaves(app) {
   const rawLeaves = await getLeaves();
@@ -17,7 +17,7 @@ export async function adminLeaves(app) {
             <div class="leave-card animate-fade-in-up">
               <div class="leave-card-header">
                 <div class="leave-card-student">
-                  <div class="leave-card-avatar">${getInitials(student?.name || 'U')}</div>
+                  ${renderAvatar(student, 'leave-card-avatar')}
                   <div>
                     <div class="leave-card-name">${student?.name || 'Unknown'}</div>
                     <div class="leave-card-meta">${student?.hostelType || ''} Hostel • ${student?.department || ''}</div>
@@ -42,7 +42,13 @@ export function adminProfile(app) {
   app.innerHTML = `
     ${renderPageHeader('UCE IT', '')}
     <div class="page">
-      <div class="profile-avatar-large animate-scale-in">${getInitials(user.name)}</div>
+      <div class="profile-avatar-container animate-scale-in" style="position: relative; width: 80px; height: 80px; margin: 0 auto var(--space-md); cursor: pointer; border-radius: 50%;">
+        ${renderAvatar(user, 'profile-avatar-large')}
+        <div class="avatar-edit-overlay" style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+          <span class="material-icons-outlined" style="font-size:16px;">edit</span>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
+      </div>
       <div class="profile-name">${user.name}</div>
       <div class="profile-location">System Administrator • University Central</div>
 
@@ -117,6 +123,34 @@ export function adminProfile(app) {
       fb.style.cssText = 'width:48px;height:48px;border-radius:50%;background:var(--primary-fixed);color:var(--primary-container);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-bottom:4px;';
       fb.textContent = 'VC';
       this.parentNode.insertBefore(fb, this.nextSibling);
+    };
+  }
+
+  const avatarContainer = app.querySelector('.profile-avatar-container');
+  const avatarInput = app.querySelector('#avatarInput');
+
+  if (avatarContainer && avatarInput) {
+    avatarContainer.onclick = () => avatarInput.click();
+    avatarInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        showToast('Uploading profile picture...', 'info');
+        avatarContainer.style.opacity = '0.5';
+
+        const { uploadAvatar } = await import('../../store.js');
+        const newUrl = await uploadAvatar(user.id, file);
+
+        user.avatarUrl = newUrl;
+
+        adminProfile(app);
+        showToast('Profile picture updated successfully', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to upload picture: ' + err.message, 'error');
+        avatarContainer.style.opacity = '1';
+      }
     };
   }
 

@@ -81,7 +81,8 @@ export function getInitials(name) {
 
 export function renderAvatar(user, customClass = 'profile-avatar-large') {
   if (user && user.avatarUrl) {
-    return `<img src="${escapeHtml(user.avatarUrl)}" class="${customClass}" alt="${escapeHtml(user.name || 'Avatar')}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=\\'${customClass}\\'>'+getInitials('${escapeHtml(user.name || '')}')+'</div>'" />`;
+    const initials = getInitials(user.name);
+    return `<img src="${escapeHtml(user.avatarUrl)}" class="${customClass}" alt="${escapeHtml(user.name || 'Avatar')}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=\\'${customClass}\\'>${initials}</div>'" />`;
   }
   const name = user ? user.name : '';
   return `<div class="${customClass}">${getInitials(name)}</div>`;

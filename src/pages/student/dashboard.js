@@ -1,7 +1,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { getLeavesByStudent, getActiveOutpassByStudent } from '../../store.js';
 import { navigate } from '../../router.js';
-import { studentNav, formatDateRange, formatRelativeTime, getInitials } from '../../helpers.js';
+import { studentNav, formatDateRange, formatRelativeTime, getInitials, renderAvatar } from '../../helpers.js';
 
 export default async function studentDashboard(app) {
   const user = getCurrentUser();
@@ -50,7 +50,7 @@ export default async function studentDashboard(app) {
         <button class="icon-btn" aria-label="notifications" style="padding:4px;">
           <span class="material-icons-outlined">notifications</span>
         </button>
-        <div class="stitch-avatar-sm" onclick="location.hash='#/student/profile'" style="cursor:pointer;">${getInitials(user.name)}</div>
+        <a href="#/student/profile" style="text-decoration:none;color:inherit;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
       </div>
     </header>
 
