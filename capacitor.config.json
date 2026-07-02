@@ -1,5 +1,9 @@
 {
   "appId": "com.dormflow.app",
   "appName": "UCE IT",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "url": "https://varun122134.github.io/dormflow/app/",
+    "hostname": "varun122134.github.io"
+  }
 }
