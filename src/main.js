@@ -65,6 +65,7 @@ import messAttendancePage from './pages/mess/attendance.js';
 import { supabase } from './supabase.js';
 import { subscribeToNotifications, unsubscribeFromNotifications } from './realtime.js';
 import { showToast, refreshNotifBadge } from './helpers.js';
+import { startAutoAttendanceScheduler, stopAutoAttendanceScheduler } from './auto-attendance-scheduler.js';
 
 async function boot() {
   await loadCurrentUser();
@@ -74,6 +75,9 @@ async function boot() {
       showToast(`${notif.title}: ${notif.body}`, notif.type || 'info');
     });
     refreshNotifBadge();
+    if (user.role === 'boys_warden' || user.role === 'girls_warden' || user.role === 'admin') {
+      startAutoAttendanceScheduler(user);
+    }
   }
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN' && session?.user) {
@@ -83,6 +87,7 @@ async function boot() {
       refreshNotifBadge();
     }
     if (event === 'SIGNED_OUT') {
+      stopAutoAttendanceScheduler();
       const cur = getCurrentUser();
       if (cur) unsubscribeFromNotifications(cur.id);
       const badge = document.getElementById('notifBadge');
