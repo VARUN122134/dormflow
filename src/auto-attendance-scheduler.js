@@ -7,11 +7,10 @@ let monthlySaved = false;
 
 export function startAutoAttendanceScheduler(user) {
   if (!user) return;
-  const hostelType = user.role === 'boys_warden' ? 'Boys' : user.role === 'girls_warden' ? 'Girls' : null;
-  if (!hostelType && user.role !== 'admin') return;
+  if (user.role !== 'boys_warden' && user.role !== 'girls_warden' && user.role !== 'admin') return;
   if (intervalId) return;
 
-  const types = hostelType ? [hostelType] : ['Boys', 'Girls'];
+  const types = ['Boys', 'Girls'];
 
   intervalId = setInterval(async () => {
     try {
