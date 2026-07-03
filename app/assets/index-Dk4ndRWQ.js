@@ -2754,7 +2754,19 @@ Minimum version required to store current data is: `+c+`.
           <button class="btn btn-primary btn-sm" id="modalConfirm">Create</button>
         </div>
       </div>
-    `,document.body.appendChild(e),e.querySelector(`#modalCancel`).onclick=()=>e.remove(),e.querySelector(`#modalConfirm`).onclick=async()=>{let r=document.getElementById(`evTitle`).value.trim();if(!r){Q(`Title required`,`warning`);return}try{let{createEvent:a}=await i(async()=>{let{createEvent:e}=await Promise.resolve().then(()=>cg);return{createEvent:e}},void 0,import.meta.url);await a({title:r,description:document.getElementById(`evDesc`).value.trim(),eventDate:document.getElementById(`evDate`).value,eventTime:document.getElementById(`evTime`).value,venue:document.getElementById(`evVenue`).value.trim(),createdBy:t.id,type:document.getElementById(`evType`).value}),Q(`Event created!`,`success`),e.remove(),n()}catch(e){Q(e.message,`error`)}},e.onclick=t=>{t.target===e&&e.remove()}}function c(e){Q(`Mark attendance: select students from residents page`,`info`)}n()}async function gb(e){let t=vh();if(!t)return;let n=t.role===`boys_warden`?`Boys`:`Girls`,r=[];async function i(){let i=(await pg()).filter(e=>e.role===`student`&&e.hostelType===n&&e.isApproved);r=i;let o=[...new Set(i.map(e=>e.department).filter(Boolean))].sort(),s=new Date().toLocaleDateString(`en-IN`,{weekday:`long`,year:`numeric`,month:`long`,day:`numeric`}),c=i.filter(e=>e.activeStatus===`IN`),l=i.filter(e=>e.activeStatus===`OUT`);e.innerHTML=`
+    `,document.body.appendChild(e),e.querySelector(`#modalCancel`).onclick=()=>e.remove(),e.querySelector(`#modalConfirm`).onclick=async()=>{let r=document.getElementById(`evTitle`).value.trim();if(!r){Q(`Title required`,`warning`);return}try{let{createEvent:a}=await i(async()=>{let{createEvent:e}=await Promise.resolve().then(()=>cg);return{createEvent:e}},void 0,import.meta.url);await a({title:r,description:document.getElementById(`evDesc`).value.trim(),eventDate:document.getElementById(`evDate`).value,eventTime:document.getElementById(`evTime`).value,venue:document.getElementById(`evVenue`).value.trim(),createdBy:t.id,type:document.getElementById(`evType`).value}),Q(`Event created!`,`success`),e.remove(),n()}catch(e){Q(e.message,`error`)}},e.onclick=t=>{t.target===e&&e.remove()}}function c(e){Q(`Mark attendance: select students from residents page`,`info`)}n()}async function gb(e){let t=vh();if(!t)return;let n=t.role===`boys_warden`?`Boys`:`Girls`,r=[];async function i(){let i=(await pg()).filter(e=>e.role===`student`&&e.hostelType===n&&e.isApproved);r=i;let o=[...new Set(i.map(e=>e.department).filter(Boolean))].sort(),s=new Date().toLocaleDateString(`en-IN`,{weekday:`long`,year:`numeric`,month:`long`,day:`numeric`}),c=i.filter(e=>e.activeStatus===`IN`),l=i.filter(e=>e.activeStatus===`OUT`),u=``;try{let{data:e,error:t}=await X.storage.from(`attendance-snapshots`).list(``,{sortBy:{column:`name`,order:`desc`}});if(!t&&e){let t=e.filter(e=>e.name.startsWith(n.toLowerCase()));t.length>0&&(u=`
+            <div class="card" style="margin-bottom:12px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:8px;">Past Snapshots</div>
+              ${t.map(e=>{let{data:{publicUrl:t}}=X.storage.from(`attendance-snapshots`).getPublicUrl(e.name);return`
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--surface-container);">
+                    <span style="font-size:12px;">${e.name.replace(/^.+_(\d{4}-\d{2}-\d{2})\.csv$/,`$1`)}</span>
+                    <a href="${t}" target="_blank" class="btn btn-sm btn-primary" style="font-size:11px;padding:4px 8px;text-decoration:none;" download>
+                      <span class="material-icons-outlined" style="font-size:14px;">download</span> CSV
+                    </a>
+                  </div>
+                `}).join(``)}
+            </div>
+          `)}}catch{}e.innerHTML=`
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
@@ -2777,8 +2789,10 @@ Minimum version required to store current data is: `+c+`.
           </div>
 
           <button class="btn btn-primary btn-sm" id="downloadCsvBtn" style="width:100%;margin-bottom:16px;">
-            <span class="material-icons-outlined" style="font-size:18px;">download</span> Download Excel (.csv)
+            <span class="material-icons-outlined" style="font-size:18px;">download</span> Download & Save Today's CSV
           </button>
+
+          ${u}
 
           ${o.map(e=>{let t=i.filter(t=>t.department===e),n=[...new Set(t.map(e=>e.year).filter(Boolean))].sort();return`
               <div class="card" style="margin-bottom:12px;">
@@ -2815,7 +2829,7 @@ Minimum version required to store current data is: `+c+`.
         </div>
         ${Qh(`attendance`)}
       </div>
-    `,document.getElementById(`downloadCsvBtn`)?.addEventListener(`click`,a)}async function a(){let e=r;try{let t=await N_(n,e),r=new Blob([t],{type:`text/csv;charset=utf-8;`}),i=URL.createObjectURL(r),a=document.createElement(`a`);a.href=i;let o=new Date().toISOString().slice(0,10);a.download=`${n.toLowerCase()}_hostel_attendance_${o}.csv`,a.click(),URL.revokeObjectURL(i),Q(`Saved to server + downloaded`,`success`)}catch(e){Q(`Failed to save to server: `+e.message,`error`)}}i()}n();async function _b(e){let t=vh();if(!t)return;async function n(){let[n,i,a]=await Promise.all([c_(),g_(),__()]),s={total:n.length,available:n.filter(e=>e.status===`available`).length,occupied:n.filter(e=>e.status===`occupied`).length,maintenance:n.filter(e=>e.status===`maintenance`).length};e.innerHTML=`
+    `,document.getElementById(`downloadCsvBtn`)?.addEventListener(`click`,a)}async function a(){let e=r;try{let t=await N_(n,e),r=new Blob([t],{type:`text/csv;charset=utf-8;`}),a=URL.createObjectURL(r),o=document.createElement(`a`);o.href=a;let s=new Date().toISOString().slice(0,10);o.download=`${n.toLowerCase()}_hostel_attendance_${s}.csv`,o.click(),URL.revokeObjectURL(a),Q(`Saved & downloaded`,`success`),i()}catch(e){Q(`Error: `+e.message,`error`)}}i()}n();async function _b(e){let t=vh();if(!t)return;async function n(){let[n,i,a]=await Promise.all([c_(),g_(),__()]),s={total:n.length,available:n.filter(e=>e.status===`available`).length,occupied:n.filter(e=>e.status===`occupied`).length,maintenance:n.filter(e=>e.status===`maintenance`).length};e.innerHTML=`
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
