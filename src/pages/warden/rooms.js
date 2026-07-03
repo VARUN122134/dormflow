@@ -1,5 +1,5 @@
 import { getCurrentUser } from '../../auth.js';
-import { getRooms, getRoomAllocations, allocateRoom, vacateRoom } from '../../store.js';
+import { getRooms, getRoomAllocations, allocateRoom, vacateRoom, updateRoom } from '../../store.js';
 import { wardenNav, showToast, escapeHtml, renderNotifBell, renderAvatar } from '../../helpers.js';
 
 export default async function wardenRoomsPage(app) {
@@ -78,7 +78,7 @@ export default async function wardenRoomsPage(app) {
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div>
             <div style="font-size:16px;font-weight:700;">Room ${escapeHtml(room.roomNumber)}</div>
-            <div style="font-size:12px;color:var(--on-surface-variant);">${escapeHtml(room.blockName)} • Floor ${room.floor} • ${room.roomType} • Cap: ${room.capacity}</div>
+            <div style="font-size:12px;color:var(--on-surface-variant);">${escapeHtml(room.blockName)} • Floor ${room.floor} • ${room.roomType} • Cap: ${room.capacity} <button class="btn btn-sm btn-ghost editCapacity" data-room-id="${room.id}" data-capacity="${room.capacity}" style="font-size:10px;padding:0 4px;min-width:auto;vertical-align:middle;">edit</button></div>
             <div style="margin-top:4px;">
               <span class="chip ${room.status === 'available' ? 'chip-approved' : room.status === 'occupied' ? 'chip-info' : room.status === 'maintenance' ? 'chip-pending' : 'chip-neutral'}">${room.status}</span>
             </div>
@@ -106,6 +106,9 @@ export default async function wardenRoomsPage(app) {
     });
     app.querySelectorAll('.removeResident').forEach(btn => {
       btn.onclick = () => showRemoveResidentModal(btn.dataset.allocId, btn.dataset.roomId, btn.dataset.studentId);
+    });
+    app.querySelectorAll('.editCapacity').forEach(btn => {
+      btn.onclick = () => showCapacityModal(btn.dataset.roomId, parseInt(btn.dataset.capacity));
     });
   }
 
@@ -147,6 +150,40 @@ export default async function wardenRoomsPage(app) {
       try {
         await allocateRoom(roomId, sid, user.id);
         showToast('Room allocated!', 'success');
+        backdrop.remove();
+        render();
+      } catch (e) { showToast(e.message, 'error'); }
+    };
+    backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+  }
+
+  function showCapacityModal(roomId, currentCap) {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-title">Edit Room Capacity</div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Capacity (1-8)</label>
+            <select class="form-input" id="wardenCapacitySelect">
+              ${[1,2,3,4,5,6,7,8].map(n => `<option value="${n}"${n===currentCap?' selected':''}>${n} Member${n>1?'s':''}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
+          <button class="btn btn-primary btn-sm" id="modalConfirm">Save</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(backdrop);
+    backdrop.querySelector('#modalCancel').onclick = () => backdrop.remove();
+    backdrop.querySelector('#modalConfirm').onclick = async () => {
+      const cap = parseInt(document.getElementById('wardenCapacitySelect').value);
+      try {
+        await updateRoom(roomId, { capacity: cap });
+        showToast('Capacity updated', 'success');
         backdrop.remove();
         render();
       } catch (e) { showToast(e.message, 'error'); }

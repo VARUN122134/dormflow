@@ -2597,7 +2597,7 @@ Minimum version required to store current data is: `+c+`.
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div>
             <div style="font-size:16px;font-weight:700;">Room ${Z(e.roomNumber)}</div>
-            <div style="font-size:12px;color:var(--on-surface-variant);">${Z(e.blockName)} • Floor ${e.floor} • ${e.roomType} • Cap: ${e.capacity}</div>
+            <div style="font-size:12px;color:var(--on-surface-variant);">${Z(e.blockName)} • Floor ${e.floor} • ${e.roomType} • Cap: ${e.capacity} <button class="btn btn-sm btn-ghost editCapacity" data-room-id="${e.id}" data-capacity="${e.capacity}" style="font-size:10px;padding:0 4px;min-width:auto;vertical-align:middle;">edit</button></div>
             <div style="margin-top:4px;">
               <span class="chip ${e.status===`available`?`chip-approved`:e.status===`occupied`?`chip-info`:e.status===`maintenance`?`chip-pending`:`chip-neutral`}">${e.status}</span>
             </div>
@@ -2616,7 +2616,7 @@ Minimum version required to store current data is: `+c+`.
           </div>
         </div>
       </div>
-    `}function o(){e.querySelectorAll(`.allocateRoom`).forEach(e=>{e.onclick=()=>s(e.dataset.roomId)}),e.querySelectorAll(`.removeResident`).forEach(e=>{e.onclick=()=>c(e.dataset.allocId,e.dataset.roomId,e.dataset.studentId)})}function s(e){let n=document.createElement(`div`);n.className=`modal-backdrop`,n.innerHTML=`
+    `}function o(){e.querySelectorAll(`.allocateRoom`).forEach(e=>{e.onclick=()=>s(e.dataset.roomId)}),e.querySelectorAll(`.removeResident`).forEach(e=>{e.onclick=()=>l(e.dataset.allocId,e.dataset.roomId,e.dataset.studentId)}),e.querySelectorAll(`.editCapacity`).forEach(e=>{e.onclick=()=>c(e.dataset.roomId,parseInt(e.dataset.capacity))})}function s(e){let n=document.createElement(`div`);n.className=`modal-backdrop`,n.innerHTML=`
       <div class="modal">
         <div class="modal-title">Allocate Room</div>
         <div class="modal-body">
@@ -2631,7 +2631,23 @@ Minimum version required to store current data is: `+c+`.
           <button class="btn btn-primary btn-sm" id="modalConfirm">Allocate</button>
         </div>
       </div>
-    `,document.body.appendChild(n),n.querySelector(`#wardenAllocStudentId`).addEventListener(`input`,async e=>{let t=e.target.value.trim();if(!(t.length<10))try{let{getUserById:e}=await i(async()=>{let{getUserById:e}=await Promise.resolve().then(()=>cg);return{getUserById:e}},void 0,import.meta.url),n=await e(t);document.getElementById(`wardenAllocPreview`).textContent=n?`Student: ${n.name} (${n.department||`N/A`})`:`Student not found`}catch{}}),n.querySelector(`#modalCancel`).onclick=()=>n.remove(),n.querySelector(`#modalConfirm`).onclick=async()=>{let i=document.getElementById(`wardenAllocStudentId`).value.trim();if(!i){Q(`Enter student ID`,`warning`);return}try{await p_(e,i,t.id),Q(`Room allocated!`,`success`),n.remove(),r()}catch(e){Q(e.message,`error`)}},n.onclick=e=>{e.target===n&&n.remove()}}function c(e,t,n){let i=document.createElement(`div`);i.className=`modal-backdrop`,i.innerHTML=`
+    `,document.body.appendChild(n),n.querySelector(`#wardenAllocStudentId`).addEventListener(`input`,async e=>{let t=e.target.value.trim();if(!(t.length<10))try{let{getUserById:e}=await i(async()=>{let{getUserById:e}=await Promise.resolve().then(()=>cg);return{getUserById:e}},void 0,import.meta.url),n=await e(t);document.getElementById(`wardenAllocPreview`).textContent=n?`Student: ${n.name} (${n.department||`N/A`})`:`Student not found`}catch{}}),n.querySelector(`#modalCancel`).onclick=()=>n.remove(),n.querySelector(`#modalConfirm`).onclick=async()=>{let i=document.getElementById(`wardenAllocStudentId`).value.trim();if(!i){Q(`Enter student ID`,`warning`);return}try{await p_(e,i,t.id),Q(`Room allocated!`,`success`),n.remove(),r()}catch(e){Q(e.message,`error`)}},n.onclick=e=>{e.target===n&&n.remove()}}function c(e,t){let n=document.createElement(`div`);n.className=`modal-backdrop`,n.innerHTML=`
+      <div class="modal">
+        <div class="modal-title">Edit Room Capacity</div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Capacity (1-8)</label>
+            <select class="form-input" id="wardenCapacitySelect">
+              ${[1,2,3,4,5,6,7,8].map(e=>`<option value="${e}"${e===t?` selected`:``}>${e} Member${e>1?`s`:``}</option>`).join(``)}
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
+          <button class="btn btn-primary btn-sm" id="modalConfirm">Save</button>
+        </div>
+      </div>
+    `,document.body.appendChild(n),n.querySelector(`#modalCancel`).onclick=()=>n.remove(),n.querySelector(`#modalConfirm`).onclick=async()=>{let t=parseInt(document.getElementById(`wardenCapacitySelect`).value);try{await d_(e,{capacity:t}),Q(`Capacity updated`,`success`),n.remove(),r()}catch(e){Q(e.message,`error`)}},n.onclick=e=>{e.target===n&&n.remove()}}function l(e,t,n){let i=document.createElement(`div`);i.className=`modal-backdrop`,i.innerHTML=`
       <div class="modal">
         <div class="modal-title">Remove Resident</div>
         <div class="modal-body">Remove this resident from the room?</div>
@@ -2856,7 +2872,7 @@ Minimum version required to store current data is: `+c+`.
           <div class="form-group">
             <label class="form-label">Capacity (1-8)</label>
             <select class="form-input" id="rCapacity">
-              ${[1,2,3,4,5,6,7,8].map(e=>`<option value="${e}"${e===2?` selected`:``}>${e} Member${e>1?`s`:``}</option>`).join(``)}
+              ${[1,2,3,4,5,6,7,8].map(e=>`<option value="${e}"${e===4?` selected`:``}>${e} Member${e>1?`s`:``}</option>`).join(``)}
             </select>
           </div>
           <div class="form-group">

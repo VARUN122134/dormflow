@@ -230,7 +230,7 @@ export default async function adminRoomsPage(app) {
           <div class="form-group">
             <label class="form-label">Capacity (1-8)</label>
             <select class="form-input" id="rCapacity">
-              ${[1,2,3,4,5,6,7,8].map(n => `<option value="${n}"${n===2?' selected':''}>${n} Member${n>1?'s':''}</option>`).join('')}
+              ${[1,2,3,4,5,6,7,8].map(n => `<option value="${n}"${n===4?' selected':''}>${n} Member${n>1?'s':''}</option>`).join('')}
             </select>
           </div>
           <div class="form-group">
