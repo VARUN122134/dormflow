@@ -235,6 +235,21 @@ export default async function gateDashboard(app) {
         </div>
       `;
       refreshActivityLog();
+      // Show success overlay for 150ms then go back
+      const overlay = document.createElement('div');
+      overlay.id = 'scanSuccessOverlay';
+      overlay.innerHTML = `
+        <div style="position:fixed;inset:0;z-index:9999;background:rgba(22,163,74,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn 0.15s ease forwards;">
+          <span class="material-icons-outlined" style="font-size:80px;color:#fff;animation:scaleIn 0.15s ease forwards;">check_circle</span>
+          <p style="color:#fff;font-size:20px;font-weight:600;margin-top:12px;">${result.action === 'DEPARTURE' ? 'Checked OUT' : 'Checked IN'}</p>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      setTimeout(() => {
+        const o = document.getElementById('scanSuccessOverlay');
+        if (o) o.remove();
+        window.history.back();
+      }, 150);
     } else {
       showToast(result.error, 'error');
       resultDiv.innerHTML = `

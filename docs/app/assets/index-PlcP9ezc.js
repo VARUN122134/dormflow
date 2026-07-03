@@ -1151,7 +1151,7 @@ Minimum version required to store current data is: `+c+`.
       <div style="text-align:center;padding:var(--space-md);">
         <p class="body-md">Processing scan, please wait...</p>
       </div>
-    `;let r=await Ag(e,t.id);if(!r.success&&!e.startsWith(`UCEIT`)&&!e.startsWith(`DORMFLOW`)){let n=(await Dg()).find(t=>t.passId===e);n&&(r=await Ag(n.qrData,t.id))}r.success?(Q(r.message,`success`),n.innerHTML=`
+    `;let r=await Ag(e,t.id);if(!r.success&&!e.startsWith(`UCEIT`)&&!e.startsWith(`DORMFLOW`)){let n=(await Dg()).find(t=>t.passId===e);n&&(r=await Ag(n.qrData,t.id))}if(r.success){Q(r.message,`success`),n.innerHTML=`
         <div class="scan-result scan-success animate-scale-in" style="margin-bottom:var(--space-md); padding: var(--space-md);">
           <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-md); text-align: left;">
             ${qh(r.student,`profile-avatar-large`)}
@@ -1170,13 +1170,18 @@ Minimum version required to store current data is: `+c+`.
             </div>
           </div>
         </div>
-      `,s()):(Q(r.error,`error`),n.innerHTML=`
+      `,s();let e=document.createElement(`div`);e.id=`scanSuccessOverlay`,e.innerHTML=`
+        <div style="position:fixed;inset:0;z-index:9999;background:rgba(22,163,74,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn 0.15s ease forwards;">
+          <span class="material-icons-outlined" style="font-size:80px;color:#fff;animation:scaleIn 0.15s ease forwards;">check_circle</span>
+          <p style="color:#fff;font-size:20px;font-weight:600;margin-top:12px;">${r.action===`DEPARTURE`?`Checked OUT`:`Checked IN`}</p>
+        </div>
+      `,document.body.appendChild(e),setTimeout(()=>{let e=document.getElementById(`scanSuccessOverlay`);e&&e.remove(),window.history.back()},150)}else Q(r.error,`error`),n.innerHTML=`
         <div class="scan-result scan-error animate-scale-in" style="margin-bottom:var(--space-md);">
           <span class="material-icons-outlined" style="font-size:48px;">error</span>
           <h3 style="margin:var(--space-sm) 0;">Scan Failed</h3>
           <p>${r.error}</p>
         </div>
-      `);let a=document.getElementById(`manualInput`);a&&(a.value=``),setTimeout(()=>{let e=document.getElementById(`scanResult`);e&&(e.innerHTML=``),i=!1},3e3)}return()=>{n&&By(n)}}async function qy(e){let t=await Pg(30);e.innerHTML=`
+      `;let a=document.getElementById(`manualInput`);a&&(a.value=``),setTimeout(()=>{let e=document.getElementById(`scanResult`);e&&(e.innerHTML=``),i=!1},3e3)}return()=>{n&&By(n)}}async function qy(e){let t=await Pg(30);e.innerHTML=`
     ${ng(`Gate History`,`All scan records`)}
     <div class="page">
       <div class="card">
