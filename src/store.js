@@ -1266,13 +1266,12 @@ export async function saveAttendanceSnapshot(hostelType, students) {
     });
   });
 
-  const { error } = await supabase.from('daily_attendance_logs').insert({
-    hostel_type: hostelType,
-    csv_content: csv,
-    total_count: students.length,
-    present_count: present.length,
-    absent_count: absent.length,
-  });
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const fileName = `${hostelType.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const file = new File([blob], fileName, { type: 'text/csv' });
+
+  const { error } = await supabase.storage.from('attendance-snapshots').upload(fileName, file, { upsert: true });
   if (error) throw error;
   return csv;
 }
