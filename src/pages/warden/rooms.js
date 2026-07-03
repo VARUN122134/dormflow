@@ -120,10 +120,11 @@ export default async function wardenRoomsPage(app) {
         <div class="modal-title">Allocate Room</div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Student ID (UUID)</label>
-            <input class="form-input" id="wardenAllocStudentId" placeholder="Paste student UUID">
+            <label class="form-label">Student Register Number</label>
+            <input class="form-input" id="wardenAllocRegNo" placeholder="e.g. 412322244001" maxlength="12">
           </div>
           <div id="wardenAllocPreview" style="font-size:12px;color:var(--on-surface-variant);margin-top:4px;"></div>
+          <input type="hidden" id="wardenAllocStudentId" />
         </div>
         <div class="modal-actions">
           <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
@@ -133,22 +134,37 @@ export default async function wardenRoomsPage(app) {
     `;
     document.body.appendChild(backdrop);
 
-    backdrop.querySelector('#wardenAllocStudentId').addEventListener('input', async (e) => {
-      const sid = e.target.value.trim();
-      if (sid.length < 10) return;
-      try {
-        const { getUserById } = await import('../../store.js');
-        const s = await getUserById(sid);
-        document.getElementById('wardenAllocPreview').textContent = s ? `Student: ${s.name} (${s.department || 'N/A'})` : 'Student not found';
-      } catch { /* silent */ }
+    const regInput = backdrop.querySelector('#wardenAllocRegNo');
+    let lookupTimeout;
+    regInput.addEventListener('input', () => {
+      clearTimeout(lookupTimeout);
+      const regNo = regInput.value.trim();
+      document.getElementById('wardenAllocPreview').textContent = '';
+      document.getElementById('wardenAllocStudentId').value = '';
+      if (regNo.length < 10) return;
+      lookupTimeout = setTimeout(async () => {
+        try {
+          const { getUserByRegNo } = await import('../../store.js');
+          const s = await getUserByRegNo(regNo);
+          const preview = document.getElementById('wardenAllocPreview');
+          if (s) {
+            preview.textContent = `Student: ${s.name} (${s.department || 'N/A'})`;
+            preview.style.color = 'var(--status-success)';
+            document.getElementById('wardenAllocStudentId').value = s.id;
+          } else {
+            preview.textContent = 'Student not found with this register number';
+            preview.style.color = 'var(--error)';
+          }
+        } catch { /* silent */ }
+      }, 300);
     });
 
     backdrop.querySelector('#modalCancel').onclick = () => backdrop.remove();
     backdrop.querySelector('#modalConfirm').onclick = async () => {
-      const sid = document.getElementById('wardenAllocStudentId').value.trim();
-      if (!sid) { showToast('Enter student ID', 'warning'); return; }
+      const studentId = document.getElementById('wardenAllocStudentId').value;
+      if (!studentId) { showToast('Enter a valid register number first', 'warning'); return; }
       try {
-        await allocateRoom(roomId, sid, user.id);
+        await allocateRoom(roomId, studentId, user.id);
         showToast('Room allocated!', 'success');
         backdrop.remove();
         render();
