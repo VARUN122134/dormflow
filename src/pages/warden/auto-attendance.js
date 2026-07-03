@@ -1,5 +1,5 @@
 import { getCurrentUser } from '../../auth.js';
-import { getUsers } from '../../store.js';
+import { getUsers, saveAttendanceSnapshot } from '../../store.js';
 import { wardenNav, showToast, escapeHtml, renderAvatar } from '../../helpers.js';
 
 export default async function wardenAutoAttendance(app) {
@@ -94,32 +94,22 @@ export default async function wardenAutoAttendance(app) {
     document.getElementById('downloadCsvBtn')?.addEventListener('click', downloadCsv);
   }
 
-  function downloadCsv() {
+  async function downloadCsv() {
     const students = cachedStudents;
-    const depts = [...new Set(students.map(s => s.department).filter(Boolean))].sort();
-
-    let csv = `Department,Year,Name,Register Number,Room,Status\n`;
-    depts.forEach(dept => {
-      const deptStudents = students.filter(s => s.department === dept);
-      const years = [...new Set(deptStudents.map(s => s.year).filter(Boolean))].sort();
-      years.forEach(year => {
-        const yrStudents = deptStudents.filter(s => s.year === year);
-        yrStudents.forEach(s => {
-          const status = s.activeStatus === 'IN' ? 'Present' : 'Absent';
-          csv += `"${dept}","${year}","${s.name}","${s.registrationNo}","${s.roomNumber || ''}","${status}"\n`;
-        });
-      });
-    });
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const dateStr = new Date().toISOString().slice(0, 10);
-    a.download = `${hostelType.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('Download started', 'success');
+    try {
+      const csv = await saveAttendanceSnapshot(hostelType, students);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const dateStr = new Date().toISOString().slice(0, 10);
+      a.download = `${hostelType.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Saved to server + downloaded', 'success');
+    } catch (e) {
+      showToast('Failed to save to server: ' + e.message, 'error');
+    }
   }
 
   render();

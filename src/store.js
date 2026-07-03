@@ -1250,6 +1250,33 @@ export async function markEventAttendance(eventId, studentIds, markedBy) {
   return data;
 }
 
+export async function saveAttendanceSnapshot(hostelType, students) {
+  const present = students.filter(s => s.activeStatus === 'IN');
+  const absent = students.filter(s => s.activeStatus === 'OUT');
+  const depts = [...new Set(students.map(s => s.department).filter(Boolean))].sort();
+
+  let csv = `Department,Year,Name,Register Number,Room,Status\n`;
+  depts.forEach(dept => {
+    const deptStudents = students.filter(s => s.department === dept);
+    const years = [...new Set(deptStudents.map(s => s.year).filter(Boolean))].sort();
+    years.forEach(year => {
+      deptStudents.filter(s => s.year === year).forEach(s => {
+        csv += `"${dept}","${year}","${s.name}","${s.registrationNo}","${s.roomNumber || ''}","${s.activeStatus === 'IN' ? 'Present' : 'Absent'}"\n`;
+      });
+    });
+  });
+
+  const { error } = await supabase.from('daily_attendance_logs').insert({
+    hostel_type: hostelType,
+    csv_content: csv,
+    total_count: students.length,
+    present_count: present.length,
+    absent_count: absent.length,
+  });
+  if (error) throw error;
+  return csv;
+}
+
 
 /* ========================================
    NOTIFICATIONS
