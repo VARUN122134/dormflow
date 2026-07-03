@@ -1,6 +1,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { getUsers, saveAttendanceSnapshot } from '../../store.js';
 import { wardenNav, showToast, escapeHtml, renderAvatar } from '../../helpers.js';
+import { supabase } from '../../supabase.js';
 
 export default async function wardenAutoAttendance(app) {
   const user = getCurrentUser();
@@ -18,6 +19,33 @@ export default async function wardenAutoAttendance(app) {
 
     const present = students.filter(s => s.activeStatus === 'IN');
     const absent = students.filter(s => s.activeStatus === 'OUT');
+
+    let snapshotsHtml = '';
+    try {
+      const { data: files, error } = await supabase.storage.from('attendance-snapshots').list('', { sortBy: { column: 'name', order: 'desc' } });
+      if (!error && files) {
+        const hostelFiles = files.filter(f => f.name.startsWith(hostelType.toLowerCase()));
+        if (hostelFiles.length > 0) {
+          snapshotsHtml = `
+            <div class="card" style="margin-bottom:12px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:8px;">Past Snapshots</div>
+              ${hostelFiles.map(f => {
+                const { data: { publicUrl } } = supabase.storage.from('attendance-snapshots').getPublicUrl(f.name);
+                const datePart = f.name.replace(/^.+_(\d{4}-\d{2}-\d{2})\.csv$/, '$1');
+                return `
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--surface-container);">
+                    <span style="font-size:12px;">${datePart}</span>
+                    <a href="${publicUrl}" target="_blank" class="btn btn-sm btn-primary" style="font-size:11px;padding:4px 8px;text-decoration:none;" download>
+                      <span class="material-icons-outlined" style="font-size:14px;">download</span> CSV
+                    </a>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+      }
+    } catch {}
 
     app.innerHTML = `
       <div class="page-container">
@@ -42,8 +70,10 @@ export default async function wardenAutoAttendance(app) {
           </div>
 
           <button class="btn btn-primary btn-sm" id="downloadCsvBtn" style="width:100%;margin-bottom:16px;">
-            <span class="material-icons-outlined" style="font-size:18px;">download</span> Download Excel (.csv)
+            <span class="material-icons-outlined" style="font-size:18px;">download</span> Download & Save Today's CSV
           </button>
+
+          ${snapshotsHtml}
 
           ${depts.map(dept => {
             const deptStudents = students.filter(s => s.department === dept);
@@ -106,9 +136,10 @@ export default async function wardenAutoAttendance(app) {
       a.download = `${hostelType.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      showToast('Saved to server + downloaded', 'success');
+      showToast('Saved & downloaded', 'success');
+      render();
     } catch (e) {
-      showToast('Failed to save to server: ' + e.message, 'error');
+      showToast('Error: ' + e.message, 'error');
     }
   }
 
