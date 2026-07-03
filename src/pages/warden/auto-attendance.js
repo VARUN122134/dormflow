@@ -139,7 +139,8 @@ export default async function wardenAutoAttendance(app) {
       showToast('Saved & downloaded', 'success');
       render();
     } catch (e) {
-      showToast('Error: ' + e.message, 'error');
+      showToast('Save failed: ' + e.message, 'error');
+      console.error('Attendance save error:', e);
     }
   }
 
