@@ -111,7 +111,7 @@ export default async function wardenDashboard(app) {
             <span class="material-icons-outlined">meeting_room</span>
             <div class="feature-label">Rooms</div>
           </a>
-          <a href="#/warden/attendance" class="feature-card">
+          <a href="#/warden/auto-attendance" class="feature-card">
             <span class="material-icons-outlined">fact_check</span>
             <div class="feature-label">Attendance</div>
           </a>
