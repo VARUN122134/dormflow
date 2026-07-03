@@ -916,7 +916,7 @@ export async function getAvailableRooms(genderType, blockName) {
 export async function allocateRoom(roomId, studentId, approvedBy) {
   const { data: room } = await supabase.from('rooms').select('*').eq('id', roomId).single();
   if (!room) throw new Error('Room not found');
-  if (room.status !== 'available') throw new Error('Room is not available');
+  if (room.status !== 'available' && room.status !== 'occupied') throw new Error('Room is not available');
 
   const { data: existing } = await supabase.from('room_allocations').select('id').eq('student_id', studentId).eq('is_current', true).maybeSingle();
   if (existing) throw new Error('Student already has an active room allocation');

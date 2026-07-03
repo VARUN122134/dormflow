@@ -239,8 +239,8 @@ export default async function gateDashboard(app) {
       const overlay = document.createElement('div');
       overlay.id = 'scanSuccessOverlay';
       overlay.innerHTML = `
-        <div style="position:fixed;inset:0;z-index:9999;background:rgba(22,163,74,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn 0.15s ease forwards;">
-          <span class="material-icons-outlined" style="font-size:80px;color:#fff;animation:scaleIn 0.15s ease forwards;">check_circle</span>
+        <div style="position:fixed;inset:0;z-index:9999;background:rgba(22,163,74,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn 0.3s ease forwards;">
+          <span class="material-icons-outlined" style="font-size:80px;color:#fff;animation:scaleIn 0.3s ease forwards;">check_circle</span>
           <p style="color:#fff;font-size:20px;font-weight:600;margin-top:12px;">${result.action === 'DEPARTURE' ? 'Checked OUT' : 'Checked IN'}</p>
         </div>
       `;
@@ -249,7 +249,7 @@ export default async function gateDashboard(app) {
         const o = document.getElementById('scanSuccessOverlay');
         if (o) o.remove();
         window.history.back();
-      }, 150);
+      }, 300);
     } else {
       showToast(result.error, 'error');
       resultDiv.innerHTML = `

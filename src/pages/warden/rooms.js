@@ -84,14 +84,16 @@ export default async function wardenRoomsPage(app) {
             </div>
             ${residents.length > 0 ? `
               <div style="margin-top:6px;font-size:12px;color:var(--on-surface-variant);">
-                <strong>Residents:</strong>
-                ${residents.map(a => `<div>• ${escapeHtml(a.student?.name || 'Unknown')}</div>`).join('')}
+                <strong>Residents (${residents.length}/${room.capacity}):</strong>
+                ${residents.map(a => `<div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                  <span>• ${escapeHtml(a.student?.name || 'Unknown')}</span>
+                  <button class="btn btn-sm btn-ghost removeResident" data-alloc-id="${a.id}" data-room-id="${room.id}" data-student-id="${a.studentId}" style="color:var(--status-danger);font-size:11px;padding:2px 6px;min-width:auto;">Remove</button>
+                </div>`).join('')}
               </div>
-            ` : ''}
+            ` : `<div style="margin-top:6px;font-size:12px;color:var(--outline-variant);">No residents</div>`}
           </div>
           <div style="display:flex;gap:4px;flex-shrink:0;">
-            ${room.status === 'available' ? `<button class="btn btn-sm btn-primary allocateRoom" data-room-id="${room.id}">Allocate</button>` : ''}
-            ${room.status === 'occupied' ? `<button class="btn btn-sm btn-ghost vacateRoom" data-room-id="${room.id}" style="color:var(--status-warning);">Vacate</button>` : ''}
+            ${(room.status === 'available' || room.status === 'occupied') && residents.length < room.capacity ? `<button class="btn btn-sm btn-primary allocateRoom" data-room-id="${room.id}">Allocate</button>` : ''}
           </div>
         </div>
       </div>
@@ -102,8 +104,8 @@ export default async function wardenRoomsPage(app) {
     app.querySelectorAll('.allocateRoom').forEach(btn => {
       btn.onclick = () => showAllocateModal(btn.dataset.roomId);
     });
-    app.querySelectorAll('.vacateRoom').forEach(btn => {
-      btn.onclick = () => showVacateModal(btn.dataset.roomId);
+    app.querySelectorAll('.removeResident').forEach(btn => {
+      btn.onclick = () => showRemoveResidentModal(btn.dataset.allocId, btn.dataset.roomId, btn.dataset.studentId);
     });
   }
 
@@ -152,29 +154,28 @@ export default async function wardenRoomsPage(app) {
     backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
   }
 
-  function showVacateModal(roomId) {
+  function showRemoveResidentModal(allocId, roomId, studentId) {
     const backdrop = document.createElement('div');
     backdrop.className = 'modal-backdrop';
     backdrop.innerHTML = `
       <div class="modal">
-        <div class="modal-title">Vacate Room</div>
-        <div class="modal-body">Remove all residents from this room?</div>
+        <div class="modal-title">Remove Resident</div>
+        <div class="modal-body">Remove this resident from the room?</div>
         <div class="modal-actions">
           <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
-          <button class="btn btn-danger btn-sm" id="modalConfirm">Vacate</button>
+          <button class="btn btn-danger btn-sm" id="modalConfirm">Remove</button>
         </div>
       </div>
     `;
     document.body.appendChild(backdrop);
     backdrop.querySelector('#modalCancel').onclick = () => backdrop.remove();
     backdrop.querySelector('#modalConfirm').onclick = async () => {
-      const allocs = await getRoomAllocations({ roomId });
-      for (const a of allocs.filter(x => x.isCurrent)) {
-        await vacateRoom(a.id, roomId, a.studentId);
-      }
-      showToast('Room vacated', 'success');
-      backdrop.remove();
-      render();
+      try {
+        await vacateRoom(allocId, roomId, studentId);
+        showToast('Resident removed', 'success');
+        backdrop.remove();
+        render();
+      } catch (e) { showToast(e.message, 'error'); }
     };
     backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
   }
