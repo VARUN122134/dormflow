@@ -2621,17 +2621,18 @@ Minimum version required to store current data is: `+c+`.
         <div class="modal-title">Allocate Room</div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Student ID (UUID)</label>
-            <input class="form-input" id="wardenAllocStudentId" placeholder="Paste student UUID">
+            <label class="form-label">Student Register Number</label>
+            <input class="form-input" id="wardenAllocRegNo" placeholder="e.g. 412322244001" maxlength="12">
           </div>
           <div id="wardenAllocPreview" style="font-size:12px;color:var(--on-surface-variant);margin-top:4px;"></div>
+          <input type="hidden" id="wardenAllocStudentId" />
         </div>
         <div class="modal-actions">
           <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
           <button class="btn btn-primary btn-sm" id="modalConfirm">Allocate</button>
         </div>
       </div>
-    `,document.body.appendChild(n),n.querySelector(`#wardenAllocStudentId`).addEventListener(`input`,async e=>{let t=e.target.value.trim();if(!(t.length<10))try{let{getUserById:e}=await i(async()=>{let{getUserById:e}=await Promise.resolve().then(()=>cg);return{getUserById:e}},void 0,import.meta.url),n=await e(t);document.getElementById(`wardenAllocPreview`).textContent=n?`Student: ${n.name} (${n.department||`N/A`})`:`Student not found`}catch{}}),n.querySelector(`#modalCancel`).onclick=()=>n.remove(),n.querySelector(`#modalConfirm`).onclick=async()=>{let i=document.getElementById(`wardenAllocStudentId`).value.trim();if(!i){Q(`Enter student ID`,`warning`);return}try{await p_(e,i,t.id),Q(`Room allocated!`,`success`),n.remove(),r()}catch(e){Q(e.message,`error`)}},n.onclick=e=>{e.target===n&&n.remove()}}function c(e,t){let n=document.createElement(`div`);n.className=`modal-backdrop`,n.innerHTML=`
+    `,document.body.appendChild(n);let a=n.querySelector(`#wardenAllocRegNo`),o;a.addEventListener(`input`,()=>{clearTimeout(o);let e=a.value.trim();document.getElementById(`wardenAllocPreview`).textContent=``,document.getElementById(`wardenAllocStudentId`).value=``,!(e.length<10)&&(o=setTimeout(async()=>{try{let{getUserByRegNo:t}=await i(async()=>{let{getUserByRegNo:e}=await Promise.resolve().then(()=>cg);return{getUserByRegNo:e}},void 0,import.meta.url),n=await t(e),r=document.getElementById(`wardenAllocPreview`);n?(r.textContent=`Student: ${n.name} (${n.department||`N/A`})`,r.style.color=`var(--status-success)`,document.getElementById(`wardenAllocStudentId`).value=n.id):(r.textContent=`Student not found with this register number`,r.style.color=`var(--error)`)}catch{}},300))}),n.querySelector(`#modalCancel`).onclick=()=>n.remove(),n.querySelector(`#modalConfirm`).onclick=async()=>{let i=document.getElementById(`wardenAllocStudentId`).value;if(!i){Q(`Enter a valid register number first`,`warning`);return}try{await p_(e,i,t.id),Q(`Room allocated!`,`success`),n.remove(),r()}catch(e){Q(e.message,`error`)}},n.onclick=e=>{e.target===n&&n.remove()}}function c(e,t){let n=document.createElement(`div`);n.className=`modal-backdrop`,n.innerHTML=`
       <div class="modal">
         <div class="modal-title">Edit Room Capacity</div>
         <div class="modal-body">
