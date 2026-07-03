@@ -54,6 +54,7 @@ import studentNotificationsPage from './pages/student/notifications.js';
 
 import wardenRoomsPage from './pages/warden/rooms.js';
 import wardenAttendancePage from './pages/warden/attendance.js';
+import wardenAutoAttendancePage from './pages/warden/auto-attendance.js';
 
 import adminRoomsPage from './pages/admin/rooms.js';
 import adminComplaintsPage from './pages/admin/complaints.js';
@@ -146,6 +147,7 @@ registerRoute('#/admin/complaints', adminComplaintsPage);
 // v5 Attendance
 registerRoute('#/student/attendance', studentAttendancePage);
 registerRoute('#/warden/attendance', wardenAttendancePage);
+registerRoute('#/warden/auto-attendance', wardenAutoAttendancePage);
 registerRoute('#/mess/attendance', messAttendancePage);
 
 // v5 Notifications

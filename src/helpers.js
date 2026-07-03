@@ -138,7 +138,7 @@ export function wardenNav(active) {
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/warden/dashboard' },
     { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/warden/requests' },
     { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/warden/rooms' },
-    { id: 'announce', icon: 'campaign', label: 'Announce', route: '#/warden/announcements' },
+    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/warden/auto-attendance' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/warden/profile' },
   ]);
 }
