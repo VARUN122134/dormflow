@@ -98,11 +98,14 @@ export default async function adminMess(app) {
     app.querySelectorAll('.mess-member-toggle').forEach(cb => {
       cb.onchange = async () => {
         try {
+          cb.disabled = true;
           await toggleMessMember(cb.dataset.userId, cb.checked);
           showToast(cb.checked ? 'Mess member added' : 'Mess member removed', 'success');
+          await render();
         } catch (e) {
           showToast(e.message || 'Failed to update', 'error');
           cb.checked = !cb.checked;
+          cb.disabled = false;
         }
       };
     });
@@ -110,11 +113,13 @@ export default async function adminMess(app) {
     app.querySelectorAll('.remove-member-btn').forEach(btn => {
       btn.onclick = async () => {
         try {
+          btn.disabled = true;
           await toggleMessMember(btn.dataset.userId, false);
           showToast('Mess member removed', 'success');
-          document.getElementById('tabMembers').click();
+          await render();
         } catch (e) {
           showToast(e.message || 'Failed to remove', 'error');
+          btn.disabled = false;
         }
       };
     });
