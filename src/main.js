@@ -61,6 +61,13 @@ import adminComplaintsPage from './pages/admin/complaints.js';
 import adminNotificationsPage from './pages/admin/notifications.js';
 
 import messAttendancePage from './pages/mess/attendance.js';
+import messStockPage from './pages/mess/stock.js';
+import messUsagePage from './pages/mess/usage.js';
+import messBillPage from './pages/mess/bill.js';
+import messWalletsPage from './pages/mess/wallets.js';
+import messReportsPage from './pages/mess/reports.js';
+
+import studentWalletPage from './pages/student/wallet.js';
 
 import { supabase } from './supabase.js';
 import { subscribeToNotifications, unsubscribeFromNotifications } from './realtime.js';
@@ -75,7 +82,7 @@ async function boot() {
       showToast(`${notif.title}: ${notif.body}`, notif.type || 'info');
     });
     refreshNotifBadge();
-    if (user.role === 'boys_warden' || user.role === 'girls_warden' || user.role === 'admin') {
+    if (['boys_warden', 'girls_warden', 'admin', 'mess_incharge'].includes(user.role)) {
       startAutoAttendanceScheduler(user);
     }
   }
@@ -148,6 +155,15 @@ registerRoute('#/admin/rooms', adminRoomsPage);
 // v5 Complaint/Feedback
 registerRoute('#/student/complaints', studentComplaintsPage);
 registerRoute('#/admin/complaints', adminComplaintsPage);
+
+// Mess Wallet & Stock
+registerRoute('#/mess/stock', messStockPage);
+registerRoute('#/mess/usage', messUsagePage);
+registerRoute('#/mess/bill', messBillPage);
+registerRoute('#/mess/wallets', messWalletsPage);
+registerRoute('#/mess/reports', messReportsPage);
+
+registerRoute('#/student/wallet', studentWalletPage);
 
 // v5 Attendance
 registerRoute('#/student/attendance', studentAttendancePage);

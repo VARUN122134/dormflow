@@ -1,13 +1,14 @@
 import { supabase } from './supabase.js';
-import { getUsers, saveAttendanceSnapshot } from './store.js';
+import { getUsers, saveAttendanceSnapshot, getDailyBill, calculateDailyBill, getDailyUsage } from './store.js';
 
 let intervalId = null;
 let todaySaved = false;
 let monthlySaved = false;
+let billCalculated = false;
 
 export function startAutoAttendanceScheduler(user) {
   if (!user) return;
-  if (user.role !== 'boys_warden' && user.role !== 'girls_warden' && user.role !== 'admin') return;
+  if (user.role !== 'boys_warden' && user.role !== 'girls_warden' && user.role !== 'admin' && user.role !== 'mess_incharge') return;
   if (intervalId) return;
 
   const types = ['Boys', 'Girls'];
@@ -19,11 +20,12 @@ export function startAutoAttendanceScheduler(user) {
       const minutes = now.getMinutes();
       const dateStr = now.toISOString().slice(0, 10);
       const isPast820 = hours > 20 || (hours === 20 && minutes >= 20);
+      const isPast2100 = hours > 21 || (hours === 21 && minutes >= 0);
 
-      if (!isPast820) return;
+      if (!isPast820 && !isPast2100) return;
 
-      for (const ht of types) {
-        if (!todaySaved) {
+      if (isPast820 && !todaySaved) {
+        for (const ht of types) {
           const fileName = `${ht.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
           const { data: existing } = await supabase.storage.from('attendance-snapshots').list('', { search: fileName });
           if (!existing || existing.length === 0) {
@@ -34,10 +36,25 @@ export function startAutoAttendanceScheduler(user) {
             }
           }
         }
+        todaySaved = true;
       }
-      todaySaved = true;
 
-      if (!monthlySaved) {
+      if (isPast2100 && !billCalculated && todaySaved) {
+        const existingBill = await getDailyBill(dateStr);
+        if (!existingBill) {
+          const usage = await getDailyUsage(dateStr);
+          if (usage && usage.items && usage.items.length > 0) {
+            try {
+              await calculateDailyBill(dateStr, null);
+            } catch (e) {
+              console.error('Auto bill calculation error:', e);
+            }
+          }
+        }
+        billCalculated = true;
+      }
+
+      if (!monthlySaved && todaySaved) {
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();

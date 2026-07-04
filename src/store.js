@@ -1376,6 +1376,222 @@ export async function exportToPDF(elementId, filename = 'export.pdf') {
   await html2pdf().set(opt).from(element).save();
 }
 
+/* ========================================
+   MESS WALLET & STOCK MANAGEMENT
+   ======================================== */
+
+function normStockItem(row) {
+  if (!row) return null;
+  return { id: row.id, name: row.name, category: row.category, unit: row.unit, createdAt: row.created_at };
+}
+
+export async function getStockItems() {
+  const { data, error } = await supabase.from('mess_stock_items').select('*').order('name');
+  if (error) throw error;
+  return (data || []).map(normStockItem);
+}
+
+export async function createStockItem(data) {
+  const { data: result, error } = await supabase.from('mess_stock_items').insert({ name: data.name, category: data.category, unit: data.unit }).select().single();
+  if (error) throw error;
+  return normStockItem(result);
+}
+
+export async function updateStockItem(id, data) {
+  const patch = {};
+  if (data.name !== undefined) patch.name = data.name;
+  if (data.category !== undefined) patch.category = data.category;
+  if (data.unit !== undefined) patch.unit = data.unit;
+  const { data: result, error } = await supabase.from('mess_stock_items').update(patch).eq('id', id).select().single();
+  if (error) throw error;
+  return normStockItem(result);
+}
+
+function normStockPurchase(row) {
+  if (!row) return null;
+  return { id: row.id, itemId: row.item_id, quantity: row.quantity, unitPrice: row.unit_price, totalCost: row.total_cost, purchasedDate: row.purchased_date, purchasedBy: row.purchased_by, notes: row.notes, createdAt: row.created_at, item: row.mess_stock_items ? normStockItem(row.mess_stock_items) : undefined };
+}
+
+export async function getStockPurchases(filters = {}) {
+  let q = supabase.from('mess_stock_purchases').select('*, mess_stock_items!mess_stock_purchases_item_id_fkey(*)').order('purchased_date', { ascending: false }).order('created_at', { ascending: false });
+  if (filters.itemId) q = q.eq('item_id', filters.itemId);
+  if (filters.fromDate) q = q.gte('purchased_date', filters.fromDate);
+  if (filters.toDate) q = q.lte('purchased_date', filters.toDate);
+  if (filters.limit) q = q.limit(filters.limit);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data || []).map(normStockPurchase);
+}
+
+export async function createStockPurchase(data) {
+  const { data: result, error } = await supabase.from('mess_stock_purchases').insert({ item_id: data.itemId, quantity: data.quantity, unit_price: data.unitPrice, total_cost: data.totalCost, purchased_date: data.purchasedDate || new Date().toISOString().slice(0, 10), purchased_by: data.purchasedBy, notes: data.notes || '' }).select().single();
+  if (error) throw error;
+  return normStockPurchase(result);
+}
+
+function normDailyUsage(row) {
+  if (!row) return null;
+  return { id: row.id, usageDate: row.usage_date, createdAt: row.created_at, items: (row.mess_daily_usage_items || []).map(i => ({ id: i.id, itemId: i.item_id, quantityUsed: i.quantity_used, item: i.mess_stock_items ? normStockItem(i.mess_stock_items) : undefined })) };
+}
+
+export async function getDailyUsage(dateStr) {
+  const { data, error } = await supabase.from('mess_daily_usage').select('*, mess_daily_usage_items!mess_daily_usage_items_usage_id_fkey(*, mess_stock_items!mess_daily_usage_items_item_id_fkey(*))').eq('usage_date', dateStr).maybeSingle();
+  if (error) throw error;
+  return normDailyUsage(data);
+}
+
+export async function saveDailyUsage(dateStr, items, userId) {
+  let { data: usage } = await supabase.from('mess_daily_usage').select('id').eq('usage_date', dateStr).maybeSingle();
+  if (!usage) {
+    const { data: ins, error: ie } = await supabase.from('mess_daily_usage').insert({ usage_date: dateStr }).select().single();
+    if (ie) throw ie;
+    usage = ins;
+  }
+  await supabase.from('mess_daily_usage_items').delete().eq('usage_id', usage.id);
+  if (items.length > 0) {
+    const rows = items.map(i => ({ usage_id: usage.id, item_id: i.itemId, quantity_used: i.quantityUsed }));
+    const { error } = await supabase.from('mess_daily_usage_items').insert(rows);
+    if (error) throw error;
+  }
+  return getDailyUsage(dateStr);
+}
+
+function normDailyBill(row) {
+  if (!row) return null;
+  return { id: row.id, billDate: row.bill_date, totalStockCost: row.total_stock_cost, totalStudents: row.total_students, perStudentCost: row.per_student_cost, calculatedAt: row.calculated_at, calculatedBy: row.calculated_by };
+}
+
+export async function getDailyBill(dateStr) {
+  const { data, error } = await supabase.from('mess_daily_bills').select('*').eq('bill_date', dateStr).maybeSingle();
+  if (error) throw error;
+  return normDailyBill(data);
+}
+
+export async function getBillHistory(limit = 30) {
+  const { data, error } = await supabase.from('mess_daily_bills').select('*').order('bill_date', { ascending: false }).limit(limit);
+  if (error) throw error;
+  return (data || []).map(normDailyBill);
+}
+
+export async function calculateDailyBill(dateStr, userId) {
+  const usage = await getDailyUsage(dateStr);
+  if (!usage || !usage.items || usage.items.length === 0) throw new Error('No stock usage recorded for this date');
+
+  let totalStockCost = 0;
+  for (const u of usage.items) {
+    const { data: purchases } = await supabase.from('mess_stock_purchases').select('unit_price').eq('item_id', u.itemId).order('purchased_date', { ascending: false }).limit(1);
+    const price = (purchases && purchases.length > 0) ? purchases[0].unit_price : 0;
+    totalStockCost += u.quantityUsed * price;
+  }
+
+  const { data: attendance } = await supabase.from('mess_attendance').select('student_id').eq('attendance_date', dateStr);
+  const uniqueStudents = [...new Set((attendance || []).map(a => a.student_id))];
+  if (uniqueStudents.length === 0) throw new Error('No students attended mess today');
+
+  const perStudentCost = Math.round((totalStockCost / uniqueStudents.length) * 100) / 100;
+
+  const { data: bill, error: be } = await supabase.from('mess_daily_bills').upsert({ bill_date: dateStr, total_stock_cost: totalStockCost, total_students: uniqueStudents.length, per_student_cost: perStudentCost, calculated_by: userId }).select().single();
+  if (be) throw be;
+
+  const { data: wallets } = await supabase.from('mess_wallets').select('*').in('student_id', uniqueStudents);
+  const walletMap = {};
+  (wallets || []).forEach(w => { walletMap[w.student_id] = w; });
+
+  for (const sid of uniqueStudents) {
+    const wallet = walletMap[sid];
+    if (!wallet || wallet.balance < perStudentCost) continue;
+    const newBalance = Math.round((wallet.balance - perStudentCost) * 100) / 100;
+    await supabase.from('mess_wallets').update({ balance: newBalance, updated_at: new Date().toISOString() }).eq('id', wallet.id);
+    await supabase.from('mess_wallet_transactions').insert({ student_id: sid, type: 'deduction', amount: perStudentCost, balance_before: wallet.balance, balance_after: newBalance, bill_id: bill.id, description: `Mess bill for ${dateStr}` });
+    if (newBalance < wallet.minimum_balance_alert && newBalance >= 0) {
+      const user = getCurrentUser();
+      await createNotification(sid, 'Low Wallet Balance', `Your mess wallet balance is ₹${newBalance}. Please recharge soon.`, 'warning', 'wallet', bill.id);
+      const { data: wardens } = await supabase.from('profiles').select('id').in('role', ['boys_warden', 'girls_warden']);
+      if (wardens) {
+        for (const w of wardens) {
+          await createNotification(w.id, 'Student Low Balance', `Student wallet ₹${newBalance}. Please notify them.`, 'warning', 'wallet', bill.id);
+        }
+      }
+    }
+  }
+  return normDailyBill(bill);
+}
+
+function normWallet(row) {
+  if (!row) return null;
+  return { id: row.id, studentId: row.student_id, balance: row.balance, totalDeposited: row.total_deposited, semester: row.semester, academicYear: row.academic_year, minimumBalanceAlert: row.minimum_balance_alert, updatedAt: row.updated_at, student: row.profiles ? (() => { const p = normProfile(row.profiles); return p ? { id: p.id, name: p.name, department: p.department, year: p.year, registrationNo: p.registrationNo, hostelType: p.hostelType } : null; })() : undefined };
+}
+
+export async function getWallet(studentId) {
+  const { data, error } = await supabase.from('mess_wallets').select('*, profiles!mess_wallets_student_id_fkey(*)').eq('student_id', studentId).maybeSingle();
+  if (error) throw error;
+  return normWallet(data);
+}
+
+export async function getWallets() {
+  const { data, error } = await supabase.from('mess_wallets').select('*, profiles!mess_wallets_student_id_fkey(*)').order('student_id');
+  if (error) throw error;
+  return (data || []).map(normWallet);
+}
+
+export async function createWallet(studentId, semester, academicYear) {
+  const { data, error } = await supabase.from('mess_wallets').insert({ student_id: studentId, balance: 0, total_deposited: 0, semester: semester || 1, academic_year: academicYear || '' }).select().single();
+  if (error) throw error;
+  return normWallet(data);
+}
+
+export async function depositWallet(studentId, amount, userId) {
+  let { data: wallet } = await supabase.from('mess_wallets').select('*').eq('student_id', studentId).maybeSingle();
+  if (!wallet) {
+    const { data: ins, error: ie } = await supabase.from('mess_wallets').insert({ student_id: studentId, balance: 0, total_deposited: 0, semester: 1, academic_year: '' }).select().single();
+    if (ie) throw ie;
+    wallet = ins;
+  }
+  const newBalance = Math.round((wallet.balance + amount) * 100) / 100;
+  const newDeposited = Math.round((wallet.total_deposited + amount) * 100) / 100;
+  await supabase.from('mess_wallets').update({ balance: newBalance, total_deposited: newDeposited, updated_at: new Date().toISOString() }).eq('id', wallet.id);
+  await supabase.from('mess_wallet_transactions').insert({ student_id: studentId, type: 'deposit', amount, balance_before: wallet.balance, balance_after: newBalance, description: `Deposit of ₹${amount}` });
+  if (userId) {
+    await createNotification(studentId, 'Wallet Recharged', `₹${amount} has been added to your mess wallet.`, 'success', 'wallet', wallet.id);
+  }
+  return getWallet(studentId);
+}
+
+export async function getWalletTransactions(studentId, limit = 100) {
+  const { data, error } = await supabase.from('mess_wallet_transactions').select('*').eq('student_id', studentId).order('created_at', { ascending: false }).limit(limit);
+  if (error) throw error;
+  return (data || []).map(r => ({ id: r.id, studentId: r.student_id, type: r.type, amount: r.amount, balanceBefore: r.balance_before, balanceAfter: r.balance_after, billId: r.bill_id, description: r.description, transactionDate: r.transaction_date, createdAt: r.created_at }));
+}
+
+export async function getLowBalanceWallets(threshold) {
+  const { data, error } = await supabase.from('mess_wallets').select('*, profiles!mess_wallets_student_id_fkey(*)').lt('balance', threshold || 500).order('balance');
+  if (error) throw error;
+  return (data || []).map(normWallet);
+}
+
+export async function getMonthlyMessReport(year, month) {
+  const prefix = `${year}-${String(month).padStart(2, '0')}`;
+  const startDate = `${prefix}-01`;
+  const endDate = `${prefix}-31`;
+  const { data: bills } = await supabase.from('mess_daily_bills').select('*').gte('bill_date', startDate).lte('bill_date', endDate).order('bill_date');
+  const { data: txns } = await supabase.from('mess_wallet_transactions').select('*, profiles!mess_wallet_transactions_student_id_fkey(*)').gte('transaction_date', startDate).lte('transaction_date', endDate).order('transaction_date');
+  const students = {};
+  (txns || []).forEach(t => {
+    if (!students[t.student_id]) {
+      const p = t.profiles;
+      students[t.student_id] = { name: p?.name || 'Unknown', department: p?.department || '', year: p?.year || '', regNo: (p?.email || '').split('@')[0] || '', deposits: 0, deductions: 0, totalDeducted: 0, days: {} };
+    }
+    if (t.type === 'deposit') {
+      students[t.student_id].deposits += t.amount;
+    } else if (t.type === 'deduction') {
+      students[t.student_id].deductions += t.amount;
+      students[t.student_id].totalDeducted += t.amount;
+      students[t.student_id].days[t.transaction_date] = (students[t.student_id].days[t.transaction_date] || 0) + t.amount;
+    }
+  });
+  return { bills: (bills || []).map(normDailyBill), students: Object.entries(students).map(([id, s]) => ({ studentId: id, ...s })) };
+}
+
 export function exportLeavesToCSV(leaves) {
   const data = leaves.map(l => ({
     'Leave ID': l.leaveId,

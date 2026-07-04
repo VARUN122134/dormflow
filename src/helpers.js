@@ -119,7 +119,7 @@ export function studentNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/student/dashboard' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/student/mess' },
-    { id: 'updates', icon: 'campaign', label: 'Updates', route: '#/student/announcements' },
+    { id: 'wallet', icon: 'account_balance_wallet', label: 'Wallet', route: '#/student/wallet' },
     { id: 'room', icon: 'meeting_room', label: 'My Room', route: '#/student/room' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/student/profile' },
   ]);
@@ -133,12 +133,23 @@ export function messMemberNav(active) {
   ]);
 }
 
+export function messInchargeNav(active) {
+  return renderBottomNav(active, [
+    { id: 'stock', icon: 'inventory_2', label: 'Stock', route: '#/mess/stock' },
+    { id: 'usage', icon: 'edit_note', label: 'Usage', route: '#/mess/usage' },
+    { id: 'bill', icon: 'receipt_long', label: 'Bill', route: '#/mess/bill' },
+    { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
+    { id: 'reports', icon: 'bar_chart', label: 'Reports', route: '#/mess/reports' },
+  ]);
+}
+
 export function wardenNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/warden/dashboard' },
     { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/warden/requests' },
     { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/warden/rooms' },
     { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/warden/auto-attendance' },
+    { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/warden/profile' },
   ]);
 }
@@ -158,6 +169,7 @@ export function adminNav(active) {
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
     { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/admin/rooms' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
+    { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
   ]);
 }
