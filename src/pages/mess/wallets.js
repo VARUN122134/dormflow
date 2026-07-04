@@ -94,7 +94,7 @@ export default async function messWalletsPage(app) {
     const bd = document.createElement('div'); bd.className = 'modal-backdrop';
     bd.innerHTML = `
       <div class="modal"><div class="modal-title">Deposit to Wallet</div><div class="modal-body">
-        <div class="form-group"><label class="form-label">Amount (₹)</label><input class="form-input" id="depositAmount" type="number" step="1" placeholder="15000" value="15000"></div>
+        <div class="form-group"><label class="form-label">Amount (₹)</label><input class="form-input" id="depositAmount" type="number" step="1" placeholder="Enter amount" value="0"></div>
       </div><div class="modal-actions"><button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button><button class="btn btn-primary btn-sm" id="modalConfirm">Deposit</button></div></div>`;
     document.body.appendChild(bd);
     bd.querySelector('#modalCancel').onclick = () => bd.remove();
