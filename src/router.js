@@ -1,26 +1,16 @@
-/* ========================================
-   UCE IT Router — Supabase-compatible
-   Hash-based SPA router with role guards
-   ======================================== */
-
 import { getCurrentUser } from './auth.js';
 
 const MAX_STACK = 20;
 const routes = {};
 let currentCleanup = null;
 const navStack = [];
+let lastHash = '';
 
 export function registerRoute(path, handler) {
   routes[path] = handler;
 }
 
 export function navigate(hash) {
-  const current = window.location.hash;
-  const authPages = ['#/splash', '#/login', '#/register', '#/', ''];
-  if (current && current !== hash && !authPages.includes(current)) {
-    navStack.push(current);
-    if (navStack.length > MAX_STACK) navStack.shift();
-  }
   window.location.hash = hash;
 }
 
@@ -55,7 +45,6 @@ function matchRoute(hash) {
   return null;
 }
 
-// Role access map
 const roleAccess = {
   '#/student': ['student'],
   '#/warden':  ['boys_warden', 'girls_warden', 'mess_incharge'],
@@ -98,19 +87,23 @@ export async function handleRoute() {
   const hash = getHash();
   const user = getCurrentUser();
 
-  // Cleanup previous page
+  const authPages = ['#/splash', '#/login', '#/register', '#/', ''];
+  if (lastHash && lastHash !== hash && !authPages.includes(lastHash)) {
+    navStack.push(lastHash);
+    if (navStack.length > MAX_STACK) navStack.shift();
+  }
+  lastHash = hash;
+
   if (currentCleanup && typeof currentCleanup === 'function') {
     currentCleanup();
     currentCleanup = null;
   }
 
-  // Auto-redirect logged-in users from auth pages
   if (['#/splash', '#/login', '#/', ''].includes(hash) && user) {
     navigate(getHomeRoute(user.role));
     return;
   }
 
-  // Access check
   if (!checkAccess(hash, user)) {
     navigate(user ? getHomeRoute(user.role) : '#/login');
     return;
@@ -121,7 +114,6 @@ export async function handleRoute() {
     const app = document.getElementById('app');
     app.innerHTML = '';
     const result = match.handler(app, match.params);
-    // Support both sync and async page handlers
     const cleanup = result instanceof Promise ? await result : result;
     if (typeof cleanup === 'function') currentCleanup = cleanup;
   } else {
