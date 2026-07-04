@@ -102,8 +102,8 @@ export default async function gateDashboard(app) {
             <span class="material-icons-outlined">${a.action === 'IN' ? 'login' : 'logout'}</span>
           </div>
           <div class="activity-content">
-            <div class="activity-title">${a.studentName}</div>
-            <div class="activity-desc">${a.hostelType} • ${a.department}</div>
+            <div class="activity-title">${escapeHtml(a.studentName)}</div>
+            <div class="activity-desc">${escapeHtml(a.hostelType)} • ${escapeHtml(a.department)}</div>
           </div>
           <div style="text-align:right;">
             <div class="activity-time">${formatTime(a.timestamp)}</div>
@@ -234,13 +234,13 @@ export default async function gateDashboard(app) {
             ${renderAvatar(result.student, 'profile-avatar-large')}
             <div>
               <h3 class="flex items-center" style="margin:0 0 4px 0;gap:6px;font-size:var(--headline-sm-size);">
-                ${result.student.name}
+                ${escapeHtml(result.student.name)}
                 <span class="material-icons-outlined fs-20 c-success">
                   ${result.action === 'DEPARTURE' ? 'logout' : 'login'}
                 </span>
               </h3>
-              <p class="c-on-surface-variant" style="margin:2px 0;font-size:var(--body-md-size);">${result.student.department} • ${result.student.year} Year</p>
-              <p class="c-on-surface-variant" style="margin:2px 0;font-size:var(--body-md-size);">${result.student.hostelType} Hostel • Room ${result.student.roomNumber}</p>
+              <p class="c-on-surface-variant" style="margin:2px 0;font-size:var(--body-md-size);">${escapeHtml(result.student.department)} • ${escapeHtml(result.student.year)} Year</p>
+              <p class="c-on-surface-variant" style="margin:2px 0;font-size:var(--body-md-size);">${escapeHtml(result.student.hostelType)} Hostel • Room ${escapeHtml(result.student.roomNumber)}</p>
               <p class="fw-600 c-success" style="margin:6px 0 0 0;font-size:var(--body-md-size);">
                 ${result.action === 'DEPARTURE' ? 'Checked OUT successfully' : 'Checked IN successfully'}
               </p>

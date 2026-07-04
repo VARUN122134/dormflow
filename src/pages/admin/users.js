@@ -89,8 +89,8 @@ export default async function userManagement(app) {
             <div class="user-card animate-fade-in-up">
               ${renderAvatar(u, 'user-card-avatar')}
               <div class="user-card-info">
-                <div class="user-card-name">${u.name} ${!u.isApproved ? '<span class="chip chip-pending" style="font-size:10px;padding:2px 8px;">Pending</span>' : ''}</div>
-                <div class="user-card-id">${u.registrationNo ? `Reg No: ${u.registrationNo}` : `ID: ${u.id}`}</div>
+                <div class="user-card-name">${escapeHtml(u.name)} ${!u.isApproved ? '<span class="chip chip-pending" style="font-size:10px;padding:2px 8px;">Pending</span>' : ''}</div>
+                <div class="user-card-id">${u.registrationNo ? `Reg No: ${escapeHtml(u.registrationNo)}` : `ID: ${escapeHtml(u.id)}`}</div>
                 <div style="margin-top:4px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
                   <span class="chip chip-info" style="font-size:10px;padding:2px 8px;">${roleLabel(u.role)}</span>
                   ${u.id !== user.id ? `<button class="btn btn-ghost" style="font-size:10px;padding:2px 6px;min-height:22px;line-height:1;" data-changerole="${u.id}" title="Change role">change</button>` : ''}

@@ -4,7 +4,7 @@
 
 import { getCurrentUser } from '../../auth.js';
 import { getLeavesByStudent, getOutpassByLeave } from '../../store.js';
-import { studentNav, statusChip, formatDateRange, renderPageHeader, renderBackButton } from '../../helpers.js';
+import { studentNav, statusChip, formatDateRange, renderPageHeader, renderBackButton, escapeHtml } from '../../helpers.js';
 
 export default async function leaveHistoryPage(app) {
   const user = getCurrentUser();
@@ -63,7 +63,7 @@ export default async function leaveHistoryPage(app) {
                   ${statusChip(outpass?.status === 'Completed' ? 'Completed' : l.approvalStatus)}
                 </div>
                 <div class="history-card-type">${l.type}</div>
-                ${l.reason ? `<div class="body-md text-muted" style="margin-top:4px;font-size:12px;padding-left:var(--space-sm);">${l.reason.slice(0, 80)}${l.reason.length > 80 ? '...' : ''}</div>` : ''}
+                ${l.reason ? `<div class="body-md text-muted" style="margin-top:4px;font-size:12px;padding-left:var(--space-sm);">${escapeHtml(l.reason.slice(0, 80))}${l.reason.length > 80 ? '...' : ''}</div>` : ''}
                 ${outpass && (outpass.status === 'Active' || outpass.status === 'Used') ? `
                   <a href="#/student/outpass" class="btn btn-ghost btn-sm" style="margin-top:var(--space-sm);padding-left:var(--space-sm);">
                     <span class="material-icons-outlined" style="font-size:16px;">qr_code_2</span>

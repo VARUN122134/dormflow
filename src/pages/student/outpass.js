@@ -1,7 +1,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { getActiveOutpassByStudent, getLeaveById } from '../../store.js';
 import { generateQR } from '../../qr.js';
-import { studentNav, statusChip, formatDate, formatTime, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { studentNav, statusChip, formatDate, formatTime, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
 export default async function outpassPage(app) {
   const user = getCurrentUser();
@@ -51,9 +51,9 @@ export default async function outpassPage(app) {
         <div style="display:flex; align-items:center; justify-content:center; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border-bottom: 1px dashed var(--outline-variant); margin-bottom: var(--space-md); text-align:left;">
           ${renderAvatar(user, 'profile-avatar-large')}
           <div>
-            <div style="font-weight:700;font-size:var(--headline-sm-size); color:var(--on-surface);">${user.name}</div>
-            <div class="label-md text-muted" style="margin-top:4px;">${user.department} • Room ${user.roomNumber}</div>
-            <div class="label-md text-muted">${user.hostelType} Hostel</div>
+            <div style="font-weight:700;font-size:var(--headline-sm-size); color:var(--on-surface);">${escapeHtml(user.name)}</div>
+            <div class="label-md text-muted" style="margin-top:4px;">${escapeHtml(user.department)} • Room ${escapeHtml(user.roomNumber)}</div>
+            <div class="label-md text-muted">${escapeHtml(user.hostelType)} Hostel</div>
           </div>
         </div>
 
@@ -62,13 +62,13 @@ export default async function outpassPage(app) {
         </div>
 
         <div class="label-md text-muted" style="margin-top:var(--space-sm);">
-          Pass ID: ${outpass.passId}
+          Pass ID: ${escapeHtml(outpass.passId)}
         </div>
 
         <div class="outpass-details">
           <div class="outpass-detail-row">
             <span class="outpass-detail-label">Leave Type</span>
-            <span class="outpass-detail-value">${leave?.type || '\u2014'}</span>
+            <span class="outpass-detail-value">${escapeHtml(leave?.type || '\u2014')}</span>
           </div>
           <div class="outpass-detail-row">
             <span class="outpass-detail-label">Departure</span>

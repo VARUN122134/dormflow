@@ -96,11 +96,12 @@ export function getInitials(name) {
 
 export function renderAvatar(user, customClass = 'profile-avatar-large') {
   if (user && user.avatarUrl) {
-    const initials = getInitials(user.name);
-    return `<img src="${escapeHtml(user.avatarUrl)}" class="${customClass}" alt="${escapeHtml(user.name || 'Avatar')}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=\\'${customClass}\\'>${initials}</div>'" />`;
+    const initials = escapeHtml(getInitials(user.name));
+    const safeClass = escapeHtml(customClass).replace(/"/g, '&quot;');
+    return `<img src="${escapeHtml(user.avatarUrl)}" class="${escapeHtml(customClass)}" alt="${escapeHtml(user.name || 'Avatar')}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=&quot;${safeClass}&quot;>${initials}</div>'" />`;
   }
   const name = user ? user.name : '';
-  return `<div class="${customClass}">${getInitials(name)}</div>`;
+  return `<div class="${customClass}">${escapeHtml(getInitials(name))}</div>`;
 }
 
 export function statusChip(status) {
@@ -288,10 +289,9 @@ export function showModal(title, body, onConfirm, confirmText = 'Confirm', confi
 
   document.body.appendChild(backdrop);
 
-  backdrop.querySelector('#modalCancel').onclick = () => backdrop.remove();
-  backdrop.querySelector('#modalConfirm').onclick = () => {
-    onConfirm();
-    backdrop.remove();
-  };
+  const cancelBtn = backdrop.querySelector('#modalCancel');
+  const confirmBtn = backdrop.querySelector('#modalConfirm');
+  if (cancelBtn) cancelBtn.onclick = () => backdrop.remove();
+  if (confirmBtn) confirmBtn.onclick = () => { onConfirm(); backdrop.remove(); };
   backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
 }

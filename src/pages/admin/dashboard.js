@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getSystemStats, getRecentGateActivity, getUsers } from '../../store.js';
-import { adminNav, formatRelativeTime, renderPageHeader, getInitials, renderAvatar, renderLogoutIcon } from '../../helpers.js';
+import { adminNav, formatRelativeTime, renderPageHeader, getInitials, renderAvatar, renderLogoutIcon, escapeHtml } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
 export default async function adminDashboard(app) {
@@ -87,10 +87,10 @@ export default async function adminDashboard(app) {
         </p>
         <div class="flex gap-sm mt-md" style="flex-wrap:wrap;">
           ${wardens.map(w => `
-            <div class="chip chip-info">${w.name} — ${w.hostelType || 'Staff'}</div>
+            <div class="chip chip-info">${escapeHtml(w.name)} — ${escapeHtml(w.hostelType || 'Staff')}</div>
           `).join('')}
           ${security.map(s => `
-            <div class="chip chip-neutral">${s.name} — Gate</div>
+            <div class="chip chip-neutral">${escapeHtml(s.name)} — Gate</div>
           `).join('')}
         </div>
       </div>
@@ -123,8 +123,8 @@ export default async function adminDashboard(app) {
               <span class="material-icons-outlined">${a.action === 'IN' ? 'login' : 'logout'}</span>
             </div>
             <div class="activity-content">
-              <div class="activity-title">${a.studentName}</div>
-              <div class="activity-desc">${a.hostelType} Hostel • Gate ${a.action}</div>
+              <div class="activity-title">${escapeHtml(a.studentName)}</div>
+              <div class="activity-desc">${escapeHtml(a.hostelType)} Hostel • Gate ${escapeHtml(a.action)}</div>
             </div>
             <div class="activity-time">${formatRelativeTime(a.timestamp)}</div>
           </div>

@@ -1,7 +1,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { getLeavesByStudent, getActiveOutpassByStudent } from '../../store.js';
 import { navigate } from '../../router.js';
-import { studentNav, formatDateRange, formatRelativeTime, getInitials, renderAvatar } from '../../helpers.js';
+import { studentNav, formatDateRange, formatRelativeTime, getInitials, renderAvatar, escapeHtml } from '../../helpers.js';
 
 export default async function studentDashboard(app) {
   const user = getCurrentUser();
@@ -27,15 +27,15 @@ export default async function studentDashboard(app) {
     if (l.approvalStatus === 'Approved') {
       icon = 'check_circle'; iconBg = 'var(--status-success)';
       title = 'Request Approved';
-      desc = `${l.type} • ${formatDateRange(l.outDate, l.inDate)} approved`;
+      desc = `${escapeHtml(l.type)} • ${formatDateRange(l.outDate, l.inDate)} approved`;
     } else if (l.approvalStatus === 'Pending') {
       icon = 'pending'; iconBg = 'var(--status-warning)';
       title = 'Request Submitted';
-      desc = `${l.type} • Awaiting verification`;
+      desc = `${escapeHtml(l.type)} • Awaiting verification`;
     } else {
       icon = 'cancel'; iconBg = 'var(--error)';
       title = 'Request Rejected';
-      desc = `${l.type} • ${l.rejectionReason || 'See details'}`;
+      desc = `${escapeHtml(l.type)} • ${escapeHtml(l.rejectionReason || 'See details')}`;
     }
     return { icon, iconBg, title, desc, time: formatRelativeTime(l.createdAt) };
   });
@@ -56,8 +56,8 @@ export default async function studentDashboard(app) {
 
     <div class="page page-student">
       <div class="welcome-section">
-        <h1 class="welcome-name">Welcome back, ${user.name.split(' ')[0]}</h1>
-        <p class="welcome-meta">${user.block || 'Block B'} • Room ${user.roomNumber || '402'}</p>
+        <h1 class="welcome-name">Welcome back, ${escapeHtml(user.name.split(' ')[0])}</h1>
+        <p class="welcome-meta">${escapeHtml(user.block || 'Block B')} • Room ${escapeHtml(user.roomNumber || '402')}</p>
       </div>
 
       <div class="section-block">
@@ -69,9 +69,9 @@ export default async function studentDashboard(app) {
           <div class="active-leave-card">
             <div class="active-leave-accent"></div>
             <div class="active-leave-body">
-              <div class="active-leave-type">${activeLeave.type}</div>
+              <div class="active-leave-type">${escapeHtml(activeLeave.type)}</div>
               <div class="active-leave-dates">${formatDateRange(activeLeave.outDate, activeLeave.inDate)}</div>
-              <div class="active-leave-status">Status: ${activeLeave.approvalStatus === 'Approved' ? 'Approved by Warden' : activeLeave.approvalStatus}</div>
+              <div class="active-leave-status">Status: ${activeLeave.approvalStatus === 'Approved' ? 'Approved by Warden' : escapeHtml(activeLeave.approvalStatus)}</div>
             </div>
             <button class="icon-btn-sm" onclick="window.location.hash='#/student/outpass'" aria-label="view QR">
               <span class="material-icons-outlined">qr_code_2</span>

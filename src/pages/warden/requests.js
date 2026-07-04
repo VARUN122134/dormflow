@@ -4,7 +4,7 @@
 
 import { getCurrentUser } from '../../auth.js';
 import { getLeavesByHostel, approveLeave, rejectLeave } from '../../store.js';
-import { wardenNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { wardenNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
 export default async function wardenRequests(app) {
   const user = getCurrentUser();
@@ -61,8 +61,8 @@ export default async function wardenRequests(app) {
                   <div class="leave-card-student">
                     ${renderAvatar(student, 'leave-card-avatar')}
                     <div>
-                      <div class="leave-card-name">${student.name}</div>
-                      <div class="leave-card-meta">${student.department} • ${student.year} Year</div>
+                      <div class="leave-card-name">${escapeHtml(student.name)}</div>
+                      <div class="leave-card-meta">${escapeHtml(student.department)} • ${escapeHtml(student.year)} Year</div>
                     </div>
                   </div>
                   ${statusChip(l.approvalStatus)}
@@ -70,7 +70,7 @@ export default async function wardenRequests(app) {
                 <div class="leave-card-meta" style="margin:4px 0;">
                   ${formatDateRange(l.outDate, l.inDate)} • ${l.type}
                 </div>
-                ${l.reason ? `<div class="leave-card-reason">"${l.reason}"</div>` : ''}
+                ${l.reason ? `<div class="leave-card-reason">"${escapeHtml(l.reason)}"</div>` : ''}
                 ${l.approvalStatus === 'Pending' ? `
                   <div class="leave-card-actions">
                     <button class="btn btn-success btn-sm" style="flex:1;" data-approve="${l.leaveId}">Approve</button>

@@ -3,7 +3,7 @@ import {
   getLeavesByHostel, approveLeave, rejectLeave,
   getHostelStats, getUsers
 } from '../../store.js';
-import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, renderLogoutIcon } from '../../helpers.js';
+import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, renderLogoutIcon, escapeHtml } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
 export default async function wardenDashboard(app) {
@@ -75,9 +75,9 @@ export default async function wardenDashboard(app) {
                   <div class="action-card-top">
                     ${renderAvatar(student, 'action-avatar')}
                     <div class="action-info">
-                      <div class="action-name">${student?.name || 'Unknown'}</div>
-                      <div class="action-meta">${formatDateRange(l.outDate, l.inDate)} • ${l.reason}</div>
-                      <div class="action-meta">${student?.department || ''} — ${l.type}</div>
+                      <div class="action-name">${escapeHtml(student?.name || 'Unknown')}</div>
+                      <div class="action-meta">${formatDateRange(l.outDate, l.inDate)} • ${escapeHtml(l.reason)}</div>
+                      <div class="action-meta">${escapeHtml(student?.department || '')} — ${escapeHtml(l.type)}</div>
                     </div>
                   </div>
                   <div class="action-btns">

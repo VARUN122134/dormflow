@@ -1,6 +1,6 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { getRecentGateActivity, getUsers } from '../../store.js';
-import { gateNav, statusChip, formatTime, formatDate, getInitials, renderPageHeader, showToast, showModal } from '../../helpers.js';
+import { gateNav, statusChip, formatTime, formatDate, getInitials, renderPageHeader, showToast, showModal, escapeHtml } from '../../helpers.js';
 
 export async function gateHistory(app) {
   const activity = await getRecentGateActivity(30);
@@ -15,8 +15,8 @@ export async function gateHistory(app) {
               <span class="material-icons-outlined">${a.action === 'IN' ? 'login' : 'logout'}</span>
             </div>
             <div class="activity-content">
-              <div class="activity-title">${a.studentName}</div>
-              <div class="activity-desc">${a.hostelType} • ${a.department} • Pass ${a.passId}</div>
+              <div class="activity-title">${escapeHtml(a.studentName)}</div>
+              <div class="activity-desc">${escapeHtml(a.hostelType)} • ${escapeHtml(a.department)} • Pass ${escapeHtml(a.passId)}</div>
             </div>
             <div style="text-align:right;">
               <div class="activity-time">${formatTime(a.timestamp)}</div>
@@ -45,10 +45,10 @@ export async function gateInHouse(app) {
       <div style="display:flex;flex-direction:column;gap:var(--space-sm);" class="stagger">
         ${students.map(s => `
           <div class="user-card animate-fade-in-up">
-            <div class="user-card-avatar">${getInitials(s.name)}</div>
+            <div class="user-card-avatar">${escapeHtml(getInitials(s.name))}</div>
             <div class="user-card-info">
-              <div class="user-card-name">${s.name}</div>
-              <div class="user-card-id">${s.hostelType} • ${s.department} • Room ${s.roomNumber}</div>
+              <div class="user-card-name">${escapeHtml(s.name)}</div>
+              <div class="user-card-id">${escapeHtml(s.hostelType)} • ${escapeHtml(s.department)} • Room ${escapeHtml(s.roomNumber)}</div>
             </div>
             ${statusChip('IN')}
           </div>
@@ -69,15 +69,15 @@ export function gateSystem(app) {
         <div class="profile-section-title">Gate Officer</div>
         <div class="profile-field">
           <span class="profile-field-label">Name</span>
-          <span class="profile-field-value">${user?.name || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user?.name || '\u2014')}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">ID</span>
-          <span class="profile-field-value">${user?.id || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user?.id || '\u2014')}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Email</span>
-          <span class="profile-field-value">${user?.email || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user?.email || '\u2014')}</span>
         </div>
       </div>
 
@@ -162,11 +162,11 @@ export function gateSystem(app) {
   document.getElementById('changePwBtn')?.addEventListener('click', async () => {
     const current = document.getElementById('cpCurrent').value;
     const newPw = document.getElementById('cpNew').value;
-    const confirm = document.getElementById('cpConfirm').value;
+    const cpConfirmEl = document.getElementById('cpConfirm').value;
     const cpError = document.getElementById('cpError');
     cpError.style.display = 'none';
 
-    if (!current || !newPw || !confirm) {
+    if (!current || !newPw || !cpConfirmEl) {
       cpError.textContent = 'Please fill in all password fields';
       cpError.style.display = 'block';
       return;
@@ -176,7 +176,7 @@ export function gateSystem(app) {
       cpError.style.display = 'block';
       return;
     }
-    if (newPw !== confirm) {
+    if (newPw !== cpConfirmEl) {
       cpError.textContent = 'New passwords do not match';
       cpError.style.display = 'block';
       return;

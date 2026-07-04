@@ -56,11 +56,11 @@ export function adminProfile(app) {
         <div class="profile-section-title">Admin Details</div>
         <div class="profile-field">
           <span class="profile-field-label">Admin ID</span>
-          <span class="profile-field-value">${user.id}</span>
+          <span class="profile-field-value">${escapeHtml(user.id)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Email</span>
-          <span class="profile-field-value">${user.email}</span>
+          <span class="profile-field-value">${escapeHtml(user.email)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Role</span>

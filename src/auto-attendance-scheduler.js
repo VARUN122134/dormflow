@@ -5,6 +5,7 @@ let intervalId = null;
 let todaySaved = false;
 let monthlySaved = false;
 let billCalculated = false;
+let lastDateStr = '';
 
 export function startAutoAttendanceScheduler(user) {
   if (!user) return;
@@ -12,6 +13,7 @@ export function startAutoAttendanceScheduler(user) {
   if (intervalId) return;
 
   const types = ['Boys', 'Girls'];
+  lastDateStr = new Date().toISOString().slice(0, 10);
 
   intervalId = setInterval(async () => {
     try {
@@ -21,6 +23,14 @@ export function startAutoAttendanceScheduler(user) {
       const dateStr = now.toISOString().slice(0, 10);
       const isPast820 = hours > 20 || (hours === 20 && minutes >= 20);
       const isPast2100 = hours > 21 || (hours === 21 && minutes >= 0);
+
+      // Reset flags when date changes (past midnight)
+      if (dateStr !== lastDateStr) {
+        todaySaved = false;
+        monthlySaved = false;
+        billCalculated = false;
+        lastDateStr = dateStr;
+      }
 
       if (!isPast820 && !isPast2100) return;
 
@@ -50,7 +60,7 @@ export function startAutoAttendanceScheduler(user) {
         todaySaved = true;
       }
 
-      if (isPast2100 && !billCalculated && todaySaved) {
+      if (isPast2100 && !billCalculated) {
         const existingBill = await getDailyBill(dateStr);
         if (!existingBill) {
           const usage = await getDailyUsage(dateStr);
@@ -93,8 +103,8 @@ export function startAutoAttendanceScheduler(user) {
               await supabase.storage.from('attendance-snapshots').upload(monthlyName, file, { upsert: true });
             }
           }
+          monthlySaved = true;
         }
-        monthlySaved = true;
       }
     } catch (e) {
       console.error('Auto-attendance scheduler error:', e);
@@ -109,4 +119,6 @@ export function stopAutoAttendanceScheduler() {
   }
   todaySaved = false;
   monthlySaved = false;
+  billCalculated = false;
+  lastDateStr = '';
 }

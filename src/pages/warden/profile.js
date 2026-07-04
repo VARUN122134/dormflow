@@ -1,6 +1,6 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { navigate } from '../../router.js';
-import { wardenNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { wardenNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
 export default function wardenProfile(app) {
   const user = getCurrentUser();
@@ -19,30 +19,30 @@ export default function wardenProfile(app) {
         <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
       </div>
 
-      <div class="profile-name">${user.name}</div>
-      <div class="profile-location">${hostelType} Hostel Warden • ${user.blockName}</div>
+      <div class="profile-name">${escapeHtml(user.name)}</div>
+      <div class="profile-location">${escapeHtml(hostelType)} Hostel Warden • ${escapeHtml(user.blockName)}</div>
 
       <div class="profile-section card animate-fade-in">
         <div class="profile-section-title">Warden Details</div>
         <div class="profile-field">
           <span class="profile-field-label">Warden ID</span>
-          <span class="profile-field-value">${user.id}</span>
+          <span class="profile-field-value">${escapeHtml(user.id)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Email</span>
-          <span class="profile-field-value">${user.email}</span>
+          <span class="profile-field-value">${escapeHtml(user.email)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Phone</span>
-          <span class="profile-field-value">${user.phone || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user.phone || '\u2014')}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Hostel</span>
-          <span class="profile-field-value">${hostelType} Hostel</span>
+          <span class="profile-field-value">${escapeHtml(hostelType)} Hostel</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Block</span>
-          <span class="profile-field-value">${user.blockName}</span>
+          <span class="profile-field-value">${escapeHtml(user.blockName)}</span>
         </div>
       </div>
 
@@ -141,11 +141,11 @@ export default function wardenProfile(app) {
   document.getElementById('changePwBtn').addEventListener('click', async () => {
     const current = document.getElementById('cpCurrent').value;
     const newPw = document.getElementById('cpNew').value;
-    const confirm = document.getElementById('cpConfirm').value;
+    const cpConfirmEl = document.getElementById('cpConfirm').value;
     const cpError = document.getElementById('cpError');
     cpError.style.display = 'none';
 
-    if (!current || !newPw || !confirm) {
+    if (!current || !newPw || !cpConfirmEl) {
       cpError.textContent = 'Please fill in all password fields';
       cpError.style.display = 'block';
       return;
@@ -155,7 +155,7 @@ export default function wardenProfile(app) {
       cpError.style.display = 'block';
       return;
     }
-    if (newPw !== confirm) {
+    if (newPw !== cpConfirmEl) {
       cpError.textContent = 'New passwords do not match';
       cpError.style.display = 'block';
       return;

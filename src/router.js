@@ -1,4 +1,4 @@
-import { getCurrentUser, refreshProfile } from './auth.js';
+import { getCurrentUser, refreshProfile, getHomeRoute } from './auth.js';
 
 const MAX_STACK = 20;
 const routes = {};
@@ -54,18 +54,6 @@ const roleAccess = {
   '#/mess':    ['student', 'mess_incharge', 'boys_warden', 'girls_warden', 'admin'],
   '#/notifications': ['student', 'boys_warden', 'girls_warden', 'admin', 'security', 'mess_incharge'],
 };
-
-function getHomeRoute(role) {
-  const map = {
-    student:      '#/student/dashboard',
-    boys_warden:  '#/warden/dashboard',
-    girls_warden: '#/warden/dashboard',
-    security:     '#/gate/dashboard',
-    admin:        '#/admin/dashboard',
-    mess_incharge: '#/mess/stock',
-  };
-  return map[role] || '#/login';
-}
 
 function checkAccess(hash, user) {
   if (['#/splash', '#/login', '#/register'].includes(hash)) return true;

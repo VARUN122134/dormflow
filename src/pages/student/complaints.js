@@ -46,7 +46,7 @@ export default async function studentComplaintsPage(app) {
                 <div class="fs-13 fw-600 text-cap mb-xs">${escapeHtml(c.subject)}</div>
                 <div class="fs-12 c-on-surface-variant">${escapeHtml(c.description)}</div>
                 ${c.adminResponse ? `<div class="mt-sm p-sm" style="background:var(--primary-fixed);border-radius:6px;font-size:12px;"><strong>Response:</strong> ${escapeHtml(c.adminResponse)}</div>` : ''}
-                ${c.status === 'resolved' && !c.rating ? `<button class="btn btn-sm btn-ghost rateComplaint mt-sm" data-id="${c.id}" style="color:var(--status-warning);">Rate Resolution</button>` : ''}
+                ${c.status === 'resolved' && !c.rating ? `<button class="btn btn-sm btn-ghost rateComplaint mt-sm" data-id="${escapeHtml(c.id)}" style="color:var(--status-warning);">Rate Resolution</button>` : ''}
               </div>
             `).join('')}
         </div>

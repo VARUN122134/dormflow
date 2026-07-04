@@ -1,6 +1,6 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { navigate } from '../../router.js';
-import { studentNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { studentNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 import { getUnreadCount } from '../../store.js';
 
 export default function profilePage(app) {
@@ -18,38 +18,38 @@ export default function profilePage(app) {
         <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
       </div>
       
-      <div class="profile-name">${user.name}</div>
-      <div class="profile-location">${user.blockName} • Room ${user.roomNumber}</div>
+      <div class="profile-name">${escapeHtml(user.name)}</div>
+      <div class="profile-location">${escapeHtml(user.blockName)} • Room ${escapeHtml(user.roomNumber)}</div>
 
       <div class="profile-section card animate-fade-in">
         <div class="profile-section-title">Personal Details</div>
         <div class="profile-field">
           <span class="profile-field-label">Student ID</span>
-          <span class="profile-field-value">${user.id}</span>
+          <span class="profile-field-value">${escapeHtml(user.id)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">${user.registrationNo ? 'Reg No' : 'Email'}</span>
-          <span class="profile-field-value">${user.registrationNo || user.email}</span>
+          <span class="profile-field-value">${escapeHtml(user.registrationNo || user.email)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Phone</span>
-          <span class="profile-field-value">${user.phone || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user.phone || '\u2014')}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Gender</span>
-          <span class="profile-field-value">${user.gender}</span>
+          <span class="profile-field-value">${escapeHtml(user.gender)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Department</span>
-          <span class="profile-field-value">${user.department}</span>
+          <span class="profile-field-value">${escapeHtml(user.department)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Year</span>
-          <span class="profile-field-value">${user.year}</span>
+          <span class="profile-field-value">${escapeHtml(user.year)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Hostel</span>
-          <span class="profile-field-value">${user.hostelType} Hostel</span>
+          <span class="profile-field-value">${escapeHtml(user.hostelType)} Hostel</span>
         </div>
       </div>
 
@@ -57,11 +57,11 @@ export default function profilePage(app) {
         <div class="profile-section-title">Guardian Information</div>
         <div class="profile-field">
           <span class="profile-field-label">Guardian Name</span>
-          <span class="profile-field-value">${user.guardianName || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user.guardianName || '\u2014')}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Guardian Phone</span>
-          <span class="profile-field-value">${user.guardianPhone || '\u2014'}</span>
+          <span class="profile-field-value">${escapeHtml(user.guardianPhone || '\u2014')}</span>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export default function profilePage(app) {
         <div class="profile-section-title">Account & Security</div>
         <div class="profile-field">
           <span class="profile-field-label">Status</span>
-          <span class="chip ${user.activeStatus === 'IN' ? 'chip-in' : 'chip-out'}">${user.activeStatus}</span>
+          <span class="chip ${user.activeStatus === 'IN' ? 'chip-in' : 'chip-out'}">${escapeHtml(user.activeStatus)}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Account Created</span>
@@ -202,11 +202,11 @@ export default function profilePage(app) {
   document.getElementById('changePwBtn').addEventListener('click', async () => {
     const current = document.getElementById('cpCurrent').value;
     const newPw = document.getElementById('cpNew').value;
-    const confirm = document.getElementById('cpConfirm').value;
+    const cpConfirmEl = document.getElementById('cpConfirm').value;
     const cpError = document.getElementById('cpError');
     cpError.style.display = 'none';
 
-    if (!current || !newPw || !confirm) {
+    if (!current || !newPw || !cpConfirmEl) {
       cpError.textContent = 'Please fill in all password fields';
       cpError.style.display = 'block';
       return;
@@ -216,7 +216,7 @@ export default function profilePage(app) {
       cpError.style.display = 'block';
       return;
     }
-    if (newPw !== confirm) {
+    if (newPw !== cpConfirmEl) {
       cpError.textContent = 'New passwords do not match';
       cpError.style.display = 'block';
       return;

@@ -1519,11 +1519,11 @@ export async function calculateDailyBill(dateStr, userId) {
     await supabase.from('mess_wallet_transactions').insert({ student_id: sid, type: 'deduction', amount: perStudentCost, balance_before: wallet.balance, balance_after: newBalance, bill_id: bill.id, description: `Mess bill for ${dateStr}` });
     const minAlert = wallet.minimum_balance_alert ?? 500;
     if (newBalance < minAlert && newBalance >= 0) {
-      await createNotification(sid, 'Low Wallet Balance', `Your mess wallet balance is ₹${newBalance}. Please recharge soon.`, 'warning', 'wallet', bill.id);
+      await createNotification({ userId: sid, title: 'Low Wallet Balance', body: `Your mess wallet balance is ₹${newBalance}. Please recharge soon.`, type: 'warning', referenceType: 'wallet', referenceId: bill.id });
       const { data: wardens } = await supabase.from('profiles').select('id').in('role', ['boys_warden', 'girls_warden']);
       if (wardens) {
         for (const w of wardens) {
-          await createNotification(w.id, 'Student Low Balance', `Student wallet ₹${newBalance}. Please notify them.`, 'warning', 'wallet', bill.id);
+          await createNotification({ userId: w.id, title: 'Student Low Balance', body: `Student wallet ₹${newBalance}. Please notify them.`, type: 'warning', referenceType: 'wallet', referenceId: bill.id });
         }
       }
     }
@@ -1566,7 +1566,7 @@ export async function depositWallet(studentId, amount, userId) {
   await supabase.from('mess_wallets').update({ balance: newBalance, total_deposited: newDeposited, updated_at: new Date().toISOString() }).eq('id', wallet.id);
   await supabase.from('mess_wallet_transactions').insert({ student_id: studentId, type: 'deposit', amount, balance_before: wallet.balance, balance_after: newBalance, description: `Deposit of ₹${amount}` });
   if (userId) {
-    await createNotification(studentId, 'Wallet Recharged', `₹${amount} has been added to your mess wallet.`, 'success', 'wallet', wallet.id);
+    await createNotification({ userId: studentId, title: 'Wallet Recharged', body: `₹${amount} has been added to your mess wallet.`, type: 'success', referenceType: 'wallet', referenceId: wallet.id });
   }
   return getWallet(studentId);
 }

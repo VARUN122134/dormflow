@@ -5,7 +5,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { createLeave } from '../../store.js';
 import { navigate } from '../../router.js';
-import { studentNav, showToast, renderPageHeader, renderBackButton } from '../../helpers.js';
+import { studentNav, showToast, renderPageHeader, renderBackButton, escapeHtml } from '../../helpers.js';
 
 export default function applyLeavePage(app) {
   const user = getCurrentUser();
@@ -73,7 +73,7 @@ export default function applyLeavePage(app) {
 
         <div class="form-group">
           <label class="form-label" for="guardianContact">Guardian Contact</label>
-          <input class="form-input" type="tel" id="guardianContact" value="${user.guardianPhone || ''}" placeholder="Guardian phone number" required />
+          <input class="form-input" type="tel" id="guardianContact" value="${escapeHtml(user.guardianPhone || '')}" placeholder="Guardian phone number" required />
         </div>
 
         <div id="formError" style="display:none;margin-top:var(--space-md);padding:10px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-md);font-size:var(--body-md-size);text-align:center;"></div>
