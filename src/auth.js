@@ -186,6 +186,13 @@ export function isMessMember() {
   return _currentProfile?.isMessMember === true;
 }
 
+export async function refreshProfile() {
+  if (!_currentProfile?.id) return null;
+  const profile = await fetchProfile(_currentProfile.id);
+  if (profile) _currentProfile = profile;
+  return profile;
+}
+
 export function getHomeRoute(role) {
   if (role === 'admin') return '#/admin/dashboard';
   if (role === 'security') return '#/gate/dashboard';

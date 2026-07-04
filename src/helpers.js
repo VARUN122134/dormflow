@@ -129,14 +129,18 @@ export function renderBottomNav(activeItem, items) {
   `;
 }
 
-export function studentNav(active) {
-  return renderBottomNav(active, [
+export function studentNav(active, isMessMember = false) {
+  const items = [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/student/dashboard' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/student/mess' },
     { id: 'wallet', icon: 'account_balance_wallet', label: 'Wallet', route: '#/student/wallet' },
     { id: 'room', icon: 'meeting_room', label: 'My Room', route: '#/student/room' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/student/profile' },
-  ]);
+  ];
+  if (isMessMember) {
+    items.splice(2, 0, { id: 'mess-mgmt', icon: 'restaurant', label: 'Mgmt', route: '#/mess/dashboard' });
+  }
+  return renderBottomNav(active, items);
 }
 
 export function messMemberNav(active) {

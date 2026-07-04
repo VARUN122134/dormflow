@@ -73,7 +73,7 @@ export default async function studentAttendancePage(app) {
             `).join('')}
         </div>
 
-        ${studentNav('profile')}
+        ${studentNav('profile', user.isMessMember)}
       </div>
     `;
   }

@@ -1,4 +1,4 @@
-import { getCurrentUser } from './auth.js';
+import { getCurrentUser, refreshProfile } from './auth.js';
 
 const MAX_STACK = 20;
 const routes = {};
@@ -85,7 +85,7 @@ function checkAccess(hash, user) {
 
 export async function handleRoute() {
   const hash = getHash();
-  const user = getCurrentUser();
+  let user = getCurrentUser();
 
   const authPages = ['#/splash', '#/login', '#/register', '#/', ''];
   if (lastHash && lastHash !== hash && !authPages.includes(lastHash)) {
@@ -93,6 +93,12 @@ export async function handleRoute() {
     if (navStack.length > MAX_STACK) navStack.shift();
   }
   lastHash = hash;
+
+  // Refresh profile for students navigating to mess routes (picks up is_mess_member changes)
+  if (hash.startsWith('#/mess') && user?.role === 'student') {
+    const updated = await refreshProfile();
+    if (updated) user = getCurrentUser();
+  }
 
   if (currentCleanup && typeof currentCleanup === 'function') {
     currentCleanup();

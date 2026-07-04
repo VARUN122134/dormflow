@@ -88,7 +88,7 @@ export default function applyLeavePage(app) {
         </div>
       </form>
     </div>
-    ${studentNav('apply')}
+    ${studentNav('apply', user.isMessMember)}
   `;
 
   // Date validation

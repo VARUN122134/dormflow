@@ -81,7 +81,7 @@ export default async function leaveHistoryPage(app) {
           `}
         </div>
       </div>
-      ${studentNav('history')}
+      ${studentNav('history', user.isMessMember)}
     `;
 
     // Attach filter handlers

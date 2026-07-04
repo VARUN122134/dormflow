@@ -22,7 +22,7 @@ export default async function outpassPage(app) {
           <a href="#/student/apply" class="btn btn-primary" style="margin-top:var(--space-md);">Apply for Leave</a>
         </div>
       </div>
-      ${studentNav('dashboard')}
+      ${studentNav('dashboard', user.isMessMember)}
     `;
     return;
   }
@@ -101,7 +101,7 @@ export default async function outpassPage(app) {
         <p class="label-sm text-muted">Present this QR code to the gate security for scanning</p>
       </div>
     </div>
-    ${studentNav('dashboard')}
+    ${studentNav('dashboard', user.isMessMember)}
   `;
 
   setTimeout(async () => {

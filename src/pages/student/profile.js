@@ -142,7 +142,7 @@ export default function profilePage(app) {
         Sign Out
       </button>
     </div>
-    ${studentNav('profile')}
+    ${studentNav('profile', user.isMessMember)}
   `;
 
   const devPhoto = app.querySelector('#dev-photo');

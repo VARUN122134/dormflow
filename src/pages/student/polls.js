@@ -40,7 +40,7 @@ export default async function pollsPage(app) {
           ` : ''}
         </div>
 
-        ${studentNav('updates')}
+        ${studentNav('updates', user.isMessMember)}
       </div>
     `;
 

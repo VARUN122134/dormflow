@@ -153,7 +153,7 @@ export default async function studentDashboard(app) {
       </div>
     </div>
 
-    ${studentNav('dashboard')}
+    ${studentNav('dashboard', user.isMessMember)}
   `;
 
   document.getElementById('applyBtn').addEventListener('click', () => navigate('#/student/apply'));

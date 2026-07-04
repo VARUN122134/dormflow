@@ -37,7 +37,7 @@ export default async function myRoomPage(app) {
             `).join('')}
         </div>
 
-        ${studentNav('profile')}
+        ${studentNav('profile', user.isMessMember)}
       </div>
     `;
 

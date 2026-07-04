@@ -29,6 +29,7 @@ export default async function messPage(app) {
         <div style="padding:16px;padding-bottom:80px;">
           <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Today's Mess Menu</h2>
           <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+          ${user.isMessMember ? `<a href="#/mess/dashboard" class="btn btn-sm btn-primary mb-md" style="display:inline-flex;align-items:center;gap:4px;"><span class="material-icons-outlined" style="font-size:16px;">dashboard</span> Manage Mess</a>` : ''}
 
           <div class="meal-tabs" id="mealTabs" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;">
             ${mealTypes.map((mt, i) => `
@@ -44,7 +45,7 @@ export default async function messPage(app) {
           </div>
         </div>
 
-        ${studentNav('mess')}
+        ${studentNav('mess', user.isMessMember)}
       </div>
     `;
 

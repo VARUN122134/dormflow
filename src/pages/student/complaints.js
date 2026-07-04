@@ -51,7 +51,7 @@ export default async function studentComplaintsPage(app) {
             `).join('')}
         </div>
 
-        ${studentNav('profile')}
+        ${studentNav('profile', user.isMessMember)}
       </div>
     `;
 

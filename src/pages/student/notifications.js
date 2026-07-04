@@ -47,7 +47,7 @@ export default async function notificationsPage(app) {
             `).join('')}
         </div>
 
-        ${user.role === 'student' ? studentNav('profile') : user.role === 'admin' ? adminNav('dashboard') : wardenNav('profile')}
+        ${user.role === 'student' ? studentNav('profile', user.isMessMember) : user.role === 'admin' ? adminNav('dashboard') : wardenNav('profile')}
       </div>
     `;
 

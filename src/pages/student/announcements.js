@@ -54,7 +54,7 @@ export default async function announcementsPage(app) {
           ` : ''}
         </div>
 
-        ${studentNav('updates')}
+        ${studentNav('updates', user.isMessMember)}
       </div>
     `;
 

@@ -25,7 +25,7 @@ export default async function studentWalletPage(app) {
             <h3>No Wallet Yet</h3>
             <p class="c-outline">Your mess wallet hasn't been created. Contact the mess incharge to set it up.</p>
           </div>
-          ${studentNav('wallet')}
+          ${studentNav('wallet', user.isMessMember)}
         </div>
       `;
       return;
@@ -88,7 +88,7 @@ export default async function studentWalletPage(app) {
             `).join('') || '<p class="text-muted">No transactions yet.</p>'}
           </div>
         </div>
-        ${studentNav('wallet')}
+        ${studentNav('wallet', user.isMessMember)}
       </div>
     `;
   }
