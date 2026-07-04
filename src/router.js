@@ -5,15 +5,28 @@
 
 import { getCurrentUser } from './auth.js';
 
+const MAX_STACK = 20;
 const routes = {};
 let currentCleanup = null;
+const navStack = [];
 
 export function registerRoute(path, handler) {
   routes[path] = handler;
 }
 
 export function navigate(hash) {
+  const current = window.location.hash;
+  const authPages = ['#/splash', '#/login', '#/register', '#/', ''];
+  if (current && current !== hash && !authPages.includes(current)) {
+    navStack.push(current);
+    if (navStack.length > MAX_STACK) navStack.shift();
+  }
   window.location.hash = hash;
+}
+
+export function goBack(fallback) {
+  const target = navStack.pop();
+  window.location.hash = target || fallback || '#/';
 }
 
 function getHash() {
@@ -117,6 +130,7 @@ export async function handleRoute() {
 }
 
 export function initRouter() {
+  window.__router = { goBack, navigate };
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
 }

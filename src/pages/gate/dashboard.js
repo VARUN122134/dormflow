@@ -248,7 +248,8 @@ export default async function gateDashboard(app) {
       setTimeout(() => {
         const o = document.getElementById('scanSuccessOverlay');
         if (o) o.remove();
-        window.history.back();
+        const rb = window.__router?.goBack;
+        if (rb) rb('#/gate/dashboard'); else window.location.hash = '#/gate/dashboard';
       }, 300);
     } else {
       showToast(result.error, 'error');
