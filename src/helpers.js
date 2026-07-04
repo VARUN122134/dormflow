@@ -182,6 +182,7 @@ export function adminNav(active) {
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/admin/dashboard' },
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
     { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/admin/rooms' },
+    { id: 'mess', icon: 'restaurant', label: 'Mess', route: '#/admin/mess' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
     { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
