@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, getPolls, getPollOptions, getPollResults, hasVoted, vote } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml, formatDate, renderNotifBell, renderBackButton } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, formatDate, renderNotifBell, renderBackButton, renderLogoutIcon } from '../../helpers.js';
 
 export default async function announcementsPage(app) {
   const user = getCurrentUser();
@@ -19,6 +19,7 @@ export default async function announcementsPage(app) {
             <span class="stitch-sub">Updates</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             ${user.name ? `<span class="fs-13 c-on-surface-variant">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}
           </div>

@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMyAllocation, getMaintenanceRequests, createMaintenanceRequest } from '../../store.js';
-import { studentNav, showToast, escapeHtml, statusChip, formatDate, renderPageHeader } from '../../helpers.js';
+import { studentNav, showToast, escapeHtml, statusChip, formatDate, renderPageHeader, renderLogoutIcon } from '../../helpers.js';
 
 export default async function myRoomPage(app) {
   const user = getCurrentUser();
@@ -12,7 +12,7 @@ export default async function myRoomPage(app) {
 
     app.innerHTML = `
       <div class="page-container">
-        ${renderPageHeader('UCE IT', 'My Room')}
+        ${renderPageHeader('UCE IT', 'My Room', `<div class="flex items-center gap-sm">${renderLogoutIcon()}</div>`)}
 
         <div style="padding:16px;padding-bottom:80px;">
           ${allocation ? renderRoomInfo(allocation) : renderNoRoom()}

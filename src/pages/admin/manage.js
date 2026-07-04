@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, createAnnouncement, deleteAnnouncement, getPolls, createPoll, deletePoll, getPollOptions, getPollResults, getMessMembers } from '../../store.js';
-import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 
 export default async function adminManage(app) {
   const user = getCurrentUser();
@@ -18,6 +18,7 @@ export default async function adminManage(app) {
             <span class="stitch-sub">Management</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>

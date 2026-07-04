@@ -1,6 +1,6 @@
 import { getCurrentUser, getRole } from '../../auth.js';
 import { getRooms, getRoomAllocations, createRoom, updateRoom, deleteRoom, allocateRoom, vacateRoom, getMaintenanceRequests, updateMaintenanceStatus, getUsers, getRoomById } from '../../store.js';
-import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { adminNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 
 export default async function adminRoomsPage(app) {
   const user = getCurrentUser();
@@ -27,6 +27,7 @@ export default async function adminRoomsPage(app) {
             <span class="stitch-sub">Room Management</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>

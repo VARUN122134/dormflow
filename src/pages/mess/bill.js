@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getDailyBill, getBillHistory, calculateDailyBill, getDailyUsage } from '../../store.js';
-import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 
 export default async function messBillPage(app) {
   const user = getCurrentUser();
@@ -20,6 +20,7 @@ export default async function messBillPage(app) {
             <span class="stitch-sub">Daily Bill</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>

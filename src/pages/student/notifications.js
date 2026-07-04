@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getNotifications, markNotificationRead, markAllNotificationsRead, getUnreadCount } from '../../store.js';
-import { studentNav, wardenNav, adminNav, showToast, escapeHtml, formatRelativeTime, renderPageHeader, renderNotifBell, renderBackButton } from '../../helpers.js';
+import { studentNav, wardenNav, adminNav, showToast, escapeHtml, formatRelativeTime, renderPageHeader, renderNotifBell, renderBackButton, renderLogoutIcon } from '../../helpers.js';
 
 export default async function notificationsPage(app) {
   const user = getCurrentUser();
@@ -18,6 +18,7 @@ export default async function notificationsPage(app) {
             <span class="stitch-sub">Notifications</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
           </div>

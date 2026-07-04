@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getSystemStats, getRecentGateActivity, getUsers } from '../../store.js';
-import { adminNav, formatRelativeTime, renderPageHeader, getInitials, renderAvatar } from '../../helpers.js';
+import { adminNav, formatRelativeTime, renderPageHeader, getInitials, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
 export default async function adminDashboard(app) {
@@ -23,10 +23,11 @@ export default async function adminDashboard(app) {
           <div class="page-header-subtitle">System Admin</div>
         </div>
       </div>
-      <div class="flex items-center gap-sm">
-        <span class="material-icons-outlined c-on-surface-variant" style="cursor:pointer;">notifications</span>
-        ${renderAvatar(user, 'stitch-avatar-sm')}
-      </div>
+          <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
+            <span class="material-icons-outlined c-on-surface-variant" style="cursor:pointer;">notifications</span>
+            ${renderAvatar(user, 'stitch-avatar-sm')}
+          </div>
     </header>
 
     <nav class="sidebar-nav">

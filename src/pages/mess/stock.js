@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getStockItems, createStockItem, updateStockItem, getStockPurchases, createStockPurchase } from '../../store.js';
-import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderSkeletonPage } from '../../helpers.js';
+import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderSkeletonPage, renderLogoutIcon } from '../../helpers.js';
 
 export default async function messStockPage(app) {
   const user = getCurrentUser();
@@ -20,6 +20,7 @@ export default async function messStockPage(app) {
             <span class="stitch-sub">Stock Management</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>

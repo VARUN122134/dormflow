@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMessAttendance, getMessAttendanceStats, getEvents, getEventAttendance } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, formatDate, renderPageHeader, renderNotifBell, renderBackButton } from '../../helpers.js';
+import { wardenNav, showToast, escapeHtml, formatDate, renderPageHeader, renderNotifBell, renderBackButton, renderLogoutIcon } from '../../helpers.js';
 
 export default async function wardenAttendancePage(app) {
   const user = getCurrentUser();
@@ -23,6 +23,7 @@ export default async function wardenAttendancePage(app) {
             <span class="stitch-sub">Attendance</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
           </div>

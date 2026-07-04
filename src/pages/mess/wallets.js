@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getWallets, depositWallet, getLowBalanceWallets } from '../../store.js';
-import { messInchargeNav, wardenNav, adminNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderBackButton, renderSkeletonPage } from '../../helpers.js';
+import { messInchargeNav, wardenNav, adminNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderBackButton, renderSkeletonPage, renderLogoutIcon } from '../../helpers.js';
 
 export default async function messWalletsPage(app) {
   const user = getCurrentUser();
@@ -29,6 +29,7 @@ export default async function messWalletsPage(app) {
             <span class="stitch-sub">Wallet Overview</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>

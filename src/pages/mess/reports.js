@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMonthlyMessReport, getDailyBill, getBillHistory } from '../../store.js';
-import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 import { supabase } from '../../supabase.js';
 
 export default async function messReportsPage(app) {
@@ -21,6 +21,7 @@ export default async function messReportsPage(app) {
             <span class="stitch-sub">Mess Reports</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>

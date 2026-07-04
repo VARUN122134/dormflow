@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getPolls, getPollOptions, getPollResults, hasVoted, vote } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml, renderNotifBell, renderBackButton } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, renderNotifBell, renderBackButton, renderLogoutIcon } from '../../helpers.js';
 
 export default async function pollsPage(app) {
   const user = getCurrentUser();
@@ -20,6 +20,7 @@ export default async function pollsPage(app) {
             <span class="stitch-sub">Polls</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             ${user.name ? `<span class="fs-13 c-on-surface-variant">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}
           </div>

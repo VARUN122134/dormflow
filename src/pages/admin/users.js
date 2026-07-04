@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getUsers, deleteUser, approveUser, exportUsersToCSV } from '../../store.js';
-import { adminNav, statusChip, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { adminNav, statusChip, getInitials, showToast, showModal, renderPageHeader, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 
 export default async function userManagement(app) {
   const user = getCurrentUser();
@@ -37,7 +37,7 @@ export default async function userManagement(app) {
     }[role] || role);
 
     app.innerHTML = `
-      ${renderPageHeader('User Management', 'Manage student and staff profiles')}
+      ${renderPageHeader('User Management', 'Manage student and staff profiles', `<div class="flex items-center gap-sm">${renderLogoutIcon()}</div>`)}
       <div class="page">
         <div class="filter-tabs mb-md" id="userTabs">
           <button class="filter-tab ${activeTab === 'all' ? 'active' : ''}" data-tab="all">

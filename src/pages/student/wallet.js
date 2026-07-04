@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getWallet, getWalletTransactions, getDailyBill } from '../../store.js';
-import { studentNav, showToast, escapeHtml, renderAvatar, renderSkeletonPage } from '../../helpers.js';
+import { studentNav, showToast, escapeHtml, renderAvatar, renderSkeletonPage, renderLogoutIcon } from '../../helpers.js';
 
 export default async function studentWalletPage(app) {
   const user = getCurrentUser();
@@ -18,7 +18,7 @@ export default async function studentWalletPage(app) {
         <div class="page-container">
           <header class="stitch-header">
             <div class="stitch-left"><span class="stitch-brand">UCE IT</span><span class="stitch-sub">My Wallet</span></div>
-            <div class="flex items-center gap-sm">${renderAvatar(user, 'stitch-avatar-sm')}</div>
+            <div class="flex items-center gap-sm">${renderLogoutIcon()}${renderAvatar(user, 'stitch-avatar-sm')}</div>
           </header>
           <div style="padding:16px;padding-bottom:80px;text-align:center;padding-top:60px;">
             <span class="material-icons-outlined" style="font-size:64px;color:var(--outline-variant);">account_balance_wallet</span>
@@ -44,6 +44,7 @@ export default async function studentWalletPage(app) {
             <span class="stitch-sub">My Wallet</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>

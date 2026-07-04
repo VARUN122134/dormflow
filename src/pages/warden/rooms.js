@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getRooms, getRoomAllocations, allocateRoom, vacateRoom, updateRoom } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { wardenNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 
 export default async function wardenRoomsPage(app) {
   const user = getCurrentUser();
@@ -26,6 +26,7 @@ export default async function wardenRoomsPage(app) {
             <span class="stitch-sub">Room Management</span>
           </div>
           <div class="flex items-center gap-sm">
+            ${renderLogoutIcon()}
             ${renderNotifBell()}
             <a href="#/warden/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>

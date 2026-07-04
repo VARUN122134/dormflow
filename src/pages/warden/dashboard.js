@@ -3,7 +3,7 @@ import {
   getLeavesByHostel, approveLeave, rejectLeave,
   getHostelStats, getUsers
 } from '../../store.js';
-import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar } from '../../helpers.js';
+import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
 export default async function wardenDashboard(app) {
@@ -26,7 +26,7 @@ export default async function wardenDashboard(app) {
           <img src="logo.png" alt="Anna University Logo" style="width: 28px; height: 28px; object-fit: contain;" />
           <span class="stitch-brand">UCE IT</span>
         </div>
-        ${renderAvatar(user, 'stitch-avatar-sm')}
+        <div class="flex items-center gap-sm">${renderLogoutIcon()}${renderAvatar(user, 'stitch-avatar-sm')}</div>
       </header>
 
       <div class="page page-warden">
