@@ -1,10 +1,16 @@
 import { getCurrentUser } from '../../auth.js';
 import { getWallets, depositWallet, getLowBalanceWallets } from '../../store.js';
-import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { messInchargeNav, wardenNav, adminNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderBackButton } from '../../helpers.js';
 
 export default async function messWalletsPage(app) {
   const user = getCurrentUser();
   if (!user) return;
+
+  function getNav() {
+    if (user.role === 'mess_incharge') return messInchargeNav('wallets');
+    if (user.role === 'admin') return adminNav('wallets');
+    return wardenNav('wallets');
+  }
 
   async function render() {
     const wallets = await getWallets();
@@ -16,6 +22,7 @@ export default async function messWalletsPage(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${user.role !== 'mess_incharge' ? renderBackButton() : ''}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Wallet Overview</span>
           </div>
@@ -69,7 +76,7 @@ export default async function messWalletsPage(app) {
             `).join('') || '<p class="text-muted">No wallets created yet.</p>'}
           </div>
         </div>
-        ${messInchargeNav('wallets')}
+        ${getNav()}
       </div>
     `;
 

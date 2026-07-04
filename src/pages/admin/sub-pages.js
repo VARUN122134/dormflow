@@ -1,14 +1,14 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { getLeaves } from '../../store.js';
 import { navigate } from '../../router.js';
-import { adminNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { adminNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar, renderBackButton } from '../../helpers.js';
 
 export async function adminLeaves(app) {
   const rawLeaves = await getLeaves();
   const leaves = rawLeaves.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   app.innerHTML = `
-    ${renderPageHeader('All Leave Requests', `${leaves.length} total`)}
+    ${renderPageHeader('All Leave Requests', `${leaves.length} total`, renderBackButton())}
     <div class="page">
       <div style="display:flex;flex-direction:column;gap:var(--space-sm);" class="stagger">
         ${leaves.map(l => {
@@ -40,7 +40,7 @@ export function adminProfile(app) {
   if (!user) return;
 
   app.innerHTML = `
-    ${renderPageHeader('UCE IT', '')}
+    ${renderPageHeader('UCE IT', '', renderBackButton())}
     <div class="page">
       <div class="profile-avatar-container animate-scale-in" style="position: relative; width: 80px; height: 80px; margin: 0 auto var(--space-md); cursor: pointer; border-radius: 50%;">
         ${renderAvatar(user, 'profile-avatar-large')}

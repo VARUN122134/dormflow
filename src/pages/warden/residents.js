@@ -4,7 +4,7 @@
 
 import { getCurrentUser } from '../../auth.js';
 import { getUsers } from '../../store.js';
-import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar } from '../../helpers.js';
+import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar, renderBackButton } from '../../helpers.js';
 
 export default async function wardenResidents(app) {
   const user = getCurrentUser();
@@ -33,7 +33,7 @@ export default async function wardenResidents(app) {
     students.sort((a, b) => a.name.localeCompare(b.name));
 
     app.innerHTML = `
-      ${renderPageHeader('Residents', `${hostelType} Hostel • ${students.length} students`)}
+      ${renderPageHeader('Residents', `${hostelType} Hostel • ${students.length} students`, renderBackButton())}
       <div class="page">
         <!-- Search -->
         <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);">

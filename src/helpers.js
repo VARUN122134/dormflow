@@ -9,6 +9,18 @@ function ensureToastContainer() {
   return toastContainer;
 }
 
+export function goBack(fallbackRoute) {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.hash = fallbackRoute || '#/';
+  }
+}
+
+export function renderBackButton(fallbackRoute) {
+  return `<a href="javascript:void(0)" onclick="(function(){const m=window.location.hash;if(window.history.length>1){window.history.back()}else{window.location.hash='${fallbackRoute || '#'}'}})()" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--on-surface-variant);margin-right:4px;" aria-label="Back"><span class="material-icons-outlined" style="font-size:24px;">arrow_back</span></a>`;
+}
+
 export function escapeHtml(str) {
   if (!str) return '';
   const div = document.createElement('div');

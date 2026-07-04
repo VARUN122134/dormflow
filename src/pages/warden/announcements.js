@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, createAnnouncement, deleteAnnouncement, getPolls, createPoll, deletePoll, getPollOptions, getPollResults, hasVoted } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell } from '../../helpers.js';
+import { wardenNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderBackButton } from '../../helpers.js';
 
 export default async function wardenAnnouncements(app) {
   const user = getCurrentUser();
@@ -14,6 +14,7 @@ export default async function wardenAnnouncements(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Manage Announcements</span>
           </div>

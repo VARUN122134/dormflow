@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getUsers, createNotification } from '../../store.js';
-import { adminNav, showToast, escapeHtml, renderPageHeader, renderNotifBell } from '../../helpers.js';
+import { adminNav, showToast, escapeHtml, renderPageHeader, renderNotifBell, renderBackButton } from '../../helpers.js';
 
 export default async function adminSendNotificationsPage(app) {
   const user = getCurrentUser();
@@ -13,6 +13,7 @@ export default async function adminSendNotificationsPage(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Notifications</span>
           </div>

@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMessAttendance, getMessAttendanceStats, getEvents, getEventAttendance } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, formatDate, renderPageHeader, renderNotifBell } from '../../helpers.js';
+import { wardenNav, showToast, escapeHtml, formatDate, renderPageHeader, renderNotifBell, renderBackButton } from '../../helpers.js';
 
 export default async function wardenAttendancePage(app) {
   const user = getCurrentUser();
@@ -18,6 +18,7 @@ export default async function wardenAttendancePage(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Attendance</span>
           </div>

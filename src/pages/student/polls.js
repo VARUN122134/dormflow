@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getPolls, getPollOptions, getPollResults, hasVoted, vote } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml, renderNotifBell } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, renderNotifBell, renderBackButton } from '../../helpers.js';
 
 export default async function pollsPage(app) {
   const user = getCurrentUser();
@@ -15,6 +15,7 @@ export default async function pollsPage(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Polls</span>
           </div>

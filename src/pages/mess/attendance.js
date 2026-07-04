@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { markMessAttendance, getMessAttendanceStats, getUsers } from '../../store.js';
-import { messMemberNav, showToast, escapeHtml, renderPageHeader, renderNotifBell } from '../../helpers.js';
+import { messMemberNav, showToast, escapeHtml, renderPageHeader, renderNotifBell, renderBackButton } from '../../helpers.js';
 
 export default async function messAttendancePage(app) {
   const user = getCurrentUser();
@@ -14,6 +14,7 @@ export default async function messAttendancePage(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Mess Attendance</span>
           </div>

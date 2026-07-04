@@ -5,7 +5,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { createLeave } from '../../store.js';
 import { navigate } from '../../router.js';
-import { studentNav, showToast, renderPageHeader } from '../../helpers.js';
+import { studentNav, showToast, renderPageHeader, renderBackButton } from '../../helpers.js';
 
 export default function applyLeavePage(app) {
   const user = getCurrentUser();
@@ -18,11 +18,7 @@ export default function applyLeavePage(app) {
   const today = new Date().toISOString().split('T')[0];
 
   app.innerHTML = `
-    ${renderPageHeader('Leave Application', '', `
-      <a href="#/student/dashboard" style="color:var(--on-surface-variant);text-decoration:none;">
-        <span class="material-icons-outlined">close</span>
-      </a>
-    `)}
+    ${renderPageHeader('Leave Application', '', renderBackButton('#/student/dashboard'))}
     <div class="page">
       <p class="body-md text-muted" style="margin-bottom:var(--space-lg);">
         Complete the form below to submit your leave request for approval.

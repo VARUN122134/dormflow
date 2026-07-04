@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, getPolls, getPollOptions, getPollResults, hasVoted, vote } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml, formatDate, renderNotifBell } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, formatDate, renderNotifBell, renderBackButton } from '../../helpers.js';
 
 export default async function announcementsPage(app) {
   const user = getCurrentUser();
@@ -14,6 +14,7 @@ export default async function announcementsPage(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
+            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Updates</span>
           </div>

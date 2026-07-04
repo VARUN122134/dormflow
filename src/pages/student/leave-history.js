@@ -4,7 +4,7 @@
 
 import { getCurrentUser } from '../../auth.js';
 import { getLeavesByStudent, getOutpassByLeave } from '../../store.js';
-import { studentNav, statusChip, formatDateRange, renderPageHeader } from '../../helpers.js';
+import { studentNav, statusChip, formatDateRange, renderPageHeader, renderBackButton } from '../../helpers.js';
 
 export default async function leaveHistoryPage(app) {
   const user = getCurrentUser();
@@ -37,7 +37,7 @@ export default async function leaveHistoryPage(app) {
     });
 
     app.innerHTML = `
-      ${renderPageHeader('UCE IT', '')}
+      ${renderPageHeader('UCE IT', '', renderBackButton())}
       <div class="page">
         <h2 style="margin-bottom:var(--space-xs);">Leave History</h2>
         <p class="body-md text-muted" style="margin-bottom:var(--space-md);">
