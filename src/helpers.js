@@ -186,6 +186,27 @@ export function adminNav(active) {
   ]);
 }
 
+export function renderSkeletonPage() {
+  return `
+    <div class="page-container">
+      <header class="stitch-header">
+        <div class="stitch-left"><span class="stitch-brand">UCE IT</span></div>
+      </header>
+      <div class="page-content">
+        <div class="skeleton skeleton-title mb-md"></div>
+        <div class="flex gap-sm mb-md">
+          <div class="skeleton stat-card" style="height:80px;"></div>
+          <div class="skeleton stat-card" style="height:80px;"></div>
+          <div class="skeleton stat-card" style="height:80px;"></div>
+        </div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text" style="width:60%;"></div>
+      </div>
+    </div>`;
+}
+
 export function renderStars(rating) {
   let html = '<span class="star-rating">';
   for (let i = 1; i <= 5; i++) {

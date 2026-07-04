@@ -20,30 +20,30 @@ export default async function messUsagePage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Daily Usage</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>
         </header>
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Today's Stock Usage</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">Today's Stock Usage</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
 
           <div id="usageItems">
             ${items.map(i => `
               <div class="card" style="margin-bottom:6px;padding:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <div class="flex justify-between items-center gap-sm">
                   <div style="flex:1;"><strong>${escapeHtml(i.name)}</strong> <span class="chip chip-info" style="font-size:10px;">${i.category}</span></div>
-                  <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="flex items-center gap-xs">
                     <input class="form-input" type="number" step="0.01" min="0" id="usage-${i.id}" value="${usageMap[i.id] || ''}" placeholder="0" style="width:80px;padding:6px;text-align:center;" data-item-id="${i.id}">
-                    <span style="font-size:12px;color:var(--outline);min-width:40px;">${i.unit}</span>
+                    <span class="fs-12 c-outline" style="min-width:40px;">${i.unit}</span>
                   </div>
                 </div>
               </div>
             `).join('') || '<p class="text-muted">No stock items. Add items in Stock Management first.</p>'}
           </div>
 
-          <button class="btn btn-primary btn-block" id="saveUsageBtn" style="margin-top:8px;">
+          <button class="btn btn-primary btn-block mt-sm" id="saveUsageBtn">
             <span class="material-icons-outlined" style="font-size:18px;">save</span> Save Today's Usage
           </button>
         </div>

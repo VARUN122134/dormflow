@@ -39,7 +39,7 @@ export default async function userManagement(app) {
     app.innerHTML = `
       ${renderPageHeader('User Management', 'Manage student and staff profiles')}
       <div class="page">
-        <div class="filter-tabs" id="userTabs" style="margin-bottom:var(--space-md);">
+        <div class="filter-tabs mb-md" id="userTabs">
           <button class="filter-tab ${activeTab === 'all' ? 'active' : ''}" data-tab="all">
             All Users (${users.length})
           </button>
@@ -49,31 +49,31 @@ export default async function userManagement(app) {
         </div>
 
         ${activeTab === 'pending' && pendingUsers.length > 0 ? `
-          <div style="background:var(--status-warning-bg);padding:12px 16px;border-radius:var(--radius-md);margin-bottom:var(--space-md);display:flex;align-items:center;gap:8px;">
-            <span class="material-icons-outlined" style="color:var(--status-warning);">pending_actions</span>
-            <span style="font-size:13px;color:var(--status-warning-text);">
+          <div class="mb-md flex items-center gap-sm" style="background:var(--status-warning-bg);padding:12px 16px;border-radius:var(--radius-md);">
+            <span class="material-icons-outlined c-warning">pending_actions</span>
+            <span class="fs-13" style="color:var(--status-warning-text);">
               ${pendingUsers.length} user(s) awaiting approval. Review their details and approve to grant access.
             </span>
           </div>
         ` : activeTab === 'pending' ? `
-          <div class="empty-state" style="padding:32px;">
-            <span class="material-icons-outlined" style="font-size:48px;color:var(--status-success);">check_circle</span>
+          <div class="empty-state p-lg">
+            <span class="material-icons-outlined c-success" style="font-size:48px;">check_circle</span>
             <div class="empty-state-title">No pending approvals</div>
             <div class="empty-state-desc">All users have been approved.</div>
           </div>
         ` : ''}
 
-        <div style="display:flex;gap:8px;margin-bottom:var(--space-md);">
+        <div class="flex gap-sm mb-md">
           <div style="position:relative;flex:1;">
-            <span class="material-icons-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--outline);">search</span>
+            <span class="material-icons-outlined fs-20 c-outline" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);">search</span>
             <input class="form-input" type="text" id="userSearch" placeholder="Search users..." style="padding-left:40px;" value="${search}" />
           </div>
           <button class="btn btn-ghost btn-sm" id="exportUsersBtn" title="Export to CSV">
-            <span class="material-icons-outlined" style="font-size:20px;">file_download</span>
+            <span class="material-icons-outlined fs-20">file_download</span>
           </button>
         </div>
 
-        <div class="filter-tabs" id="roleFilters" style="margin-bottom:var(--space-md);">
+        <div class="filter-tabs mb-md" id="roleFilters">
           ${['All', 'student', 'boys_warden', 'girls_warden', 'security', 'admin'].map(r => `
             <button class="filter-tab ${roleFilter === r ? 'active' : ''}" data-role="${r}">
               ${r === 'All' ? 'All' : roleLabel(r)}
@@ -81,7 +81,7 @@ export default async function userManagement(app) {
           `).join('')}
         </div>
 
-        <div class="label-md text-muted" style="margin-bottom:var(--space-sm);">${displayUsers.length} users found</div>
+        <div class="label-md text-muted mb-sm">${displayUsers.length} users found</div>
 
         <div style="display:flex;flex-direction:column;gap:var(--space-sm);" class="stagger">
           ${displayUsers.map(u => `

@@ -42,10 +42,10 @@ export function adminProfile(app) {
   app.innerHTML = `
     ${renderPageHeader('UCE IT', '', renderBackButton())}
     <div class="page">
-      <div class="profile-avatar-container animate-scale-in" style="position: relative; width: 80px; height: 80px; margin: 0 auto var(--space-md); cursor: pointer; border-radius: 50%;">
+      <div class="profile-avatar-container animate-scale-in mx-auto mb-md" style="position: relative; width: 80px; height: 80px; cursor: pointer; border-radius: 50%;">
         ${renderAvatar(user, 'profile-avatar-large')}
-        <div class="avatar-edit-overlay" style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-          <span class="material-icons-outlined" style="font-size:16px;">edit</span>
+        <div class="avatar-edit-overlay flex items-center justify-center" style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+          <span class="material-icons-outlined fs-16">edit</span>
         </div>
         <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
       </div>
@@ -83,31 +83,31 @@ export function adminProfile(app) {
             <label class="form-label" for="cpConfirm">Confirm New Password</label>
             <input class="form-input" type="password" id="cpConfirm" placeholder="Confirm new password" />
           </div>
-          <div id="cpError" style="display:none;margin-top:8px;padding:8px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-md);font-size:12px;text-align:center;"></div>
-          <button class="btn btn-secondary btn-block btn-sm" style="margin-top:12px;" id="changePwBtn">
+          <div id="cpError" class="fs-12 text-center" style="display:none;margin-top:8px;padding:8px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-md);"></div>
+          <button class="btn btn-secondary btn-block btn-sm mt-md" id="changePwBtn">
             <span class="material-icons-outlined" style="font-size:18px;">lock_reset</span>
             Update Password
           </button>
         </div>
       </div>
 
-      <div class="profile-section card animate-fade-in" style="text-align:center;">
+      <div class="profile-section card animate-fade-in text-center">
         <div class="profile-section-title">About</div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;">
+        <div class="flex flex-col items-center gap-sm" style="padding:8px 0;">
           <img id="dev-photo" src="photo.png" alt="Varun C" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-bottom:4px;" />
-          <div style="font-weight:600;font-size:14px;">Varun C</div>
-          <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
-          <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.0</div>
-          <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
-            <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
+          <div class="fw-600 fs-14">Varun C</div>
+          <div class="fs-12 c-on-surface-variant">Lead Developer</div>
+          <div class="text-upp" style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;">MooN Software Solutions</div>
+          <div class="c-outline" style="font-size:10px;margin-top:6px;">UCE IT v3.0.0</div>
+          <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-sm mt-md fs-12" style="color:var(--primary-container);text-decoration:none;">
+            <span class="material-icons-outlined fs-16">camera_alt</span>
             @mr_varun_c
           </a>
         </div>
       </div>
 
-      <button class="btn btn-danger btn-block animate-fade-in" id="logoutBtn" style="margin-top:var(--space-md);">
-        <span class="material-icons-outlined" style="font-size:20px;">logout</span>
+      <button class="btn btn-danger btn-block animate-fade-in mt-md" id="logoutBtn">
+        <span class="material-icons-outlined fs-20">logout</span>
         Sign Out
       </button>
     </div>

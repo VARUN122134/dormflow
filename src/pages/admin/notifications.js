@@ -17,16 +17,16 @@ export default async function adminSendNotificationsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Notifications</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+            <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 16px 0;font-size:20px;font-weight:600;">Send Notification</h2>
+        <div class="page-content">
+          <h2 class="m-0 mb-md fs-20 fw-600">Send Notification</h2>
 
-          <div class="card" style="margin-bottom:16px;">
+          <div class="card mb-md">
             <div class="form-group">
               <label class="form-label">Target Users</label>
               <select class="form-input" id="notifTarget">
@@ -65,7 +65,7 @@ export default async function adminSendNotificationsPage(app) {
               <label class="form-label">Message</label>
               <textarea class="form-input" id="notifBody" rows="3" placeholder="Notification message..."></textarea>
             </div>
-            <button class="btn btn-primary btn-block" id="sendNotifBtn" style="margin-top:16px;">
+            <button class="btn btn-primary btn-block mt-md" id="sendNotifBtn">
               <span class="material-icons-outlined" style="font-size:18px;">send</span> Send Notification
             </button>
           </div>
@@ -95,7 +95,7 @@ export default async function adminSendNotificationsPage(app) {
       else if (target === 'staff') recipients = allUsers.filter(u => u.role !== 'student');
       else if (target === 'admin') recipients = allUsers.filter(u => u.role === 'admin');
 
-      statusDiv.innerHTML = `<div style="font-size:13px;color:var(--primary-container);">Sending to ${recipients.length} user(s)...</div>`;
+      statusDiv.innerHTML = `<div class="fs-13" style="color:var(--primary-container);">Sending to ${recipients.length} user(s)...</div>`;
 
       let sent = 0;
       for (const r of recipients) {
@@ -105,7 +105,7 @@ export default async function adminSendNotificationsPage(app) {
         } catch (e) { console.warn('Failed to notify', r.id, e); }
       }
 
-      statusDiv.innerHTML = `<div style="font-size:13px;color:var(--status-success);">✓ Sent to ${sent} user(s)</div>`;
+      statusDiv.innerHTML = `<div class="fs-13 c-success">✓ Sent to ${sent} user(s)</div>`;
       showToast(`Notification sent to ${sent} user(s)`, 'success');
     });
   }

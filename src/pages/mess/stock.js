@@ -1,10 +1,12 @@
 import { getCurrentUser } from '../../auth.js';
 import { getStockItems, createStockItem, updateStockItem, getStockPurchases, createStockPurchase } from '../../store.js';
-import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar } from '../../helpers.js';
+import { messInchargeNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderSkeletonPage } from '../../helpers.js';
 
 export default async function messStockPage(app) {
   const user = getCurrentUser();
   if (!user) return;
+
+  app.innerHTML = renderSkeletonPage();
 
   async function render() {
     const items = await getStockItems();
@@ -17,27 +19,27 @@ export default async function messStockPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Stock Management</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>
         </header>
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Mess Stock</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">Manage stock items and record purchases</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">Mess Stock</h2>
+          <p class="m-0 mb-md fs-13 c-outline">Manage stock items and record purchases</p>
 
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <div class="flex gap-sm mb-md">
             <button class="btn btn-primary btn-sm" id="addItemBtn" style="flex:1;"><span class="material-icons-outlined" style="font-size:18px;">add</span> New Item</button>
             <button class="btn btn-secondary btn-sm" id="addPurchaseBtn" style="flex:1;"><span class="material-icons-outlined" style="font-size:18px;">shopping_cart</span> Record Purchase</button>
           </div>
 
           <div class="section-title">Stock Items</div>
-          <div id="itemsList" style="margin-bottom:16px;">
+          <div id="itemsList" class="mb-md">
             ${items.map(i => `
               <div class="card" style="margin-bottom:6px;padding:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                  <div><strong>${escapeHtml(i.name)}</strong> <span class="chip chip-info" style="font-size:10px;">${i.category}</span> <span style="font-size:11px;color:var(--outline);">${i.unit}</span></div>
-                  <div style="display:flex;gap:4px;">
+                <div class="flex justify-between items-center">
+                  <div><strong>${escapeHtml(i.name)}</strong> <span class="chip chip-info" style="font-size:10px;">${i.category}</span> <span class="fs-12 c-outline">${i.unit}</span></div>
+                  <div class="flex gap-xs">
                     <button class="btn btn-sm btn-ghost editItem" data-id="${i.id}" data-name="${escapeHtml(i.name)}" data-category="${i.category}" data-unit="${escapeHtml(i.unit)}" style="font-size:11px;">Edit</button>
                   </div>
                 </div>
@@ -49,11 +51,11 @@ export default async function messStockPage(app) {
           <div id="purchasesList">
             ${purchases.map(p => `
               <div class="card" style="margin-bottom:6px;padding:10px;">
-                <div style="display:flex;justify-content:space-between;font-size:12px;">
+                <div class="flex justify-between fs-12">
                   <div><strong>${escapeHtml(p.item?.name || 'Unknown')}</strong> — ${p.quantity} × ₹${p.unitPrice} = <strong>₹${p.totalCost}</strong></div>
-                  <div style="color:var(--outline);">${p.purchasedDate}</div>
+                  <div class="c-outline">${p.purchasedDate}</div>
                 </div>
-                ${p.notes ? `<div style="font-size:11px;color:var(--on-surface-variant);margin-top:2px;">${escapeHtml(p.notes)}</div>` : ''}
+                ${p.notes ? `<div class="fs-12 c-on-surface-variant mt-sm">${escapeHtml(p.notes)}</div>` : ''}
               </div>
             `).join('') || '<p class="text-muted">No purchases recorded yet.</p>'}
           </div>

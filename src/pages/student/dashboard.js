@@ -42,11 +42,11 @@ export default async function studentDashboard(app) {
 
   app.innerHTML = `
     <header class="stitch-header">
-      <div class="stitch-header-left" style="display:flex;align-items:center;gap:8px;">
+      <div class="stitch-header-left flex items-center gap-sm">
         <img src="logo.png" alt="Anna University Logo" style="width: 28px; height: 28px; object-fit: contain;" />
           <span class="stitch-brand">UCE IT</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;">
+      <div class="flex items-center gap-md">
         <button class="icon-btn" aria-label="notifications" style="padding:4px;">
           <span class="material-icons-outlined">notifications</span>
         </button>
@@ -79,14 +79,14 @@ export default async function studentDashboard(app) {
           </div>
         ` : `
           <div class="active-leave-card active-leave-empty">
-            <span class="material-icons-outlined" style="color:var(--outline);font-size:20px;">event_busy</span>
-            <span style="color:var(--on-surface-variant);font-size:13px;">No active leave</span>
+            <span class="material-icons-outlined c-outline fs-20">event_busy</span>
+            <span class="c-on-surface-variant fs-13">No active leave</span>
           </div>
         `}
       </div>
 
-      <button class="btn btn-primary btn-block" id="applyBtn" style="margin-bottom:var(--space-lg);">
-        <span class="material-icons-outlined" style="font-size:20px;">add_circle</span>
+      <button class="btn btn-primary btn-block mb-lg" id="applyBtn">
+        <span class="material-icons-outlined fs-20">add_circle</span>
         Apply for Leave
       </button>
 
@@ -103,11 +103,11 @@ export default async function studentDashboard(app) {
         </div>
       </div>
 
-      <div class="section-block" style="margin-top:var(--space-lg);">
+      <div class="section-block mt-lg">
         <div class="section-row">
           <span class="section-title">Quick Access</span>
         </div>
-        <div class="feature-grid" style="margin-bottom:var(--space-md);">
+        <div class="feature-grid mb-md">
           <a href="#/student/room" class="feature-card">
             <span class="material-icons-outlined">meeting_room</span>
             <div class="feature-label">My Room</div>
@@ -127,10 +127,10 @@ export default async function studentDashboard(app) {
         </div>
       </div>
 
-      <div class="section-block" style="margin-top:var(--space-lg);">
+      <div class="section-block mt-lg">
         <div class="section-row">
           <span class="section-title">Recent Activity</span>
-          <a href="#/student/history" style="font-size:13px;font-weight:500;color:var(--primary-container);">View All</a>
+          <a href="#/student/history" class="fs-13" style="font-weight:500;color:var(--primary-container);">View All</a>
         </div>
         <div class="activity-list">
           ${activityItems.length > 0 ? activityItems.map(a => `
@@ -145,7 +145,7 @@ export default async function studentDashboard(app) {
               <div class="activity-time">${a.time}</div>
             </div>
           `).join('') : `
-            <div style="text-align:center;padding:24px;color:var(--on-surface-variant);font-size:13px;">
+            <div class="text-center p-lg c-on-surface-variant fs-13">
               No recent activity
             </div>
           `}

@@ -20,18 +20,18 @@ export default async function messReportsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Mess Reports</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>
         </header>
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Monthly Accounts</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">Generate and download mess account reports</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">Monthly Accounts</h2>
+          <p class="m-0 mb-md fs-13 c-outline">Generate and download mess account reports</p>
 
-          <div class="card" style="margin-bottom:16px;padding:16px;">
-            <div style="font-size:14px;font-weight:600;margin-bottom:8px;">${year}-${month} Report</div>
-            <button class="btn btn-primary btn-sm" id="genReportBtn" style="width:100%;">
+          <div class="card mb-md p-md">
+            <div class="fs-14 fw-600 mb-sm">${year}-${month} Report</div>
+            <button class="btn btn-primary btn-sm w-full" id="genReportBtn">
               <span class="material-icons-outlined" style="font-size:18px;">download</span> Generate & Download Monthly Report
             </button>
           </div>
@@ -45,7 +45,7 @@ export default async function messReportsPage(app) {
           <div id="billHistory">
             ${history.map(b => `
               <div class="card" style="margin-bottom:6px;padding:10px;">
-                <div style="display:flex;justify-content:space-between;font-size:12px;">
+                <div class="flex justify-between fs-12">
                   <span><strong>${b.billDate}</strong></span>
                   <span>₹${b.perStudentCost} × ${b.totalStudents} students = ₹${b.totalStockCost}</span>
                 </div>
@@ -72,7 +72,7 @@ export default async function messReportsPage(app) {
         el.innerHTML = reportFiles.map(f => {
           const { data: { publicUrl } } = supabase.storage.from('attendance-snapshots').getPublicUrl(f.name);
           return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--surface-container);">
-            <span style="font-size:12px;">${f.name}</span>
+            <span class="fs-12">${f.name}</span>
             <a href="${publicUrl}" target="_blank" class="btn btn-sm btn-primary" style="font-size:11px;text-decoration:none;" download>Download</a>
           </div>`;
         }).join('');

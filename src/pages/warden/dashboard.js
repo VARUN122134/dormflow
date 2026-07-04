@@ -22,7 +22,7 @@ export default async function wardenDashboard(app) {
 
     app.innerHTML = `
       <header class="stitch-header">
-        <div class="stitch-header-left" style="display:flex;align-items:center;gap:8px;">
+        <div class="stitch-header-left flex items-center gap-sm">
           <img src="logo.png" alt="Anna University Logo" style="width: 28px; height: 28px; object-fit: contain;" />
           <span class="stitch-brand">UCE IT</span>
         </div>
@@ -37,7 +37,7 @@ export default async function wardenDashboard(app) {
 
         <div class="warden-stats-banner">
           <div class="warden-stat-banner-item" style="background:var(--primary-container);color:#fff;">
-            <span class="material-icons-outlined" style="font-size:20px;">pending_actions</span>
+            <span class="material-icons-outlined fs-20">pending_actions</span>
             <div>
               <div class="warden-stat-num">${freshPending.length}</div>
               <div class="warden-stat-sub">Pending Approvals</div>
@@ -52,7 +52,7 @@ export default async function wardenDashboard(app) {
             </div>
           </div>
           <div class="warden-stat-banner-item">
-            <span class="material-icons-outlined" style="font-size:20px;color:var(--status-success);">group</span>
+            <span class="material-icons-outlined fs-20 c-success">group</span>
             <div>
               <div class="warden-stat-num">${freshStats.totalStudents || 0}</div>
               <div class="warden-stat-sub">Total Residents</div>
@@ -60,9 +60,9 @@ export default async function wardenDashboard(app) {
           </div>
         </div>
 
-        <div class="section-row" style="margin-top:var(--space-lg);">
+        <div class="section-row mt-lg">
           <span class="section-title">Action Required</span>
-          ${freshPending.length > 0 ? `<a href="#/warden/requests" style="font-size:13px;color:var(--primary-container);font-weight:500;">View All</a>` : ''}
+          ${freshPending.length > 0 ? `<a href="#/warden/requests" class="fs-13" style="color:var(--primary-container);font-weight:500;">View All</a>` : ''}
         </div>
 
         ${freshPending.length > 0 ? `
@@ -89,24 +89,24 @@ export default async function wardenDashboard(app) {
             }).join('')}
           </div>
         ` : `
-          <div class="card animate-fade-in" style="text-align:center;padding:var(--space-xl);margin-bottom:var(--space-md);">
-            <span class="material-icons-outlined" style="font-size:36px;color:var(--status-success);margin-bottom:8px;">task_alt</span>
-            <div style="font-size:14px;color:var(--on-surface-variant);">All caught up! No pending requests.</div>
+          <div class="card animate-fade-in text-center p-lg mb-md">
+            <span class="material-icons-outlined fs-36 c-success mb-xs">task_alt</span>
+            <div class="fs-14 c-on-surface-variant">All caught up! No pending requests.</div>
           </div>
         `}
 
-        <div style="position:relative;margin-bottom:var(--space-lg);">
+        <div class="mb-lg" style="position:relative;">
           <span class="material-icons-outlined" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--outline);">search</span>
           <input class="form-input" type="text" placeholder="Search students by name or ID..." style="padding-left:36px;cursor:pointer;" readonly onclick="window.location.hash='#/warden/residents'"/>
         </div>
 
         <div class="section-title">Weekly Leave Trends</div>
-        <div class="card animate-fade-in" style="padding:var(--space-md);margin-bottom:var(--space-lg);">
+        <div class="card animate-fade-in p-md mb-lg">
           <canvas id="wardenChart" height="150"></canvas>
         </div>
 
         <div class="section-title">Management Tools</div>
-        <div class="feature-grid" style="margin-bottom:var(--space-lg);">
+        <div class="feature-grid mb-lg">
           <a href="#/warden/rooms" class="feature-card">
             <span class="material-icons-outlined">meeting_room</span>
             <div class="feature-label">Rooms</div>

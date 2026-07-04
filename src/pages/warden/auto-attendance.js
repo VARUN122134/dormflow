@@ -27,14 +27,14 @@ export default async function wardenAutoAttendance(app) {
         const hostelFiles = files.filter(f => f.name.startsWith(hostelType.toLowerCase()));
         if (hostelFiles.length > 0) {
           snapshotsHtml = `
-            <div class="card" style="margin-bottom:12px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:8px;">Past Snapshots</div>
+            <div class="card mb-sm">
+              <div class="fs-14 fw-600 mb-sm">Past Snapshots</div>
               ${hostelFiles.map(f => {
                 const { data: { publicUrl } } = supabase.storage.from('attendance-snapshots').getPublicUrl(f.name);
                 const datePart = f.name.replace(/^.+_(\d{4}-\d{2}-\d{2})\.csv$/, '$1');
                 return `
                   <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--surface-container);">
-                    <span style="font-size:12px;">${datePart}</span>
+                    <span class="fs-12">${datePart}</span>
                     <a href="${publicUrl}" target="_blank" class="btn btn-sm btn-primary" style="font-size:11px;padding:4px 8px;text-decoration:none;" download>
                       <span class="material-icons-outlined" style="font-size:14px;">download</span> CSV
                     </a>
@@ -54,22 +54,22 @@ export default async function wardenAutoAttendance(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Auto Attendance</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             <a href="#/warden/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">${hostelType} Hostel — Daily Attendance</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${today} • Auto-tracked via gate scans (8 PM cutoff)</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">${hostelType} Hostel — Daily Attendance</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${today} • Auto-tracked via gate scans (8 PM cutoff)</p>
 
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <div class="flex gap-sm mb-md">
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--primary-container);">${students.length}</div><div class="stat-label" style="font-size:10px;">Total</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--status-success);">${present.length}</div><div class="stat-label" style="font-size:10px;">Present</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--status-danger);">${absent.length}</div><div class="stat-label" style="font-size:10px;">Absent</div></div>
           </div>
 
-          <button class="btn btn-primary btn-sm" id="downloadCsvBtn" style="width:100%;margin-bottom:16px;">
+          <button class="btn btn-primary btn-sm w-full mb-md" id="downloadCsvBtn">
             <span class="material-icons-outlined" style="font-size:18px;">download</span> Download & Save Today's CSV
           </button>
 
@@ -79,7 +79,7 @@ export default async function wardenAutoAttendance(app) {
             const deptStudents = students.filter(s => s.department === dept);
             const years = [...new Set(deptStudents.map(s => s.year).filter(Boolean))].sort();
             return `
-              <div class="card" style="margin-bottom:12px;">
+              <div class="card mb-sm">
                 <div style="font-size:15px;font-weight:600;margin-bottom:8px;color:var(--primary-container);">${escapeHtml(dept)}</div>
                 ${years.map(year => {
                   const yrStudents = deptStudents.filter(s => s.year === year);

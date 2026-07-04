@@ -40,8 +40,8 @@ export default async function wardenRequests(app) {
         </div>
 
         <!-- Department Filter -->
-        <div style="margin-top:var(--space-sm);margin-bottom:var(--space-md);">
-          <select class="form-select" id="deptFilter" style="padding:8px 12px;font-size:12px;">
+        <div class="mt-sm mb-md">
+          <select class="form-select fs-12" id="deptFilter" style="padding:8px 12px;">
             <option value="All">All Departments</option>
             <option value="CSE" ${deptFilter === 'CSE' ? 'selected' : ''}>CSE</option>
             <option value="ECE" ${deptFilter === 'ECE' ? 'selected' : ''}>ECE</option>

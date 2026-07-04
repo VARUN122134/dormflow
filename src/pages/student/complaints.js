@@ -17,35 +17,35 @@ export default async function studentComplaintsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Complaints</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+            <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <button class="btn btn-primary btn-block" id="newComplaintBtn" style="margin-bottom:16px;">
+        <div class="page-content">
+          <button class="btn btn-primary btn-block mb-md" id="newComplaintBtn">
             <span class="material-icons-outlined" style="font-size:20px;">add_circle</span>
             Submit Complaint / Feedback
           </button>
 
-          <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:600;">My Complaints</h3>
+          <h3 class="m-0 mb-md fs-16 fw-600">My Complaints</h3>
 
           ${complaints.length === 0
-            ? '<div class="card" style="padding:32px;text-align:center;color:var(--outline);"><span class="material-icons-outlined" style="font-size:48px;">feedback</span><p style="margin:8px 0 0;">No complaints submitted yet.</p></div>'
+            ? '<div class="card p-lg text-center c-outline"><span class="material-icons-outlined" style="font-size:48px;">feedback</span><p style="margin:8px 0 0;">No complaints submitted yet.</p></div>'
             : complaints.map(c => `
-              <div class="card" style="margin-bottom:8px;">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-                  <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <div class="card mb-sm">
+                <div class="flex justify-between items-start mb-xs">
+                  <div class="flex gap-xs" style="flex-wrap:wrap;">
                     <span class="chip ${c.priority === 'urgent' ? 'chip-rejected' : c.priority === 'high' ? 'chip-pending' : 'chip-neutral'}">${c.priority}</span>
                     <span class="chip ${statusClass(c.status)}">${c.status}</span>
                   </div>
-                  <span style="font-size:11px;color:var(--outline);white-space:nowrap;">${formatDate(c.createdAt)}</span>
+                  <span class="fs-12 c-outline text-nowrap">${formatDate(c.createdAt)}</span>
                 </div>
-                <div style="font-size:13px;font-weight:600;margin-bottom:2px;text-transform:capitalize;">${escapeHtml(c.subject)}</div>
-                <div style="font-size:12px;color:var(--on-surface-variant);">${escapeHtml(c.description)}</div>
-                ${c.adminResponse ? `<div style="margin-top:8px;padding:8px;background:var(--primary-fixed);border-radius:6px;font-size:12px;"><strong>Response:</strong> ${escapeHtml(c.adminResponse)}</div>` : ''}
-                ${c.status === 'resolved' && !c.rating ? `<button class="btn btn-sm btn-ghost rateComplaint" data-id="${c.id}" style="margin-top:6px;color:var(--status-warning);">Rate Resolution</button>` : ''}
+                <div class="fs-13 fw-600 text-cap mb-xs">${escapeHtml(c.subject)}</div>
+                <div class="fs-12 c-on-surface-variant">${escapeHtml(c.description)}</div>
+                ${c.adminResponse ? `<div class="mt-sm p-sm" style="background:var(--primary-fixed);border-radius:6px;font-size:12px;"><strong>Response:</strong> ${escapeHtml(c.adminResponse)}</div>` : ''}
+                ${c.status === 'resolved' && !c.rating ? `<button class="btn btn-sm btn-ghost rateComplaint mt-sm" data-id="${c.id}" style="color:var(--status-warning);">Rate Resolution</button>` : ''}
               </div>
             `).join('')}
         </div>

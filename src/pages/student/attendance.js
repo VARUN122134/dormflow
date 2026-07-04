@@ -26,19 +26,19 @@ export default async function studentAttendancePage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Attendance</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+            <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">My Attendance</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${uniqueDays} days • ${totalMeals} meals recorded</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">My Attendance</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${uniqueDays} days • ${totalMeals} meals recorded</p>
 
-          <div class="card card-elevated" style="margin-bottom:16px;">
-            <h3 style="margin:0 0 12px 0;font-size:15px;">Today's Meals</h3>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <div class="card card-elevated mb-md">
+            <h3 class="m-0 mb-md fs-16">Today's Meals</h3>
+            <div class="flex gap-xs" style="flex-wrap:wrap;">
               ${['morning_tea','breakfast','lunch','snacks','dinner'].map(mt => {
                 const marked = todayMeals.some(r => r.mealType === mt);
                 return `<span class="chip ${marked ? 'chip-approved' : 'chip-neutral'}"><span class="material-icons-outlined" style="font-size:14px;margin-right:2px;">${marked ? 'check_circle' : 'radio_button_unchecked'}</span> ${mealLabels[mt]}</span>`;
@@ -46,28 +46,28 @@ export default async function studentAttendancePage(app) {
             </div>
           </div>
 
-          <h3 style="margin:0 0 12px 0;font-size:15px;">Upcoming Events</h3>
+          <h3 class="m-0 mb-md fs-16">Upcoming Events</h3>
           ${events.slice(0, 5).length === 0
-            ? '<div class="card" style="padding:16px;text-align:center;color:var(--outline);font-size:13px;">No upcoming events</div>'
+            ? '<div class="card p-md text-center c-outline fs-13">No upcoming events</div>'
             : events.slice(0, 5).map(e => `
-              <div class="card" style="margin-bottom:8px;display:flex;align-items:center;gap:12px;">
+              <div class="card mb-sm flex items-center" style="gap:12px;">
                 <div style="width:44px;height:44px;border-radius:8px;background:var(--primary-fixed);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                   <span class="material-icons-outlined" style="color:var(--primary-container);">event</span>
                 </div>
                 <div style="flex:1;">
-                  <div style="font-size:13px;font-weight:600;">${escapeHtml(e.title)}</div>
-                  <div style="font-size:11px;color:var(--on-surface-variant);">${formatDate(e.eventDate)}${e.venue ? ` • ${escapeHtml(e.venue)}` : ''}</div>
+                  <div class="fs-13 fw-600">${escapeHtml(e.title)}</div>
+                  <div class="fs-12 c-on-surface-variant">${formatDate(e.eventDate)}${e.venue ? ` • ${escapeHtml(e.venue)}` : ''}</div>
                 </div>
               </div>
             `).join('')}
 
-          <h3 style="margin:16px 0 12px 0;font-size:15px;">Recent Meal History</h3>
+          <h3 class="mt-md mb-md fs-16">Recent Meal History</h3>
           ${messRecords.slice(0, 10).length === 0
-            ? '<div class="card" style="padding:24px;text-align:center;color:var(--outline);">No attendance records yet</div>'
+            ? '<div class="card p-lg text-center c-outline">No attendance records yet</div>'
             : messRecords.slice(0, 10).map(r => `
-              <div class="card" style="margin-bottom:4px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+              <div class="card mb-xs p-sm flex justify-between items-center">
                 <div><span class="chip chip-approved" style="font-size:10px;">${mealLabels[r.mealType] || r.mealType}</span></div>
-                <div style="font-size:11px;color:var(--outline);">${formatDate(r.attendanceDate)}</div>
+                <div class="fs-12 c-outline">${formatDate(r.attendanceDate)}</div>
               </div>
             `).join('')}
         </div>

@@ -16,15 +16,15 @@ export default async function adminDashboard(app) {
 
   app.innerHTML = `
     <header class="page-header">
-      <div style="display:flex;align-items:center;gap:12px;">
+      <div class="flex items-center gap-md">
         <img src="logo.png" alt="Anna University Logo" style="width: 36px; height: 36px; object-fit: contain;" />
         <div>
           <div class="page-header-title">UCE IT</div>
           <div class="page-header-subtitle">System Admin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:var(--space-sm);">
-        <span class="material-icons-outlined" style="color:var(--on-surface-variant);cursor:pointer;">notifications</span>
+      <div class="flex items-center gap-sm">
+        <span class="material-icons-outlined c-on-surface-variant" style="cursor:pointer;">notifications</span>
         ${renderAvatar(user, 'stitch-avatar-sm')}
       </div>
     </header>
@@ -48,28 +48,28 @@ export default async function adminDashboard(app) {
     </nav>
 
     <div class="page">
-      <h2 style="margin-bottom:var(--space-xs);">System Health Overview</h2>
+      <h2 class="mb-xs">System Health Overview</h2>
 
-      <div class="admin-health-grid" style="margin-top:var(--space-md);">
+      <div class="admin-health-grid mt-md">
         <div class="stat-card animate-fade-in">
           <div class="stat-value">${stats.totalUsers.toLocaleString()}</div>
           <div class="stat-label">Active Users</div>
           <div class="stat-trend up">
-            <span class="material-icons-outlined" style="font-size:14px;">trending_up</span> +12%
+            <span class="material-icons-outlined fs-14">trending_up</span> +12%
           </div>
         </div>
         <div class="stat-card animate-fade-in">
           <div class="stat-value">${stats.systemUptime}</div>
           <div class="stat-label">Uptime</div>
           <div class="stat-trend neutral">
-            <span class="material-icons-outlined" style="font-size:14px;">check_circle</span> OK
+            <span class="material-icons-outlined fs-14">check_circle</span> OK
           </div>
         </div>
         <div class="stat-card animate-fade-in">
           <div class="stat-value">${stats.avgResponseTime}</div>
           <div class="stat-label">Latency</div>
           <div class="stat-trend up">
-            <span class="material-icons-outlined" style="font-size:14px;">speed</span> Fast
+            <span class="material-icons-outlined fs-14">speed</span> Fast
           </div>
         </div>
       </div>
@@ -80,11 +80,11 @@ export default async function adminDashboard(app) {
       </div>
 
       <div class="section-title">Staff Capacity</div>
-      <div class="card animate-fade-in" style="margin-bottom:var(--space-lg);">
+      <div class="card animate-fade-in mb-lg">
         <p class="body-md text-muted">
           Managing <strong>${wardens.length}</strong> active Wardens and <strong>${security.length}</strong> Gate Security Officers across campus.
         </p>
-        <div style="display:flex;gap:var(--space-sm);margin-top:var(--space-md);flex-wrap:wrap;">
+        <div class="flex gap-sm mt-md" style="flex-wrap:wrap;">
           ${wardens.map(w => `
             <div class="chip chip-info">${w.name} — ${w.hostelType || 'Staff'}</div>
           `).join('')}
@@ -95,7 +95,7 @@ export default async function adminDashboard(app) {
       </div>
 
       <div class="section-title">Management</div>
-      <div class="feature-grid" style="margin-bottom:var(--space-lg);">
+      <div class="feature-grid mb-lg">
         <a href="#/admin/rooms" class="feature-card">
           <span class="material-icons-outlined">meeting_room</span>
           <div class="feature-label">Room Management</div>
@@ -128,7 +128,7 @@ export default async function adminDashboard(app) {
             <div class="activity-time">${formatRelativeTime(a.timestamp)}</div>
           </div>
         `).join('') : `
-          <div class="body-md text-muted" style="padding:var(--space-md);text-align:center;">No recent system activity</div>
+          <div class="body-md text-muted p-md text-center">No recent system activity</div>
         `}
       </div>
     </div>

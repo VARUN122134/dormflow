@@ -26,14 +26,14 @@ export default async function adminRoomsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Room Management</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <div class="page-content">
+          <div class="flex gap-sm mb-md">
             <button class="btn btn-sm btn-primary" id="tabRooms" style="flex:1;">Rooms</button>
             <button class="btn btn-sm btn-ghost" id="tabMaintenance" style="flex:1;">Maintenance</button>
           </div>
@@ -66,20 +66,20 @@ export default async function adminRoomsPage(app) {
   function renderRoomsTab(rooms, allocations, stats) {
     const blocks = [...new Set(rooms.map(r => r.blockName))];
     return `
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div class="flex gap-sm mb-md">
         <button class="btn btn-primary btn-sm" id="addRoomBtn" style="flex:1;">
-          <span class="material-icons-outlined" style="font-size:16px;">add</span> Add Room
+          <span class="material-icons-outlined fs-16">add</span> Add Room
         </button>
       </div>
 
-      <div style="display:flex;gap:6px;margin-bottom:12px;">
-        <div class="stat-card" style="padding:8px;"><div class="stat-value" style="font-size:16px;">${stats.total}</div><div class="stat-label" style="font-size:9px;">Total</div></div>
-        <div class="stat-card" style="padding:8px;"><div class="stat-value" style="font-size:16px;color:var(--status-success);">${stats.available}</div><div class="stat-label" style="font-size:9px;">Free</div></div>
-        <div class="stat-card" style="padding:8px;"><div class="stat-value" style="font-size:16px;color:var(--primary-container);">${stats.occupied}</div><div class="stat-label" style="font-size:9px;">Full</div></div>
-        <div class="stat-card" style="padding:8px;"><div class="stat-value" style="font-size:16px;color:var(--status-warning);">${stats.maintenance}</div><div class="stat-label" style="font-size:9px;">Maint</div></div>
+      <div class="flex gap-sm mb-md">
+        <div class="stat-card" style="padding:8px;"><div class="stat-value fs-16">${stats.total}</div><div class="stat-label" style="font-size:9px;">Total</div></div>
+        <div class="stat-card" style="padding:8px;"><div class="stat-value fs-16 c-success">${stats.available}</div><div class="stat-label" style="font-size:9px;">Free</div></div>
+        <div class="stat-card" style="padding:8px;"><div class="stat-value fs-16" style="color:var(--primary-container);">${stats.occupied}</div><div class="stat-label" style="font-size:9px;">Full</div></div>
+        <div class="stat-card" style="padding:8px;"><div class="stat-value fs-16 c-warning">${stats.maintenance}</div><div class="stat-label" style="font-size:9px;">Maint</div></div>
       </div>
 
-      <div class="filter-tabs" id="adminBlockTabs" style="margin-bottom:12px;">
+      <div class="filter-tabs mb-md" id="adminBlockTabs">
         <button class="filter-tab active" data-block="all">All</button>
         ${blocks.map(b => `<button class="filter-tab" data-block="${b}">${escapeHtml(b)}</button>`).join('')}
       </div>
@@ -93,19 +93,19 @@ export default async function adminRoomsPage(app) {
   function renderAdminRoomCard(room, roomAllocs) {
     const statusColors = { available: 'var(--status-success)', occupied: 'var(--primary-container)', maintenance: 'var(--status-warning)', unavailable: 'var(--outline)' };
     return `
-      <div class="card" style="margin-bottom:8px;border-left:4px solid ${statusColors[room.status] || 'var(--outline)'};">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div class="card mb-sm" style="border-left:4px solid ${statusColors[room.status] || 'var(--outline)'};">
+        <div class="flex justify-between" style="align-items:flex-start;">
           <div style="flex:1;">
-            <div style="font-size:15px;font-weight:700;">Room ${escapeHtml(room.roomNumber)}</div>
+            <div class="fs-14 fw-700">Room ${escapeHtml(room.roomNumber)}</div>
             <div style="font-size:11px;color:var(--on-surface-variant);">${escapeHtml(room.blockName)} • F${room.floor} • ${room.roomType} • ${room.genderType} • Cap: ${room.capacity}</div>
             <span class="chip ${room.status === 'available' ? 'chip-approved' : room.status === 'occupied' ? 'chip-info' : room.status === 'maintenance' ? 'chip-pending' : 'chip-neutral'}" style="margin-top:4px;">${room.status}</span>
             ${roomAllocs.length > 0 ? `<div style="margin-top:4px;font-size:11px;color:var(--on-surface-variant);">${roomAllocs.map(a => escapeHtml(a.student?.name || 'Unknown')).join(', ')}</div>` : ''}
           </div>
-          <div style="display:flex;gap:4px;flex-shrink:0;">
-            <button class="btn btn-ghost btn-sm editRoom" data-id="${room.id}"><span class="material-icons-outlined" style="font-size:16px;">edit</span></button>
+          <div class="flex" style="gap:4px;flex-shrink:0;">
+            <button class="btn btn-ghost btn-sm editRoom" data-id="${room.id}"><span class="material-icons-outlined fs-16">edit</span></button>
             ${room.status === 'available' ? `<button class="btn btn-sm btn-primary allocateRoom" data-id="${room.id}">Allocate</button>` : ''}
-            ${room.status === 'occupied' ? `<button class="btn btn-sm btn-ghost vacateRoom" data-id="${room.id}" style="color:var(--status-warning);">Vacate</button>` : ''}
-            <button class="btn btn-ghost btn-sm deleteRoom" data-id="${room.id}" style="color:var(--error);"><span class="material-icons-outlined" style="font-size:16px;">delete</span></button>
+            ${room.status === 'occupied' ? `<button class="btn btn-sm btn-ghost c-warning vacateRoom" data-id="${room.id}">Vacate</button>` : ''}
+            <button class="btn btn-ghost btn-sm deleteRoom c-danger" data-id="${room.id}"><span class="material-icons-outlined fs-16">delete</span></button>
           </div>
         </div>
       </div>
@@ -117,14 +117,14 @@ export default async function adminRoomsPage(app) {
     const resolved = requests.filter(r => r.status === 'resolved' || r.status === 'closed');
 
     return `
-      <div class="filter-tabs" id="maintFilter" style="margin-bottom:12px;">
+      <div class="filter-tabs mb-md" id="maintFilter">
         <button class="filter-tab active" data-mfilter="all">All (${requests.length})</button>
         <button class="filter-tab" data-mfilter="pending">Pending (${pending.length})</button>
         <button class="filter-tab" data-mfilter="resolved">Resolved (${resolved.length})</button>
       </div>
       <div id="maintenanceList">
         ${requests.length === 0
-          ? '<div class="card" style="padding:24px;text-align:center;color:var(--outline);">No maintenance requests</div>'
+          ? '<div class="card p-lg text-center c-outline">No maintenance requests</div>'
           : requests.map(m => renderMaintenanceCard(m)).join('')}
       </div>
     `;
@@ -134,21 +134,21 @@ export default async function adminRoomsPage(app) {
     const statusColors = { pending: 'chip-pending', acknowledged: 'chip-info', in_progress: 'chip-pending', resolved: 'chip-approved', closed: 'chip-neutral' };
     const priorityColors = { low: 'chip-neutral', medium: 'chip-pending', high: 'chip-pending', urgent: 'chip-rejected' };
     return `
-      <div class="card" style="margin-bottom:8px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div class="card mb-sm">
+        <div class="flex justify-between" style="align-items:flex-start;">
           <div style="flex:1;">
-            <div style="display:flex;gap:4px;margin-bottom:4px;">
+            <div class="flex gap-sm mb-xs">
               <span class="chip ${statusColors[m.status] || 'chip-neutral'}">${m.status}</span>
               <span class="chip ${priorityColors[m.priority] || 'chip-neutral'}">${m.priority}</span>
             </div>
-            <div style="font-size:13px;font-weight:600;text-transform:capitalize;">${escapeHtml(m.issueType.replace(/_/g,' '))}</div>
-            <div style="font-size:12px;color:var(--on-surface-variant);">Room ${escapeHtml(m.room?.roomNumber || '')} • ${escapeHtml(m.student?.name || 'Unknown')}</div>
-            <div style="font-size:12px;margin-top:4px;">${escapeHtml(m.description)}</div>
-            ${m.resolutionNote ? `<div style="font-size:11px;color:var(--primary-container);margin-top:4px;">✓ ${escapeHtml(m.resolutionNote)}</div>` : ''}
+            <div class="fs-13 fw-600 text-cap">${escapeHtml(m.issueType.replace(/_/g,' '))}</div>
+            <div class="fs-12 c-on-surface-variant">Room ${escapeHtml(m.room?.roomNumber || '')} • ${escapeHtml(m.student?.name || 'Unknown')}</div>
+            <div class="fs-12" style="margin-top:4px;">${escapeHtml(m.description)}</div>
+            ${m.resolutionNote ? `<div class="fs-12" style="color:var(--primary-container);margin-top:4px;">✓ ${escapeHtml(m.resolutionNote)}</div>` : ''}
           </div>
-          <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
+          <div class="flex flex-col gap-sm" style="flex-shrink:0;">
             ${m.status !== 'resolved' && m.status !== 'closed' ? `<button class="btn btn-sm btn-success resolveMaint" data-id="${m.id}">Resolve</button>` : ''}
-            <span style="font-size:10px;color:var(--outline);">${formatDate(m.createdAt)}</span>
+            <span class="c-outline" style="font-size:10px;">${formatDate(m.createdAt)}</span>
           </div>
         </div>
       </div>

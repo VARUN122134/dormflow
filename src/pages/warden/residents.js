@@ -36,9 +36,9 @@ export default async function wardenResidents(app) {
       ${renderPageHeader('Residents', `${hostelType} Hostel • ${students.length} students`, renderBackButton())}
       <div class="page">
         <!-- Search -->
-        <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);">
+        <div class="flex gap-sm mb-md">
           <div style="flex:1;position:relative;">
-            <span class="material-icons-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--outline);">search</span>
+            <span class="material-icons-outlined fs-20 c-outline" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);">search</span>
             <input class="form-input" type="text" id="searchInput" placeholder="Search by name, ID, or department..." 
               style="padding-left:40px;" value="${search}" />
           </div>

@@ -18,17 +18,17 @@ export default async function messAttendancePage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Mess Attendance</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
+            <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Today's Attendance</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">Today's Attendance</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
 
-          <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <div class="flex gap-sm mb-sm">
             <div class="stat-card" style="padding:10px;">
               <div class="stat-value" style="font-size:18px;color:var(--status-success);">${stats.uniqueStudents}</div>
               <div class="stat-label" style="font-size:10px;">Students</div>
@@ -39,7 +39,7 @@ export default async function messAttendancePage(app) {
             </div>
           </div>
 
-          <div style="margin-bottom:12px;">
+          <div class="mb-sm">
             <label class="form-label">Meal Type</label>
             <select class="form-input" id="attendanceMealType">
               <option value="morning_tea">Morning Tea</option>
@@ -50,7 +50,7 @@ export default async function messAttendancePage(app) {
             </select>
           </div>
 
-          <div class="form-group" style="margin-bottom:12px;">
+          <div class="form-group mb-sm">
             <label class="form-label">Student ID or Registration No.</label>
             <input class="form-input" id="studentSearch" placeholder="Search student...">
             <div id="studentResults" style="margin-top:4px;"></div>
@@ -62,12 +62,12 @@ export default async function messAttendancePage(app) {
             </button>
           </div>
 
-          <h3 style="margin:16px 0 8px 0;font-size:14px;">Today's Stats by Meal</h3>
+          <h3 class="mt-md mb-sm fs-14">Today's Stats by Meal</h3>
           <div id="mealStats">
             ${Object.entries(stats.byMeal).map(([meal, count]) => `
-              <div class="card" style="margin-bottom:4px;padding:8px 12px;display:flex;justify-content:space-between;">
-                <span style="font-size:13px;text-transform:capitalize;">${escapeHtml(meal.replace(/_/g,' '))}</span>
-                <span style="font-size:13px;font-weight:600;">${count}</span>
+              <div class="card p-sm flex justify-between" style="margin-bottom:4px;">
+                <span class="fs-13 text-cap">${escapeHtml(meal.replace(/_/g,' '))}</span>
+                <span class="fs-13 fw-600">${count}</span>
               </div>
             `).join('')}
           </div>

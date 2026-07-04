@@ -19,31 +19,31 @@ export default async function messBillPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Daily Bill</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>
         </header>
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Today's Mess Bill</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">Today's Mess Bill</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
 
           ${bill ? `
-            <div class="card" style="margin-bottom:12px;text-align:center;padding:20px;border-left:4px solid var(--status-success);">
-              <div style="font-size:13px;color:var(--outline);margin-bottom:8px;">Bill already calculated</div>
+            <div class="card mb-sm" style="text-align:center;padding:20px;border-left:4px solid var(--status-success);">
+              <div class="fs-13 c-outline mb-sm">Bill already calculated</div>
               <div style="font-size:28px;font-weight:700;color:var(--primary-container);">₹${bill.perStudentCost}</div>
-              <div style="font-size:12px;color:var(--on-surface-variant);margin-top:4px;">per student • ${bill.totalStudents} students present</div>
-              <div style="font-size:11px;color:var(--outline);margin-top:4px;">Total stock cost: ₹${bill.totalStockCost}</div>
+              <div class="fs-12 c-on-surface-variant mt-sm">per student • ${bill.totalStudents} students present</div>
+              <div class="fs-12 c-outline mt-sm">Total stock cost: ₹${bill.totalStockCost}</div>
             </div>
           ` : `
-            <div class="card" style="margin-bottom:12px;text-align:center;padding:20px;">
+            <div class="card mb-sm" style="text-align:center;padding:20px;">
               ${usage && usage.items && usage.items.length > 0 ? `
-                <div style="font-size:13px;color:var(--outline);margin-bottom:8px;">Usage recorded — ready to calculate</div>
+                <div class="fs-13 c-outline mb-sm">Usage recorded — ready to calculate</div>
                 <button class="btn btn-primary" id="calcBillBtn">
                   <span class="material-icons-outlined" style="font-size:18px;">calculate</span> Calculate Today's Bill
                 </button>
               ` : `
-                <div style="font-size:13px;color:var(--outline);">
+                <div class="fs-13 c-outline">
                   <span class="material-icons-outlined" style="font-size:40px;color:var(--outline-variant);display:block;margin-bottom:8px;">edit_note</span>
                   Record stock usage first in Daily Usage
                 </div>
@@ -55,11 +55,11 @@ export default async function messBillPage(app) {
             <div class="section-title">Bill History</div>
             ${history.map(b => `
               <div class="card" style="margin-bottom:6px;padding:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="flex justify-between items-center">
                   <div><strong>${b.billDate}</strong></div>
-                  <div style="text-align:right;">
-                    <div style="font-weight:600;">₹${b.perStudentCost}<span style="font-weight:400;color:var(--outline);font-size:11px;"> / student</span></div>
-                    <div style="font-size:11px;color:var(--outline);">${b.totalStudents} students • ₹${b.totalStockCost}</div>
+                  <div class="text-right">
+                    <div class="fw-600">₹${b.perStudentCost}<span style="font-weight:400;color:var(--outline);font-size:11px;"> / student</span></div>
+                    <div class="fs-12 c-outline">${b.totalStudents} students • ₹${b.totalStockCost}</div>
                   </div>
                 </div>
               </div>

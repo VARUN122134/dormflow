@@ -25,24 +25,24 @@ export default async function wardenRoomsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Room Management</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             <a href="#/warden/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">${hostelType} Hostel Rooms</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${totalRooms} rooms • ${occupied} occupied • ${available} available</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">${hostelType} Hostel Rooms</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${totalRooms} rooms • ${occupied} occupied • ${available} available</p>
 
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <div class="flex gap-sm mb-md">
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--primary-container);">${totalRooms}</div><div class="stat-label" style="font-size:10px;">Total</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--status-success);">${available}</div><div class="stat-label" style="font-size:10px;">Available</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--primary-container);">${occupied}</div><div class="stat-label" style="font-size:10px;">Occupied</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--status-warning);">${maintenance}</div><div class="stat-label" style="font-size:10px;">Maint</div></div>
           </div>
 
-          <div class="filter-tabs" id="blockTabs" style="margin-bottom:12px;">
+          <div class="filter-tabs mb-md" id="blockTabs">
             <button class="filter-tab active" data-block="all">All Blocks</button>
             ${blocks.map(b => `<button class="filter-tab" data-block="${b}">${escapeHtml(b)}</button>`).join('')}
           </div>
@@ -74,25 +74,25 @@ export default async function wardenRoomsPage(app) {
     const statusColors = { available: 'var(--status-success)', occupied: 'var(--primary-container)', maintenance: 'var(--status-warning)', unavailable: 'var(--outline)' };
     const residents = roomAllocations.filter(a => a.isCurrent);
     return `
-      <div class="card" style="margin-bottom:8px;border-left:4px solid ${statusColors[room.status] || 'var(--outline)'};">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div class="card mb-sm" style="border-left:4px solid ${statusColors[room.status] || 'var(--outline)'};">
+        <div class="flex justify-between" style="align-items:flex-start;">
           <div>
-            <div style="font-size:16px;font-weight:700;">Room ${escapeHtml(room.roomNumber)}</div>
-            <div style="font-size:12px;color:var(--on-surface-variant);">${escapeHtml(room.blockName)} • Floor ${room.floor} • ${room.roomType} • Cap: ${room.capacity} <button class="btn btn-sm btn-ghost editCapacity" data-room-id="${room.id}" data-capacity="${room.capacity}" style="font-size:10px;padding:0 4px;min-width:auto;vertical-align:middle;">edit</button></div>
-            <div style="margin-top:4px;">
+            <div class="fs-16 fw-700">Room ${escapeHtml(room.roomNumber)}</div>
+            <div class="fs-12 c-on-surface-variant">${escapeHtml(room.blockName)} • Floor ${room.floor} • ${room.roomType} • Cap: ${room.capacity} <button class="btn btn-sm btn-ghost editCapacity" data-room-id="${room.id}" data-capacity="${room.capacity}" style="font-size:10px;padding:0 4px;min-width:auto;vertical-align:middle;">edit</button></div>
+            <div class="mt-sm">
               <span class="chip ${room.status === 'available' ? 'chip-approved' : room.status === 'occupied' ? 'chip-info' : room.status === 'maintenance' ? 'chip-pending' : 'chip-neutral'}">${room.status}</span>
             </div>
             ${residents.length > 0 ? `
-              <div style="margin-top:6px;font-size:12px;color:var(--on-surface-variant);">
+              <div class="fs-12 c-on-surface-variant" style="margin-top:6px;">
                 <strong>Residents (${residents.length}/${room.capacity}):</strong>
-                ${residents.map(a => `<div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                ${residents.map(a => `<div class="flex items-center justify-between" style="gap:4px;">
                   <span>• ${escapeHtml(a.student?.name || 'Unknown')}</span>
                   <button class="btn btn-sm btn-ghost removeResident" data-alloc-id="${a.id}" data-room-id="${room.id}" data-student-id="${a.studentId}" style="color:var(--status-danger);font-size:11px;padding:2px 6px;min-width:auto;">Remove</button>
                 </div>`).join('')}
               </div>
-            ` : `<div style="margin-top:6px;font-size:12px;color:var(--outline-variant);">No residents</div>`}
+            ` : `<div class="fs-12" style="margin-top:6px;color:var(--outline-variant);">No residents</div>`}
           </div>
-          <div style="display:flex;gap:4px;flex-shrink:0;">
+          <div class="flex flex-shrink-0" style="gap:4px;">
             ${(room.status === 'available' || room.status === 'occupied') && residents.length < room.capacity ? `<button class="btn btn-sm btn-primary allocateRoom" data-room-id="${room.id}">Allocate</button>` : ''}
           </div>
         </div>

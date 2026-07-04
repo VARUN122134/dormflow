@@ -24,9 +24,9 @@ export default async function gateDashboard(app) {
 
     app.innerHTML = `
       <div class="gate-header">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+        <div class="flex items-center gap-md mb-xs">
           <img src="logo.png" alt="Anna University Logo" style="width: 36px; height: 36px; object-fit: contain;" />
-          <h1 style="margin:0;font-size:24px;font-weight:700;">UCE IT</h1>
+          <h1 class="m-0 fw-700" style="font-size:24px;">UCE IT</h1>
         </div>
         <p>UC Engineering Ariyalur • Gate Security</p>
       </div>
@@ -34,7 +34,7 @@ export default async function gateDashboard(app) {
       <div class="gate-stats">
         <div class="stat-card">
           <div class="stat-label">Currently Out</div>
-          <div class="stat-value" style="color:var(--status-warning);">${stats.currentlyOut}</div>
+          <div class="stat-value c-warning">${stats.currentlyOut}</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Exits</div>
@@ -44,21 +44,21 @@ export default async function gateDashboard(app) {
 
       <div class="page" style="padding-top:var(--space-sm);">
         <div class="section-title">
-          <span class="material-icons-outlined" style="font-size:20px;vertical-align:middle;">qr_code_scanner</span>
+          <span class="material-icons-outlined fs-20" style="vertical-align:middle;">qr_code_scanner</span>
           Scan Pass
         </div>
-        <div class="card" style="margin-bottom:var(--space-md);">
-          <div id="scannerContainer" style="width:100%;max-width:300px;margin:0 auto;">
+        <div class="card mb-md">
+          <div id="scannerContainer" class="w-full mx-auto" style="max-width:300px;">
             ${!scannerActive ? `
-              <div style="text-align:center;padding:var(--space-lg);">
-                <div class="scanner-frame" style="background:var(--surface-container);display:flex;align-items:center;justify-content:center;height:200px;max-width:250px;margin:0 auto;">
-                  <div style="text-align:center;">
-                    <span class="material-icons-outlined" style="font-size:64px;color:var(--outline-variant);">qr_code_scanner</span>
-                    <p class="label-sm text-muted" style="margin-top:var(--space-sm);">Tap to activate camera</p>
+              <div class="text-center p-lg">
+                <div class="scanner-frame bg-surface flex items-center justify-center" style="height:200px;max-width:250px;margin:0 auto;">
+                  <div class="text-center">
+                    <span class="material-icons-outlined fs-36" style="color:var(--outline-variant);">qr_code_scanner</span>
+                    <p class="label-sm text-muted mt-sm">Tap to activate camera</p>
                   </div>
                 </div>
-                <button class="btn btn-primary" style="margin-top:var(--space-md);" id="startScanBtn">
-                  <span class="material-icons-outlined" style="font-size:20px;">camera_alt</span>
+                <button class="btn btn-primary mt-md" id="startScanBtn">
+                  <span class="material-icons-outlined fs-20">camera_alt</span>
                   Start Scanner
                 </button>
               </div>
@@ -73,17 +73,17 @@ export default async function gateDashboard(app) {
         <div id="scanResult"></div>
 
         <div class="section-title">Manual ID Entry</div>
-        <div class="manual-entry-section" style="margin:0 0 var(--space-md);">
+        <div class="manual-entry-section mb-md">
           <div class="manual-entry-row">
             <input class="form-input" type="text" id="manualInput" placeholder="Enter outpass QR data or pass ID..." />
-            <button class="btn btn-primary" id="manualScanBtn" style="white-space:nowrap;">
-              <span class="material-icons-outlined" style="font-size:20px;">search</span>
+            <button class="btn btn-primary text-nowrap" id="manualScanBtn">
+              <span class="material-icons-outlined fs-20">search</span>
             </button>
           </div>
         </div>
 
         <div class="section-title">Live Activity Log</div>
-        <p class="label-sm text-muted" style="margin-bottom:var(--space-sm);">Real-time gate traffic updates</p>
+        <p class="label-sm text-muted mb-sm">Real-time gate traffic updates</p>
         <div class="card" id="activityLogContainer">
           ${renderActivityLog(recentActivity)}
         </div>
@@ -113,7 +113,7 @@ export default async function gateDashboard(app) {
       `).join('');
     }
     return `
-      <div class="body-md text-muted" style="padding:var(--space-lg);text-align:center;">
+      <div class="body-md text-muted p-lg text-center">
         <span class="material-icons-outlined" style="font-size:40px;color:var(--outline-variant);display:block;margin-bottom:8px;">history</span>
         No gate activity yet
       </div>
@@ -162,15 +162,15 @@ export default async function gateDashboard(app) {
     const container = document.getElementById('scannerContainer');
     if (container) {
       container.innerHTML = `
-        <div style="text-align:center;padding:var(--space-lg);">
-          <div class="scanner-frame" style="background:var(--surface-container);display:flex;align-items:center;justify-content:center;height:200px;max-width:250px;margin:0 auto;">
-            <div style="text-align:center;">
-              <span class="material-icons-outlined" style="font-size:64px;color:var(--outline-variant);">qr_code_scanner</span>
-              <p class="label-sm text-muted" style="margin-top:var(--space-sm);">Tap to activate camera</p>
+        <div class="text-center p-lg">
+          <div class="scanner-frame bg-surface flex items-center justify-center" style="height:200px;max-width:250px;margin:0 auto;">
+            <div class="text-center">
+              <span class="material-icons-outlined fs-36" style="color:var(--outline-variant);">qr_code_scanner</span>
+              <p class="label-sm text-muted mt-sm">Tap to activate camera</p>
             </div>
           </div>
-          <button class="btn btn-primary" style="margin-top:var(--space-md);" id="startScanBtn">
-            <span class="material-icons-outlined" style="font-size:20px;">camera_alt</span>
+          <button class="btn btn-primary mt-md" id="startScanBtn">
+            <span class="material-icons-outlined fs-20">camera_alt</span>
             Start Scanner
           </button>
         </div>
@@ -197,7 +197,7 @@ export default async function gateDashboard(app) {
     if (!resultDiv) { scanLock = false; return; }
 
     resultDiv.innerHTML = `
-      <div style="text-align:center;padding:var(--space-md);">
+      <div class="text-center p-md">
         <p class="body-md">Processing scan, please wait...</p>
       </div>
     `;
@@ -215,19 +215,19 @@ export default async function gateDashboard(app) {
     if (result.success) {
       showToast(result.message, 'success');
       resultDiv.innerHTML = `
-        <div class="scan-result scan-success animate-scale-in" style="margin-bottom:var(--space-md); padding: var(--space-md);">
-          <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-md); text-align: left;">
+        <div class="scan-result scan-success animate-scale-in mb-md p-md">
+          <div class="flex items-center justify-center gap-md">
             ${renderAvatar(result.student, 'profile-avatar-large')}
             <div>
-              <h3 style="margin:0 0 4px 0; display:flex; align-items:center; gap:6px; font-size:var(--headline-sm-size);">
+              <h3 class="flex items-center" style="margin:0 0 4px 0;gap:6px;font-size:var(--headline-sm-size);">
                 ${result.student.name}
-                <span class="material-icons-outlined" style="font-size:20px; color:var(--status-success);">
+                <span class="material-icons-outlined fs-20 c-success">
                   ${result.action === 'DEPARTURE' ? 'logout' : 'login'}
                 </span>
               </h3>
-              <p style="margin:2px 0; color:var(--on-surface-variant); font-size:var(--body-md-size);">${result.student.department} • ${result.student.year} Year</p>
-              <p style="margin:2px 0; color:var(--on-surface-variant); font-size:var(--body-md-size);">${result.student.hostelType} Hostel • Room ${result.student.roomNumber}</p>
-              <p style="margin:6px 0 0 0; font-size:var(--body-md-size); font-weight:600; color:var(--status-success);">
+              <p class="c-on-surface-variant" style="margin:2px 0;font-size:var(--body-md-size);">${result.student.department} • ${result.student.year} Year</p>
+              <p class="c-on-surface-variant" style="margin:2px 0;font-size:var(--body-md-size);">${result.student.hostelType} Hostel • Room ${result.student.roomNumber}</p>
+              <p class="fw-600 c-success" style="margin:6px 0 0 0;font-size:var(--body-md-size);">
                 ${result.action === 'DEPARTURE' ? 'Checked OUT successfully' : 'Checked IN successfully'}
               </p>
             </div>
@@ -253,9 +253,9 @@ export default async function gateDashboard(app) {
     } else {
       showToast(result.error, 'error');
       resultDiv.innerHTML = `
-        <div class="scan-result scan-error animate-scale-in" style="margin-bottom:var(--space-md);">
+        <div class="scan-result scan-error animate-scale-in mb-md">
           <span class="material-icons-outlined" style="font-size:48px;">error</span>
-          <h3 style="margin:var(--space-sm) 0;">Scan Failed</h3>
+          <h3 class="mt-sm mb-sm">Scan Failed</h3>
           <p>${result.error}</p>
         </div>
       `;

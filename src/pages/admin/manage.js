@@ -17,14 +17,14 @@ export default async function adminManage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Management</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             <a href="#/admin/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>
         </header>
 
-        <div style="padding:16px;padding-bottom:80px;">
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <div class="page-content">
+          <div class="flex gap-sm mb-md">
             <button class="btn btn-sm btn-primary" id="tabAnnouncements" style="flex:1;">Announcements</button>
             <button class="btn btn-sm btn-ghost" id="tabPolls" style="flex:1;">Polls</button>
           </div>
@@ -59,22 +59,22 @@ export default async function adminManage(app) {
     const typeColors = { announcement: 'chip-info', event: 'chip-pending', news: 'chip-success' };
 
     return `
-      <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <div class="flex gap-sm mb-md">
         <button class="btn btn-primary btn-sm" id="newAnnouncementBtn" style="flex:1;">
-          <span class="material-icons-outlined" style="font-size:16px;vertical-align:text-bottom;">add</span> New
+          <span class="material-icons-outlined fs-16" style="vertical-align:text-bottom;">add</span> New
         </button>
       </div>
-      ${announcements.length === 0 ? '<div class="card" style="padding:24px;text-align:center;color:var(--outline);">No announcements.</div>' : ''}
+      ${announcements.length === 0 ? '<div class="card p-lg text-center c-outline">No announcements.</div>' : ''}
       ${announcements.map(a => `
-        <div class="card" style="margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="card mb-sm">
+          <div class="flex justify-between" style="align-items:flex-start;">
             <div style="flex:1;">
-              <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
+              <div class="flex gap-sm items-center mb-xs">
                 <span class="chip ${typeColors[a.type] || 'chip-neutral'}">${typeLabels[a.type] || a.type}</span>
                 <span style="font-size:11px;color:var(--outline);">${formatDate(a.createdAt)}</span>
               </div>
-              <h4 style="margin:0 0 4px 0;font-size:15px;">${escapeHtml(a.title)}</h4>
-              <p style="margin:0;font-size:13px;color:var(--on-surface-variant);">${escapeHtml(a.content)}</p>
+              <h4 class="m-0 mb-xs" style="font-size:15px;">${escapeHtml(a.title)}</h4>
+              <p class="m-0 fs-13 c-on-surface-variant">${escapeHtml(a.content)}</p>
             </div>
             <button class="btn btn-ghost btn-sm deleteAnnouncement" data-id="${a.id}" style="flex-shrink:0;color:var(--error);">
               <span class="material-icons-outlined" style="font-size:18px;">delete</span>
@@ -87,24 +87,24 @@ export default async function adminManage(app) {
 
   function renderPollsTab(polls) {
     return `
-      <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <div class="flex gap-sm mb-md">
         <button class="btn btn-primary btn-sm" id="newPollBtn" style="flex:1;">
-          <span class="material-icons-outlined" style="font-size:16px;vertical-align:text-bottom;">how_to_vote</span> New Poll
+          <span class="material-icons-outlined fs-16" style="vertical-align:text-bottom;">how_to_vote</span> New Poll
         </button>
       </div>
-      ${polls.length === 0 ? '<div class="card" style="padding:24px;text-align:center;color:var(--outline);">No polls created.</div>' : ''}
+      ${polls.length === 0 ? '<div class="card p-lg text-center c-outline">No polls created.</div>' : ''}
       ${polls.map(p => `
-        <div class="card" style="margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="card mb-sm">
+          <div class="flex justify-between" style="align-items:flex-start;">
             <div style="flex:1;">
-              <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
+              <div class="flex gap-sm items-center mb-xs">
                 <span class="chip ${p.isActive ? 'chip-pending' : 'chip-neutral'}">${p.isActive ? 'Active' : 'Closed'}</span>
                 <span style="font-size:11px;color:var(--outline);">${formatDate(p.createdAt)}</span>
               </div>
-              <h4 style="margin:0 0 4px 0;font-size:15px;">${escapeHtml(p.title)}</h4>
-              ${p.description ? `<p style="margin:0;font-size:13px;color:var(--on-surface-variant);">${escapeHtml(p.description)}</p>` : ''}
+              <h4 class="m-0 mb-xs" style="font-size:15px;">${escapeHtml(p.title)}</h4>
+              ${p.description ? `<p class="m-0 fs-13 c-on-surface-variant">${escapeHtml(p.description)}</p>` : ''}
             </div>
-            <div style="display:flex;gap:4px;flex-shrink:0;">
+            <div class="flex flex-shrink-0" style="gap:4px;">
               <button class="btn btn-ghost btn-sm togglePollStatus" data-id="${p.id}" data-active="${p.isActive}" style="color:var(--primary);">
                 <span class="material-icons-outlined" style="font-size:18px;">${p.isActive ? 'toggle_on' : 'toggle_off'}</span>
               </button>

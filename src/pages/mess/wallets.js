@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getWallets, depositWallet, getLowBalanceWallets } from '../../store.js';
-import { messInchargeNav, wardenNav, adminNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderBackButton } from '../../helpers.js';
+import { messInchargeNav, wardenNav, adminNav, showToast, escapeHtml, renderNotifBell, renderAvatar, renderBackButton, renderSkeletonPage } from '../../helpers.js';
 
 export default async function messWalletsPage(app) {
   const user = getCurrentUser();
@@ -11,6 +11,8 @@ export default async function messWalletsPage(app) {
     if (user.role === 'admin') return adminNav('wallets');
     return wardenNav('wallets');
   }
+
+  app.innerHTML = renderSkeletonPage();
 
   async function render() {
     const wallets = await getWallets();
@@ -26,23 +28,23 @@ export default async function messWalletsPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Wallet Overview</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div class="flex items-center gap-sm">
             ${renderNotifBell()}
             ${renderAvatar(user, 'stitch-avatar-sm')}
           </div>
         </header>
-        <div style="padding:16px;padding-bottom:80px;">
-          <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Student Wallets</h2>
-          <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${wallets.length} wallets • ₹${totalDeposited} deposited • ₹${totalBalance} remaining</p>
+        <div class="page-content">
+          <h2 class="m-0 mb-xs fs-20 fw-600">Student Wallets</h2>
+          <p class="m-0 mb-md fs-13 c-outline">${wallets.length} wallets • ₹${totalDeposited} deposited • ₹${totalBalance} remaining</p>
 
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <div class="flex gap-sm mb-md">
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--primary-container);">${wallets.length}</div><div class="stat-label" style="font-size:10px;">Wallets</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--status-success);">₹${totalDeposited.toLocaleString()}</div><div class="stat-label" style="font-size:10px;">Deposited</div></div>
             <div class="stat-card" style="padding:10px;"><div class="stat-value" style="font-size:18px;color:var(--status-warning);">₹${totalBalance.toLocaleString()}</div><div class="stat-label" style="font-size:10px;">Balance</div></div>
           </div>
 
           ${lowBalance.length > 0 ? `
-            <div class="card" style="margin-bottom:12px;border-left:4px solid var(--status-danger);padding:12px;">
+            <div class="card mb-sm" style="border-left:4px solid var(--status-danger);padding:12px;">
               <div style="font-size:14px;font-weight:600;color:var(--status-danger);margin-bottom:8px;">
                 <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle;">warning</span>
                 Low Balance Alerts (${lowBalance.length})
@@ -50,25 +52,25 @@ export default async function messWalletsPage(app) {
               ${lowBalance.map(w => `
                 <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--surface-container);">
                   <span>${escapeHtml(w.student?.name || 'Unknown')}</span>
-                  <span style="color:var(--status-danger);font-weight:600;">₹${w.balance}</span>
+                  <span class="c-danger fw-600">₹${w.balance}</span>
                 </div>
               `).join('')}
             </div>
           ` : ''}
 
           <div class="section-title">All Wallets</div>
-          <input class="form-input" id="walletSearch" placeholder="Search student..." style="margin-bottom:8px;">
+          <input class="form-input mb-sm" id="walletSearch" placeholder="Search student...">
           <div id="walletsList">
             ${wallets.map(w => `
               <div class="card wallet-row" style="margin-bottom:6px;padding:10px;" data-name="${(w.student?.name || '').toLowerCase()}">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="flex justify-between items-center">
                   <div>
-                    <div style="font-weight:600;font-size:13px;">${escapeHtml(w.student?.name || 'Unknown')}</div>
-                    <div style="font-size:11px;color:var(--outline);">${w.student?.department || ''} ${w.student?.year ? '• Year '+w.student.year : ''}</div>
+                    <div class="fw-600 fs-13">${escapeHtml(w.student?.name || 'Unknown')}</div>
+                    <div class="fs-12 c-outline">${w.student?.department || ''} ${w.student?.year ? '• Year '+w.student.year : ''}</div>
                   </div>
-                  <div style="text-align:right;">
+                  <div class="text-right">
                     <div style="font-weight:600;font-size:14px;color:${w.balance < 500 ? 'var(--status-danger)' : 'var(--status-success)'};">₹${w.balance}</div>
-                    <div style="font-size:10px;color:var(--outline);">Deposited: ₹${w.totalDeposited}</div>
+                    <div class="fs-12 c-outline">Deposited: ₹${w.totalDeposited}</div>
                     <button class="btn btn-sm btn-primary depositBtn" data-student="${w.studentId}" style="font-size:10px;padding:2px 8px;margin-top:2px;min-width:auto;">Deposit</button>
                   </div>
                 </div>
