@@ -52,6 +52,9 @@
 
 .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-lg); }
 
+.page-student { padding-top: 0; }
+.page-warden { padding-top: 0; }
+
 .welcome-section { padding: 20px var(--margin-mobile) 8px; }
 .welcome-name { font-size: 22px; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; }
 .welcome-meta { font-size: 13px; color: var(--on-surface-variant); }

@@ -216,7 +216,12 @@
   font-size: 13px; font-weight: 700; flex-shrink: 0;
 }
 
-.page-content { padding: var(--space-md); padding-bottom: 80px; }
+.page {
+  padding: var(--margin-mobile);
+  padding-bottom: 100px;
+  min-height: 100vh;
+}
+.page-content { padding: var(--space-md); padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 .section-title {
   font-size: var(--headline-sm-size);
   font-weight: var(--headline-sm-weight);
