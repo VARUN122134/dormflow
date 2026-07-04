@@ -25,15 +25,26 @@ export function startAutoAttendanceScheduler(user) {
       if (!isPast820 && !isPast2100) return;
 
       if (isPast820 && !todaySaved) {
+        const all = await getUsers();
         for (const ht of types) {
           const fileName = `${ht.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
           const { data: existing } = await supabase.storage.from('attendance-snapshots').list('', { search: fileName });
-          if (!existing || existing.length === 0) {
-            const all = await getUsers();
-            const students = all.filter(s => s.role === 'student' && s.hostelType === ht && s.isApproved);
-            if (students.length > 0) {
+          const students = all.filter(s => s.role === 'student' && s.hostelType === ht && s.isApproved);
+          if (students.length > 0) {
+            if (!existing || existing.length === 0) {
               await saveAttendanceSnapshot(ht, students);
             }
+            // Mark all students as present for dinner (last meal of the day)
+            const attendanceRecords = students.map(s => ({
+              student_id: s.id,
+              meal_type: 'dinner',
+              attendance_date: dateStr,
+              verified_by: user.id,
+            }));
+            const { error: attErr } = await supabase
+              .from('mess_attendance')
+              .upsert(attendanceRecords, { onConflict: 'student_id,attendance_date,meal_type', ignoreDuplicates: true });
+            if (attErr) console.error('Auto attendance insert error:', attErr);
           }
         }
         todaySaved = true;
@@ -45,7 +56,7 @@ export function startAutoAttendanceScheduler(user) {
           const usage = await getDailyUsage(dateStr);
           if (usage && usage.items && usage.items.length > 0) {
             try {
-              await calculateDailyBill(dateStr, null);
+              await calculateDailyBill(dateStr, user.id);
             } catch (e) {
               console.error('Auto bill calculation error:', e);
             }
