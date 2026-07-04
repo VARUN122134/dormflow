@@ -1398,6 +1398,21 @@ function normStockItem(row) {
   return { id: row.id, name: row.name, category: row.category, unit: row.unit, createdAt: row.created_at };
 }
 
+export async function getStockInventory() {
+  const items = await getStockItems();
+  const { data: purchases } = await supabase.from('mess_stock_purchases').select('item_id, quantity');
+  const { data: usageItems } = await supabase.from('mess_daily_usage_items').select('item_id, quantity_used');
+  const purchased = {}; const used = {};
+  (purchases || []).forEach(p => { purchased[p.item_id] = (purchased[p.item_id] || 0) + p.quantity; });
+  (usageItems || []).forEach(u => { used[u.item_id] = (used[u.item_id] || 0) + u.quantity_used; });
+  return items.map(i => ({
+    ...i,
+    totalPurchased: Math.round((purchased[i.id] || 0) * 100) / 100,
+    totalUsed: Math.round((used[i.id] || 0) * 100) / 100,
+    remaining: Math.round(((purchased[i.id] || 0) - (used[i.id] || 0)) * 100) / 100,
+  }));
+}
+
 export async function getStockItems() {
   const { data, error } = await supabase.from('mess_stock_items').select('*').order('name');
   if (error) throw error;

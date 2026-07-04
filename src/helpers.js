@@ -155,6 +155,7 @@ export function messMemberNav(active) {
 
 export function messInchargeNav(active) {
   return renderBottomNav(active, [
+    { id: 'stock-manager', icon: 'dashboard', label: 'Manager', route: '#/mess/stock-manager' },
     { id: 'stock', icon: 'inventory_2', label: 'Stock', route: '#/mess/stock' },
     { id: 'usage', icon: 'edit_note', label: 'Usage', route: '#/mess/usage' },
     { id: 'bill', icon: 'receipt_long', label: 'Bill', route: '#/mess/bill' },

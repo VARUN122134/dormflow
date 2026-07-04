@@ -66,6 +66,7 @@ import messUsagePage from './pages/mess/usage.js';
 import messBillPage from './pages/mess/bill.js';
 import messWalletsPage from './pages/mess/wallets.js';
 import messReportsPage from './pages/mess/reports.js';
+import messStockManagerPage from './pages/mess/stock-manager.js';
 
 import studentWalletPage from './pages/student/wallet.js';
 
@@ -162,6 +163,7 @@ registerRoute('#/mess/usage', messUsagePage);
 registerRoute('#/mess/bill', messBillPage);
 registerRoute('#/mess/wallets', messWalletsPage);
 registerRoute('#/mess/reports', messReportsPage);
+registerRoute('#/mess/stock-manager', messStockManagerPage);
 
 registerRoute('#/student/wallet', studentWalletPage);
 
