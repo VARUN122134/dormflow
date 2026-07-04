@@ -271,13 +271,13 @@ export function refreshNotifBadge() {
   });
 }
 
-export function showModal(title, body, onConfirm, confirmText = 'Confirm', confirmClass = 'btn-danger') {
+export function showModal(title, body, onConfirm, confirmText = 'Confirm', confirmClass = 'btn-danger', isHtml = false) {
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
   backdrop.innerHTML = `
     <div class="modal">
       <div class="modal-title">${escapeHtml(title)}</div>
-      <div class="modal-body">${escapeHtml(body)}</div>
+      <div class="modal-body">${isHtml ? body : escapeHtml(body)}</div>
       <div class="modal-actions">
         <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
         <button class="btn ${confirmClass} btn-sm" id="modalConfirm">${escapeHtml(confirmText)}</button>

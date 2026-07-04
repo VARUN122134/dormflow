@@ -135,6 +135,19 @@ export async function approveUser(userId) {
   return updateUser(userId, { isApproved: true });
 }
 
+export async function updateUserRole(userId, newRole) {
+  const validRoles = ['student', 'boys_warden', 'girls_warden', 'security', 'admin', 'mess_incharge'];
+  if (!validRoles.includes(newRole)) throw new Error('Invalid role: ' + newRole);
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ role: newRole })
+    .eq('id', userId)
+    .select()
+    .single();
+  if (error) throw error;
+  return normProfile(data);
+}
+
 export async function createUser(userData) {
   throw new Error('User creation via admin panel is disabled. New users must register through the registration page.');
 }

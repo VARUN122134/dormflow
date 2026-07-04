@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
-import { getUsers, deleteUser, approveUser, exportUsersToCSV } from '../../store.js';
-import { adminNav, statusChip, getInitials, showToast, showModal, renderPageHeader, renderAvatar, renderLogoutIcon } from '../../helpers.js';
+import { getUsers, deleteUser, approveUser, updateUserRole, exportUsersToCSV } from '../../store.js';
+import { adminNav, statusChip, getInitials, showToast, showModal, escapeHtml, renderPageHeader, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 
 export default async function userManagement(app) {
   const user = getCurrentUser();
@@ -34,6 +34,7 @@ export default async function userManagement(app) {
       girls_warden: 'Girls Warden',
       security: 'Gate Security',
       admin: 'Admin',
+      mess_incharge: 'Mess Incharge',
     }[role] || role);
 
     app.innerHTML = `
@@ -74,7 +75,7 @@ export default async function userManagement(app) {
         </div>
 
         <div class="filter-tabs mb-md" id="roleFilters">
-          ${['All', 'student', 'boys_warden', 'girls_warden', 'security', 'admin'].map(r => `
+          ${['All', 'student', 'boys_warden', 'girls_warden', 'security', 'admin', 'mess_incharge'].map(r => `
             <button class="filter-tab ${roleFilter === r ? 'active' : ''}" data-role="${r}">
               ${r === 'All' ? 'All' : roleLabel(r)}
             </button>
@@ -90,8 +91,9 @@ export default async function userManagement(app) {
               <div class="user-card-info">
                 <div class="user-card-name">${u.name} ${!u.isApproved ? '<span class="chip chip-pending" style="font-size:10px;padding:2px 8px;">Pending</span>' : ''}</div>
                 <div class="user-card-id">${u.registrationNo ? `Reg No: ${u.registrationNo}` : `ID: ${u.id}`}</div>
-                <div style="margin-top:4px;">
+                <div style="margin-top:4px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
                   <span class="chip chip-info" style="font-size:10px;padding:2px 8px;">${roleLabel(u.role)}</span>
+                  ${u.id !== user.id ? `<button class="btn btn-ghost" style="font-size:10px;padding:2px 6px;min-height:22px;line-height:1;" data-changerole="${u.id}" title="Change role">change</button>` : ''}
                   ${u.hostelType ? `<span class="chip chip-neutral" style="font-size:10px;padding:2px 8px;">${u.hostelType}</span>` : ''}
                 </div>
               </div>
@@ -171,6 +173,39 @@ export default async function userManagement(app) {
           },
           'Delete',
           'btn-danger'
+        );
+      });
+    });
+
+    document.querySelectorAll('[data-changerole]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const targetUser = displayUsers.find(u => u.id === btn.dataset.changerole);
+        if (!targetUser) return;
+        const roles = ['student', 'boys_warden', 'girls_warden', 'security', 'admin', 'mess_incharge'];
+        const current = roleLabel(targetUser.role);
+        const opts = roles.map(r =>
+          `<option value="${r}" ${r === targetUser.role ? 'selected' : ''}>${roleLabel(r)}</option>`
+        ).join('');
+        showModal(
+          'Change Role',
+          `<div style="margin-bottom:12px;">Change role for <strong>${escapeHtml(targetUser.name)}</strong> (currently ${current}):</div>
+           <select id="roleSelect" class="form-input" style="width:100%;">${opts}</select>`,
+          async () => {
+            const sel = document.getElementById('roleSelect');
+            if (!sel) return;
+            const newRole = sel.value;
+            if (newRole === targetUser.role) { showToast('No change', 'info'); return; }
+            try {
+              await updateUserRole(targetUser.id, newRole);
+              showToast(`${escapeHtml(targetUser.name)} is now ${roleLabel(newRole)}`, 'success');
+              await render();
+            } catch (err) {
+              showToast('Failed to change role: ' + err.message, 'error');
+            }
+          },
+          'Save',
+          'btn-primary',
+          true
         );
       });
     });
