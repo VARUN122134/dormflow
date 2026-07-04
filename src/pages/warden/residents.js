@@ -4,7 +4,7 @@
 
 import { getCurrentUser } from '../../auth.js';
 import { getUsers } from '../../store.js';
-import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar, renderBackButton } from '../../helpers.js';
+import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar, renderBackButton, escapeHtml } from '../../helpers.js';
 
 export default async function wardenResidents(app) {
   const user = getCurrentUser();
@@ -57,8 +57,8 @@ export default async function wardenResidents(app) {
             <div class="user-card animate-fade-in-up">
               ${renderAvatar(s, 'user-card-avatar')}
               <div class="user-card-info">
-                <div class="user-card-name">${s.name}</div>
-                <div class="user-card-id">${s.department} • ${s.year} Year • Room ${s.roomNumber}</div>
+                <div class="user-card-name">${escapeHtml(s.name)}</div>
+                <div class="user-card-id">${escapeHtml(s.department)} • ${escapeHtml(s.year)} Year • Room ${escapeHtml(s.roomNumber)}</div>
               </div>
               ${statusChip(s.activeStatus)}
             </div>

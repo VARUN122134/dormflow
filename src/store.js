@@ -1510,14 +1510,15 @@ export async function calculateDailyBill(dateStr, userId) {
   const walletMap = {};
   (wallets || []).forEach(w => { walletMap[w.student_id] = w; });
 
+  const schedulerUser = getCurrentUser();
   for (const sid of uniqueStudents) {
     const wallet = walletMap[sid];
     if (!wallet || wallet.balance < perStudentCost) continue;
     const newBalance = Math.round((wallet.balance - perStudentCost) * 100) / 100;
     await supabase.from('mess_wallets').update({ balance: newBalance, updated_at: new Date().toISOString() }).eq('id', wallet.id);
     await supabase.from('mess_wallet_transactions').insert({ student_id: sid, type: 'deduction', amount: perStudentCost, balance_before: wallet.balance, balance_after: newBalance, bill_id: bill.id, description: `Mess bill for ${dateStr}` });
-    if (newBalance < wallet.minimum_balance_alert && newBalance >= 0) {
-      const user = getCurrentUser();
+    const minAlert = wallet.minimum_balance_alert ?? 500;
+    if (newBalance < minAlert && newBalance >= 0) {
       await createNotification(sid, 'Low Wallet Balance', `Your mess wallet balance is ₹${newBalance}. Please recharge soon.`, 'warning', 'wallet', bill.id);
       const { data: wardens } = await supabase.from('profiles').select('id').in('role', ['boys_warden', 'girls_warden']);
       if (wardens) {

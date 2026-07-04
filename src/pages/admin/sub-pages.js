@@ -1,11 +1,11 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { getLeaves } from '../../store.js';
 import { navigate } from '../../router.js';
-import { adminNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar, renderBackButton } from '../../helpers.js';
+import { adminNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar, renderBackButton, escapeHtml } from '../../helpers.js';
 
 export async function adminLeaves(app) {
   const rawLeaves = await getLeaves();
-  const leaves = rawLeaves.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const leaves = [...rawLeaves].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   app.innerHTML = `
     ${renderPageHeader('All Leave Requests', `${leaves.length} total`, renderBackButton())}
@@ -19,13 +19,13 @@ export async function adminLeaves(app) {
                 <div class="leave-card-student">
                   ${renderAvatar(student, 'leave-card-avatar')}
                   <div>
-                    <div class="leave-card-name">${student?.name || 'Unknown'}</div>
-                    <div class="leave-card-meta">${student?.hostelType || ''} Hostel • ${student?.department || ''}</div>
+                    <div class="leave-card-name">${escapeHtml(student?.name || 'Unknown')}</div>
+                    <div class="leave-card-meta">${escapeHtml(student?.hostelType || '')} Hostel • ${escapeHtml(student?.department || '')}</div>
                   </div>
                 </div>
                 ${statusChip(l.approvalStatus)}
               </div>
-              <div class="leave-card-meta">${formatDateRange(l.outDate, l.inDate)} • ${l.type}</div>
+              <div class="leave-card-meta">${formatDateRange(l.outDate, l.inDate)} • ${escapeHtml(l.type)}</div>
             </div>
           `;
         }).join('')}
@@ -49,7 +49,7 @@ export function adminProfile(app) {
         </div>
         <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
       </div>
-      <div class="profile-name">${user.name}</div>
+      <div class="profile-name">${escapeHtml(user.name)}</div>
       <div class="profile-location">System Administrator • University Central</div>
 
       <div class="profile-section card animate-fade-in">
@@ -163,11 +163,11 @@ export function adminProfile(app) {
   document.getElementById('changePwBtn').addEventListener('click', async () => {
     const current = document.getElementById('cpCurrent').value;
     const newPw = document.getElementById('cpNew').value;
-    const confirm = document.getElementById('cpConfirm').value;
+    const cpConfirmEl = document.getElementById('cpConfirm').value;
     const cpError = document.getElementById('cpError');
     cpError.style.display = 'none';
 
-    if (!current || !newPw || !confirm) {
+    if (!current || !newPw || !cpConfirmEl) {
       cpError.textContent = 'Please fill in all password fields';
       cpError.style.display = 'block';
       return;
@@ -177,7 +177,7 @@ export function adminProfile(app) {
       cpError.style.display = 'block';
       return;
     }
-    if (newPw !== confirm) {
+    if (newPw !== cpConfirmEl) {
       cpError.textContent = 'New passwords do not match';
       cpError.style.display = 'block';
       return;

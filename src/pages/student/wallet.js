@@ -93,5 +93,5 @@ export default async function studentWalletPage(app) {
     `;
   }
 
-  render();
+  await render();
 }
