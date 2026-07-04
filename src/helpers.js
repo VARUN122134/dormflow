@@ -155,12 +155,10 @@ export function messMemberNav(active) {
 
 export function messInchargeNav(active) {
   return renderBottomNav(active, [
-    { id: 'stock-manager', icon: 'dashboard', label: 'Manager', route: '#/mess/stock-manager' },
-    { id: 'stock', icon: 'inventory_2', label: 'Stock', route: '#/mess/stock' },
-    { id: 'usage', icon: 'edit_note', label: 'Usage', route: '#/mess/usage' },
-    { id: 'bill', icon: 'receipt_long', label: 'Bill', route: '#/mess/bill' },
+    { id: 'stock-manager', icon: 'inventory_2', label: 'Stock', route: 'https://varun122134.github.io/dormflow/stock-manager/' },
     { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
     { id: 'reports', icon: 'bar_chart', label: 'Reports', route: '#/mess/reports' },
+    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/mess/attendance' },
   ]);
 }
 

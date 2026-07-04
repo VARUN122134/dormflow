@@ -61,12 +61,8 @@ import adminComplaintsPage from './pages/admin/complaints.js';
 import adminNotificationsPage from './pages/admin/notifications.js';
 
 import messAttendancePage from './pages/mess/attendance.js';
-import messStockPage from './pages/mess/stock.js';
-import messUsagePage from './pages/mess/usage.js';
-import messBillPage from './pages/mess/bill.js';
 import messWalletsPage from './pages/mess/wallets.js';
 import messReportsPage from './pages/mess/reports.js';
-import messStockManagerPage from './pages/mess/stock-manager.js';
 
 import studentWalletPage from './pages/student/wallet.js';
 
@@ -157,13 +153,9 @@ registerRoute('#/admin/rooms', adminRoomsPage);
 registerRoute('#/student/complaints', studentComplaintsPage);
 registerRoute('#/admin/complaints', adminComplaintsPage);
 
-// Mess Wallet & Stock
-registerRoute('#/mess/stock', messStockPage);
-registerRoute('#/mess/usage', messUsagePage);
-registerRoute('#/mess/bill', messBillPage);
+// Mess Wallet & Reports
 registerRoute('#/mess/wallets', messWalletsPage);
 registerRoute('#/mess/reports', messReportsPage);
-registerRoute('#/mess/stock-manager', messStockManagerPage);
 
 registerRoute('#/student/wallet', studentWalletPage);
 

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Stock Manager - Mess</title>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1a56db;--primary-container:#2563eb;--on-primary:#fff;
+  --surface:#fff;--surface-container:#f1f5f9;--on-surface:#1e293b;--on-surface-variant:#64748b;
+  --outline:#94a3b8;--outline-variant:#e2e8f0;
+  --status-success:#16a34a;--status-warning:#d97706;--status-danger:#dc2626;--status-info:#2563eb;
+  --error-container:#fef2f2;--on-error-container:#dc2626;
+  --success-container:#f0fdf4;--on-success-container:#16a34a;
+  --radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-full:999px;
+  --body-font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+}
+body{font-family:var(--body-font);background:var(--surface-container);color:var(--on-surface);font-size:14px;line-height:1.5;min-height:100vh;padding-bottom:80px}
+input,select,button,textarea{font-family:inherit;font-size:inherit}
+.card{background:var(--surface);border-radius:var(--radius-md);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:8px}
+.page{padding:16px;padding-bottom:90px;max-width:600px;margin:0 auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--radius-sm);border:none;font-weight:600;font-size:13px;cursor:pointer;transition:opacity .2s;text-decoration:none}
+.btn:active{opacity:.8}
+.btn-primary{background:var(--primary-container);color:#fff}
+.btn-secondary{background:var(--surface-container);color:var(--on-surface)}
+.btn-danger{background:var(--status-danger);color:#fff}
+.btn-success{background:var(--status-success);color:#fff}
+.btn-sm{padding:7px 14px;font-size:12px}
+.btn-block{width:100%}
+.btn-ghost{background:transparent;color:var(--on-surface-variant)}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--on-surface-variant);margin-bottom:4px}
+.form-input,.form-select{width:100%;padding:10px 12px;border:1.5px solid var(--outline-variant);border-radius:var(--radius-sm);background:var(--surface);color:var(--on-surface);outline:none;transition:border-color .2s}
+.form-input:focus,.form-select:focus{border-color:var(--primary-container)}
+.form-input-sm{padding:6px 8px;font-size:12px;text-align:center}
+.section-title{font-size:13px;font-weight:700;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px}
+.mb-xs{margin-bottom:4px}.mb-sm{margin-bottom:8px}.mb-md{margin-bottom:16px}.mb-lg{margin-bottom:24px}.mt-sm{margin-top:8px}.mt-md{margin-top:16px}
+.flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.gap-xs{gap:4px}.gap-sm{gap:8px}.gap-md{gap:16px}.flex-1{flex:1}
+.text-center{text-align:center}.text-right{text-align:right}
+.fw-600{font-weight:600}.fw-700{font-weight:700}
+.fs-10{font-size:10px}.fs-12{font-size:12px}.fs-13{font-size:13px}.fs-14{font-size:14px}.fs-20{font-size:20px}.fs-24{font-size:24px}.fs-32{font-size:32px}
+.c-outline{color:var(--outline)}.c-on-surface-variant{color:var(--on-surface-variant)}.c-success{color:var(--status-success)}.c-danger{color:var(--status-danger)}.c-warning{color:var(--status-warning)}
+.chip{display:inline-block;padding:3px 10px;border-radius:var(--radius-full);font-size:10px;font-weight:600}
+.chip-info{background:var(--primary-container);color:#fff}
+.chip-neutral{background:var(--surface-container);color:var(--on-surface-variant)}
+.m-0{margin:0}.p-0{padding:0}
+.hidden{display:none!important}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat-card{background:var(--surface);border-radius:var(--radius-md);padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat-value{font-size:24px;font-weight:700}
+.stat-label{font-size:12px;color:var(--outline);margin-top:2px}
+.progress-bar{height:6px;background:var(--surface-container);border-radius:3px;overflow:hidden;margin:4px 0}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:999;padding:16px}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:20px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:12px}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.modal-actions .btn{flex:1}
+.header{background:var(--primary-container);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:100}
+.header h1{font-size:18px;font-weight:700}
+.header .sub{font-size:12px;opacity:.8}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--outline-variant);display:flex;justify-content:space-around;padding:4px 0;z-index:100}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 12px;background:none;border:none;cursor:pointer;font-size:10px;color:var(--outline);text-decoration:none;transition:color .2s}
+.nav-item.active{color:var(--primary-container)}
+.nav-item .material-icons{font-size:22px}
+.toast-container{position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:10px 16px;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:600;animation:slideIn .2s;display:flex;align-items:center;gap:8px}
+.toast-success{background:var(--status-success)}
+.toast-error{background:var(--status-danger)}
+.toast-warning{background:var(--status-warning)}
+.toast-info{background:var(--status-info)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.login-container{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.login-card{background:var(--surface);border-radius:var(--radius-lg);padding:32px 24px;width:100%;max-width:360px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.login-card h2{text-align:center;margin-bottom:4px}
+.login-card p{text-align:center;color:var(--on-surface-variant);font-size:13px;margin-bottom:20px}
+.login-error{padding:8px 12px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-sm);font-size:12px;margin-bottom:12px;display:none;text-align:center}
+.refresh-btn{position:fixed;bottom:80px;right:16px;width:48px;height:48px;border-radius:50%;background:var(--primary-container);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;z-index:50}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const SUPABASE_URL = 'https://oekdpzoewzkznxghmgby.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la2Rwem9ld3prem54Z2htZ2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjU1MDMsImV4cCI6MjA5NjMwMTUwM30.r_Im6_fzocAFee9d7KfjKBYfApW1QAktd5MdqWn23Ok';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let currentUser = null;
+let currentPage = 'dashboard';
+
+function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function showToast(msg, type) {
+  let c = document.querySelector('.toast-container');
+  if (!c) { c = document.createElement('div'); c.className = 'toast-container'; document.body.appendChild(c); }
+  const t = document.createElement('div'); t.className = 'toast toast-' + (type || 'info');
+  const icons = {success:'check_circle',error:'error',warning:'warning',info:'info'};
+  t.innerHTML = '<span style="font-size:18px">' + (icons[type]||'info') + '</span><span>' + escapeHtml(msg) + '</span>';
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(100%)'; t.style.transition = 'all .3s'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const { data: { user } } = await sb.auth.getUser();
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
+    if (profile && ['mess_incharge', 'boys_warden', 'girls_warden', 'admin'].includes(profile.role)) {
+      currentUser = { ...user, ...profile };
+      return true;
+    }
+  }
+  return false;
+}
+
+async function login(email, pass) {
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) throw error;
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', data.user.id).maybeSingle();
+  if (!profile || !['mess_incharge', 'boys_warden', 'girls_warden', 'admin'].includes(profile.role)) {
+    await sb.auth.signOut();
+    throw new Error('Access denied. Only mess staff can use this portal.');
+  }
+  currentUser = { ...data.user, ...profile };
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  render();
+}
+
+async function getStockItems() {
+  const { data } = await sb.from('mess_stock_items').select('*').order('name');
+  return data || [];
+}
+
+async function createStockItem(data) {
+  const { error } = await sb.from('mess_stock_items').insert({ name: data.name, category: data.category, unit: data.unit });
+  if (error) throw error;
+}
+
+async function updateStockItem(id, data) {
+  const { error } = await sb.from('mess_stock_items').update(data).eq('id', id);
+  if (error) throw error;
+}
+
+async function getStockPurchases(filters) {
+  let q = sb.from('mess_stock_purchases').select('*, mess_stock_items!mess_stock_purchases_item_id_fkey(*)').order('purchased_date', { ascending: false }).order('created_at', { ascending: false });
+  if (filters?.itemId) q = q.eq('item_id', filters.itemId);
+  if (filters?.limit) q = q.limit(filters.limit);
+  const { data } = await q;
+  return (data || []).map(r => ({ id: r.id, itemId: r.item_id, quantity: r.quantity, unitPrice: r.unit_price, totalCost: r.total_cost, purchasedDate: r.purchased_date, notes: r.notes, item: r.mess_stock_items ? { id: r.mess_stock_items.id, name: r.mess_stock_items.name, category: r.mess_stock_items.category, unit: r.mess_stock_items.unit } : null }));
+}
+
+async function createStockPurchase(data) {
+  const { error } = await sb.from('mess_stock_purchases').insert({ item_id: data.itemId, quantity: data.quantity, unit_price: data.unitPrice, total_cost: data.totalCost, purchased_date: data.purchasedDate || new Date().toISOString().slice(0, 10), purchased_by: data.purchasedBy, notes: data.notes || '' });
+  if (error) throw error;
+}
+
+async function getDailyUsage(dateStr) {
+  const { data } = await sb.from('mess_daily_usage').select('*, mess_daily_usage_items!mess_daily_usage_items_usage_id_fkey(*, mess_stock_items!mess_daily_usage_items_item_id_fkey(*))').eq('usage_date', dateStr).maybeSingle();
+  if (!data) return null;
+  return { id: data.id, usageDate: data.usage_date, items: (data.mess_daily_usage_items || []).map(i => ({ id: i.id, itemId: i.item_id, quantityUsed: i.quantity_used, item: i.mess_stock_items ? { id: i.mess_stock_items.id, name: i.mess_stock_items.name, category: i.mess_stock_items.category, unit: i.mess_stock_items.unit } : null })) };
+}
+
+async function saveDailyUsage(dateStr, items) {
+  let { data: usage } = await sb.from('mess_daily_usage').select('id').eq('usage_date', dateStr).maybeSingle();
+  if (!usage) {
+    const { data: ins, error: ie } = await sb.from('mess_daily_usage').insert({ usage_date: dateStr }).select().single();
+    if (ie) throw ie;
+    usage = ins;
+  }
+  await sb.from('mess_daily_usage_items').delete().eq('usage_id', usage.id);
+  if (items.length > 0) {
+    const rows = items.map(i => ({ usage_id: usage.id, item_id: i.itemId, quantity_used: i.quantityUsed }));
+    const { error } = await sb.from('mess_daily_usage_items').insert(rows);
+    if (error) throw error;
+  }
+}
+
+async function getDailyBill(dateStr) {
+  const { data } = await sb.from('mess_daily_bills').select('*').eq('bill_date', dateStr).maybeSingle();
+  if (!data) return null;
+  return { id: data.id, billDate: data.bill_date, totalStockCost: data.total_stock_cost, totalStudents: data.total_students, perStudentCost: data.per_student_cost, calculatedAt: data.calculated_at };
+}
+
+async function calculateDailyBill(dateStr) {
+  const usage = await getDailyUsage(dateStr);
+  if (!usage || !usage.items || usage.items.length === 0) throw new Error('No stock usage recorded for this date');
+  let totalStockCost = 0;
+  for (const u of usage.items) {
+    const { data: purchases } = await sb.from('mess_stock_purchases').select('unit_price').eq('item_id', u.itemId).order('purchased_date', { ascending: false }).limit(1);
+    const price = (purchases && purchases.length > 0) ? purchases[0].unit_price : 0;
+    totalStockCost += u.quantityUsed * price;
+  }
+  const { data: attendance } = await sb.from('mess_attendance').select('student_id').eq('attendance_date', dateStr);
+  const uniqueStudents = [...new Set((attendance || []).map(a => a.student_id))];
+  if (uniqueStudents.length === 0) throw new Error('No students attended mess today');
+  const perStudentCost = Math.round((totalStockCost / uniqueStudents.length) * 100) / 100;
+  const { data: bill, error: be } = await sb.from('mess_daily_bills').upsert({ bill_date: dateStr, total_stock_cost: totalStockCost, total_students: uniqueStudents.length, per_student_cost: perStudentCost, calculated_by: currentUser.id }).select().single();
+  if (be) throw be;
+  const { data: wallets } = await sb.from('mess_wallets').select('*').in('student_id', uniqueStudents);
+  const walletMap = {};
+  (wallets || []).forEach(w => { walletMap[w.student_id] = w; });
+  for (const sid of uniqueStudents) {
+    const wallet = walletMap[sid];
+    if (!wallet || wallet.balance < perStudentCost) continue;
+    const newBalance = Math.round((wallet.balance - perStudentCost) * 100) / 100;
+    await sb.from('mess_wallets').update({ balance: newBalance, updated_at: new Date().toISOString() }).eq('id', wallet.id);
+    await sb.from('mess_wallet_transactions').insert({ student_id: sid, type: 'deduction', amount: perStudentCost, balance_before: wallet.balance, balance_after: newBalance, bill_id: bill.id, description: `Mess bill for ${dateStr}` });
+  }
+  return { id: bill.id, billDate: bill.bill_date, totalStockCost: bill.total_stock_cost, totalStudents: bill.total_students, perStudentCost: bill.per_student_cost, calculatedAt: bill.calculated_at };
+}
+
+async function getStockInventory() {
+  const items = await getStockItems();
+  const { data: purchases } = await sb.from('mess_stock_purchases').select('item_id, quantity');
+  const { data: usageItems } = await sb.from('mess_daily_usage_items').select('item_id, quantity_used');
+  const purchased = {}; const used = {};
+  (purchases || []).forEach(p => { purchased[p.item_id] = (purchased[p.item_id] || 0) + p.quantity; });
+  (usageItems || []).forEach(u => { used[u.item_id] = (used[u.item_id] || 0) + u.quantity_used; });
+  return items.map(i => ({
+    ...i,
+    totalPurchased: Math.round((purchased[i.id] || 0) * 100) / 100,
+    totalUsed: Math.round((used[i.id] || 0) * 100) / 100,
+    remaining: Math.round(((purchased[i.id] || 0) - (used[i.id] || 0)) * 100) / 100,
+  }));
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (!currentUser) { renderLogin(app); return; }
+  switch (currentPage) {
+    case 'dashboard': renderDashboard(app); break;
+    case 'items': renderItems(app); break;
+    case 'usage': renderUsage(app); break;
+    case 'bill': renderBill(app); break;
+    default: renderDashboard(app);
+  }
+}
+
+function renderNav(active) {
+  return `<nav class="bottom-nav">
+    <a href="#" class="nav-item ${active === 'dashboard' ? 'active' : ''}" data-page="dashboard"><span class="material-icons">dashboard</span>Dashboard</a>
+    <a href="#" class="nav-item ${active === 'items' ? 'active' : ''}" data-page="items"><span class="material-icons">inventory_2</span>Stock</a>
+    <a href="#" class="nav-item ${active === 'usage' ? 'active' : ''}" data-page="usage"><span class="material-icons">edit_note</span>Usage</a>
+    <a href="#" class="nav-item ${active === 'bill' ? 'active' : ''}" data-page="bill"><span class="material-icons">receipt_long</span>Bill</a>
+  </nav>`;
+}
+
+function attachNav() {
+  document.querySelectorAll('.nav-item[data-page]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); currentPage = el.dataset.page; render(); });
+  });
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    if (confirm('Sign out?')) await logout();
+  });
+}
+
+function renderLogin(app) {
+  app.innerHTML = `
+    <div class="login-container">
+      <div class="login-card">
+        <h2>Stock Manager</h2>
+        <p>Mess Inventory &amp; Billing System</p>
+        <div class="login-error" id="loginError"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="loginEmail" type="email" placeholder="you@example.com"></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="loginPass" type="password" placeholder="Enter password"></div>
+        <button class="btn btn-primary btn-block mt-sm" id="loginBtn">Sign In</button>
+      </div>
+    </div>`;
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const err = document.getElementById('loginError');
+    if (!email || !pass) { err.textContent = 'Enter email and password'; err.style.display = 'block'; return; }
+    try { await login(email, pass); render(); } catch (e) { err.textContent = e.message; err.style.display = 'block'; }
+  });
+  document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginBtn').click(); });
+}
+
+async function renderDashboard(app) {
+  const inventory = await getStockInventory();
+  const today = new Date().toISOString().slice(0, 10);
+  const bill = await getDailyBill(today);
+  const lowStock = inventory.filter(i => i.remaining <= 0);
+  const totalCost = bill ? bill.totalStockCost : 0;
+  app.innerHTML = `
+    <div class="header"><div class="flex justify-between items-center">
+      <div><h1>Stock Manager</h1><div class="sub">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</div></div>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none;" id="logoutBtn">Sign out</button>
+    </div></div>
+    <div class="page">
+      <div class="grid-3 mb-md">
+        <div class="stat-card"><div class="stat-value" style="color:var(--primary-container)">${inventory.length}</div><div class="stat-label">Items</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:${lowStock.length > 0 ? 'var(--status-danger)' : 'var(--status-success)'}">${lowStock.length}</div><div class="stat-label">Needs Refill</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:${bill ? 'var(--status-success)' : 'var(--outline)'}">${bill ? '₹'+bill.perStudentCost : '--'}</div><div class="stat-label">${bill ? 'Per Student' : 'Not billed'}</div></div>
+      </div>
+
+      ${lowStock.length > 0 ? `<div class="card mb-md" style="border-left:4px solid var(--status-danger);background:var(--error-container);">
+        <div class="flex items-center gap-sm"><span style="font-size:20px;color:var(--status-danger)">!</span>
+        <div><div class="fw-600 fs-13">${lowStock.length} item(s) need refill</div><div class="fs-12 c-on-surface-variant">${lowStock.map(i => escapeHtml(i.name)).join(', ')}</div></div></div>
+      </div>` : ''}
+
+      <div class="grid-2 mb-md">
+        <button class="btn btn-primary btn-sm" id="addItemBtn"><span style="font-size:18px">+</span> New Item</button>
+        <button class="btn btn-secondary btn-sm" id="addPurchaseBtn"><span style="font-size:18px">+</span> Refill Stock</button>
+      </div>
+
+      <div class="section-title">Current Inventory</div>
+      ${inventory.length === 0 ? '<p class="c-outline">No items yet. Add your first stock item.</p>' : inventory.map(i => {
+        const pct = i.totalPurchased > 0 ? Math.round((i.remaining / i.totalPurchased) * 100) : 0;
+        const barColor = pct > 30 ? 'var(--status-success)' : pct > 0 ? 'var(--status-warning)' : 'var(--status-danger)';
+        return `<div class="card">
+          <div class="flex justify-between items-center mb-xs"><div><strong>${escapeHtml(i.name)}</strong> <span class="chip chip-info">${i.category}</span></div>
+            <div class="fs-14"><span class="fw-700" style="color:${i.remaining > 0 ? 'var(--status-success)' : 'var(--status-danger)'}">${i.remaining}</span><span class="c-outline fs-12"> / ${i.unit}</span></div></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(pct, 100)}%;background:${barColor}"></div></div>
+          <div class="flex justify-between fs-12 c-outline"><span>Bought: ${i.totalPurchased} ${i.unit}</span><span>Used: ${i.totalUsed} ${i.unit}</span></div>
+        </div>`;
+      }).join('')}
+
+      <div class="section-title">Recent Purchases</div>
+      <div id="purchasesList"></div>
+
+      <div class="section-title">Quick Actions</div>
+      <div class="grid-2 mb-md">
+        <button class="btn btn-secondary btn-sm" id="goUsageBtn"><span style="font-size:18px">+</span> Log Today's Usage</button>
+        <button class="btn btn-success btn-sm" id="goBillBtn" ${bill ? 'disabled style="opacity:.5"' : ''}><span style="font-size:18px">+</span> ${bill ? 'Billed' : 'Calculate Bill'}</button>
+      </div>
+    </div>
+    <button class="refresh-btn" id="refreshBtn">↻</button>
+    ${renderNav('dashboard')}`;
+  attachNav();
+  document.getElementById('refreshBtn')?.addEventListener('click', () => render());
+  document.getElementById('addItemBtn')?.addEventListener('click', showAddItemModal);
+  document.getElementById('addPurchaseBtn')?.addEventListener('click', () => showAddPurchaseModal());
+  document.getElementById('goUsageBtn')?.addEventListener('click', () => { currentPage = 'usage'; render(); });
+  document.getElementById('goBillBtn')?.addEventListener('click', async () => {
+    try { await calculateDailyBill(today); showToast('Bill calculated & deducted!', 'success'); render(); }
+    catch (e) { showToast(e.message, 'error'); }
+  });
+  loadRecentPurchases();
+}
+
+async function loadRecentPurchases() {
+  const el = document.getElementById('purchasesList');
+  if (!el) return;
+  const purchases = await getStockPurchases({ limit: 15 });
+  el.innerHTML = purchases.length === 0 ? '<p class="c-outline">No purchases recorded.</p>' :
+    purchases.map(p => `<div class="card" style="margin-bottom:4px;padding:8px 10px;">
+      <div class="flex justify-between fs-12"><div><strong>${escapeHtml(p.item?.name || 'Unknown')}</strong> <span class="c-outline">${p.quantity} × ₹${p.unitPrice}</span> = <span class="fw-600">₹${p.totalCost}</span></div>
+      <div class="c-outline">${p.purchasedDate}</div></div>
+      ${p.notes ? `<div class="fs-12 c-on-surface-variant mt-xs">${escapeHtml(p.notes)}</div>` : ''}
+    </div>`).join('');
+}
+
+function showAddItemModal() {
+  const bd = document.createElement('div'); bd.className = 'modal-backdrop';
+  bd.innerHTML = `<div class="modal"><div class="modal-title">Add Stock Item</div>
+    <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="itemName" placeholder="e.g. Rice"></div>
+    <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="itemCategory"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="bulk">Bulk</option></select></div>
+    <div class="form-group"><label class="form-label">Unit</label><input class="form-input" id="itemUnit" placeholder="e.g. kg, litre, piece"></div>
+    <div class="modal-actions"><button class="btn btn-secondary" id="mdlCancel">Cancel</button><button class="btn btn-primary" id="mdlConfirm">Add</button></div></div>`;
+  document.body.appendChild(bd);
+  bd.querySelector('#mdlCancel').onclick = () => bd.remove();
+  bd.querySelector('#mdlConfirm').onclick = async () => {
+    const name = document.getElementById('itemName').value.trim();
+    const category = document.getElementById('itemCategory').value;
+    const unit = document.getElementById('itemUnit').value.trim();
+    if (!name || !unit) { showToast('Fill all fields', 'warning'); return; }
+    try { await createStockItem({ name, category, unit }); showToast('Item added', 'success'); bd.remove(); render(); } catch (e) { showToast(e.message, 'error'); }
+  };
+  bd.onclick = e => { if (e.target === bd) bd.remove(); };
+}
+
+async function showAddPurchaseModal() {
+  const items = await getStockItems();
+  const bd = document.createElement('div'); bd.className = 'modal-backdrop';
+  bd.innerHTML = `<div class="modal"><div class="modal-title">Record Purchase</div>
+    <div class="form-group"><label class="form-label">Item</label><select class="form-input" id="purchaseItem">${items.map(i => `<option value="${i.id}">${escapeHtml(i.name)} (${i.unit})</option>`).join('')}</select></div>
+    <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" id="purchaseQty" type="number" step="0.01" placeholder="0"></div>
+    <div class="form-group"><label class="form-label">Unit Price (₹)</label><input class="form-input" id="purchasePrice" type="number" step="0.01" placeholder="0"></div>
+    <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="purchaseDate" type="date" value="${new Date().toISOString().slice(0, 10)}"></div>
+    <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="purchaseNotes" placeholder="Optional"></div>
+    <p class="fw-600 fs-14" id="purchaseTotal">Total: ₹0.00</p>
+    <div class="modal-actions"><button class="btn btn-secondary" id="mdlCancel">Cancel</button><button class="btn btn-primary" id="mdlConfirm">Save</button></div></div>`;
+  document.body.appendChild(bd);
+  const calc = () => { const q = parseFloat(document.getElementById('purchaseQty').value) || 0; const p = parseFloat(document.getElementById('purchasePrice').value) || 0; document.getElementById('purchaseTotal').textContent = 'Total: ₹' + (q * p).toFixed(2); };
+  document.getElementById('purchaseQty')?.addEventListener('input', calc);
+  document.getElementById('purchasePrice')?.addEventListener('input', calc);
+  bd.querySelector('#mdlCancel').onclick = () => bd.remove();
+  bd.querySelector('#mdlConfirm').onclick = async () => {
+    const itemId = document.getElementById('purchaseItem').value;
+    const qty = parseFloat(document.getElementById('purchaseQty').value);
+    const price = parseFloat(document.getElementById('purchasePrice').value);
+    const date = document.getElementById('purchaseDate').value;
+    const notes = document.getElementById('purchaseNotes').value.trim();
+    if (!qty || !price) { showToast('Enter quantity and price', 'warning'); return; }
+    try { await createStockPurchase({ itemId, quantity: qty, unitPrice: price, totalCost: qty * price, purchasedDate: date, purchasedBy: currentUser.id, notes }); showToast('Purchase recorded', 'success'); bd.remove(); render(); } catch (e) { showToast(e.message, 'error'); }
+  };
+  bd.onclick = e => { if (e.target === bd) bd.remove(); };
+}
+
+async function renderItems(app) {
+  const items = await getStockItems();
+  app.innerHTML = `
+    <div class="header"><div class="flex justify-between items-center">
+      <div><h1>Stock Items</h1><div class="sub">${items.length} items</div></div>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none;" id="logoutBtn">Sign out</button>
+    </div></div>
+    <div class="page">
+      <button class="btn btn-primary btn-block btn-sm mb-md" id="addItemBtn"><span style="font-size:18px">+</span> Add New Item</button>
+      ${items.length === 0 ? '<p class="c-outline text-center">No stock items yet.</p>' : items.map(i => `
+        <div class="card"><div class="flex justify-between items-center">
+          <div><strong>${escapeHtml(i.name)}</strong> <span class="chip chip-info">${i.category}</span> <span class="c-outline fs-12">${i.unit}</span></div>
+          <button class="btn btn-sm btn-ghost edit-item" data-id="${i.id}" data-name="${escapeHtml(i.name)}" data-category="${i.category}" data-unit="${escapeHtml(i.unit)}">Edit</button>
+        </div></div>
+      `).join('')}
+    </div>
+    <button class="refresh-btn" id="refreshBtn">↻</button>
+    ${renderNav('items')}`;
+  attachNav();
+  document.getElementById('refreshBtn')?.addEventListener('click', () => render());
+  document.getElementById('addItemBtn')?.addEventListener('click', showAddItemModal);
+  document.querySelectorAll('.edit-item').forEach(b => b.addEventListener('click', () => {
+    const { id, name, category, unit } = b.dataset;
+    const bd = document.createElement('div'); bd.className = 'modal-backdrop';
+    bd.innerHTML = `<div class="modal"><div class="modal-title">Edit Item</div>
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="itemName" value="${escapeHtml(name)}"></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="itemCategory"><option value="daily"${category==='daily'?' selected':''}>Daily</option><option value="weekly"${category==='weekly'?' selected':''}>Weekly</option><option value="bulk"${category==='bulk'?' selected':''}>Bulk</option></select></div>
+      <div class="form-group"><label class="form-label">Unit</label><input class="form-input" id="itemUnit" value="${escapeHtml(unit)}"></div>
+      <div class="modal-actions"><button class="btn btn-secondary" id="mdlCancel">Cancel</button><button class="btn btn-primary" id="mdlConfirm">Save</button></div></div>`;
+    document.body.appendChild(bd);
+    bd.querySelector('#mdlCancel').onclick = () => bd.remove();
+    bd.querySelector('#mdlConfirm').onclick = async () => {
+      try { await updateStockItem(id, { name: document.getElementById('itemName').value.trim(), category: document.getElementById('itemCategory').value, unit: document.getElementById('itemUnit').value.trim() }); showToast('Updated', 'success'); bd.remove(); render(); } catch (e) { showToast(e.message, 'error'); }
+    };
+    bd.onclick = e => { if (e.target === bd) bd.remove(); };
+  }));
+}
+
+async function renderUsage(app) {
+  const items = await getStockItems();
+  const today = new Date().toISOString().slice(0, 10);
+  const usage = await getDailyUsage(today);
+  const usageMap = {};
+  (usage?.items || []).forEach(u => { usageMap[u.itemId] = u.quantityUsed; });
+  app.innerHTML = `
+    <div class="header"><div class="flex justify-between items-center">
+      <div><h1>Daily Usage</h1><div class="sub">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</div></div>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none;" id="logoutBtn">Sign out</button>
+    </div></div>
+    <div class="page">
+      <p class="c-outline mb-md fs-13">Enter how much of each item was consumed today.</p>
+      ${items.length === 0 ? '<p class="c-outline">No stock items. Add items in Stock first.</p>' : items.map(i => `
+        <div class="card"><div class="flex justify-between items-center gap-sm">
+          <div class="flex-1"><strong>${escapeHtml(i.name)}</strong> <span class="chip chip-info">${i.category}</span></div>
+          <div class="flex items-center gap-xs"><input class="form-input form-input-sm" type="number" step="0.01" min="0" id="usage-${i.id}" value="${usageMap[i.id] || ''}" placeholder="0" style="width:80px" data-id="${i.id}"><span class="fs-12 c-outline" style="min-width:30px">${i.unit}</span></div>
+        </div></div>
+      `).join('')}
+      <button class="btn btn-primary btn-block mt-md" id="saveUsageBtn"><span style="font-size:18px">+</span> Save Today's Usage</button>
+    </div>
+    <button class="refresh-btn" id="refreshBtn">↻</button>
+    ${renderNav('usage')}`;
+  attachNav();
+  document.getElementById('refreshBtn')?.addEventListener('click', () => render());
+  document.getElementById('saveUsageBtn')?.addEventListener('click', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const inputs = document.querySelectorAll('[id^="usage-"]');
+    const items = [];
+    inputs.forEach(inp => {
+      const val = parseFloat(inp.value);
+      if (val && val > 0) items.push({ itemId: inp.dataset.id, quantityUsed: val });
+    });
+    if (items.length === 0) { showToast('Enter at least one item', 'warning'); return; }
+    try { await saveDailyUsage(today, items); showToast('Usage saved!', 'success'); } catch (e) { showToast(e.message, 'error'); }
+  });
+}
+
+async function renderBill(app) {
+  const today = new Date().toISOString().slice(0, 10);
+  const bill = await getDailyBill(today);
+  const usage = await getDailyUsage(today);
+  app.innerHTML = `
+    <div class="header"><div class="flex justify-between items-center">
+      <div><h1>Bill &amp; Division</h1><div class="sub">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</div></div>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none;" id="logoutBtn">Sign out</button>
+    </div></div>
+    <div class="page">
+      ${bill ? `<div class="card mb-md" style="text-align:center;padding:24px;border-left:4px solid var(--status-success);">
+        <div class="c-outline fs-13 mb-sm">Today's Mess Bill</div>
+        <div class="fs-32 fw-700" style="color:var(--primary-container)">₹${bill.perStudentCost}</div>
+        <div class="fs-13 c-on-surface-variant">${bill.totalStudents} students present</div>
+        <div class="fs-12 c-outline mt-sm">Total stock cost: ₹${bill.totalStockCost}</div>
+      </div>` : `
+        <div class="card mb-md" style="text-align:center;padding:24px;">
+          ${usage && usage.items && usage.items.length > 0 ? `
+            <div class="c-outline fs-13 mb-sm">Usage recorded — ready to calculate</div>
+            <button class="btn btn-primary" id="calcBtn"><span style="font-size:18px">+</span> Calculate Today's Bill</button>
+          ` : `<div class="c-outline fs-13"><span style="font-size:40px;color:var(--outline-variant);display:block;margin-bottom:8px">+</span>Record stock usage first</div>`}
+        </div>`}
+
+      <div class="section-title">How It Works</div>
+      <div class="card fs-12 c-on-surface-variant">
+        <ol style="padding-left:16px;display:flex;flex-direction:column;gap:6px;">
+          <li>Record <strong>purchases</strong> in Stock tab (item qty + unit price)</li>
+          <li>Log <strong>daily usage</strong> in Usage tab (what was consumed today)</li>
+          <li>Click <strong>Calculate Bill</strong> — system divides total cost by students who attended mess</li>
+          <li>Each student's wallet is <strong>deducted</strong> the per-student amount</li>
+          <li>Students with <strong>insufficient balance</strong> are skipped</li>
+        </ol>
+      </div>
+    </div>
+    <button class="refresh-btn" id="refreshBtn">↻</button>
+    ${renderNav('bill')}`;
+  attachNav();
+  document.getElementById('refreshBtn')?.addEventListener('click', () => render());
+  document.getElementById('calcBtn')?.addEventListener('click', async () => {
+    try { await calculateDailyBill(today); showToast('Bill calculated & deducted from wallets!', 'success'); render(); }
+    catch (e) { showToast(e.message, 'error'); }
+  });
+}
+
+(async () => {
+  // Load Material Icons
+  const link = document.createElement('link');
+  link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
+  link.rel = 'stylesheet';
+  document.head.appendChild(link);
+
+  const loggedIn = await checkSession();
+  if (loggedIn) render();
+  else render();
+})();
+</script>
+</body>
+</html>
