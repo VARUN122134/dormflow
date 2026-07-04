@@ -84,7 +84,7 @@ export default async function messAttendancePage(app) {
       const q = e.target.value.trim().toLowerCase();
       if (q.length < 2) { document.getElementById('studentResults').innerHTML = ''; document.getElementById('manualEntry').style.display = 'none'; return; }
       const allUsers = await getUsers();
-      const matches = allUsers.filter(u => u.role === 'student' && (u.name.toLowerCase().includes(q) || u.registrationNo.toLowerCase().includes(q)));
+      const matches = allUsers.filter(u => u.role === 'student' && (u.name.toLowerCase().includes(q) || (u.registrationNo || '').toLowerCase().includes(q)));
       if (matches.length === 0) {
         document.getElementById('studentResults').innerHTML = '<div style="font-size:12px;color:var(--outline);">No students found</div>';
         document.getElementById('manualEntry').style.display = 'none';

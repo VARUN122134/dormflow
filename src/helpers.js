@@ -215,7 +215,7 @@ export function renderSkeletonPage() {
 }
 
 export function renderLogoutIcon() {
-  return `<button onclick="(async function(){const m=await import('./auth.js');const s=await import('./store.js');const r=await import('./router.js');if(confirm('Sign out of UCE IT?')){await m.logout();s.showToast('Signed out','info');r.navigate('#/login');}})()" class="icon-btn" aria-label="Sign out" title="Sign out"><span class="material-icons-outlined">logout</span></button>`;
+  return `<button onclick="(async function(){const m=await import('./auth.js');const h=await import('./helpers.js');const r=await import('./router.js');if(confirm('Sign out of UCE IT?')){await m.logout();h.showToast('Signed out','info');r.navigate('#/login');}})()" class="icon-btn" aria-label="Sign out" title="Sign out"><span class="material-icons-outlined">logout</span></button>`;
 }
 
 export function renderStars(rating) {

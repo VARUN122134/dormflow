@@ -49,6 +49,7 @@ export default async function adminMess(app) {
       document.getElementById('tabMembers').className = 'btn btn-sm btn-primary';
       document.getElementById('tabStudents').className = 'btn btn-sm btn-ghost';
       document.getElementById('tabContent').innerHTML = renderMembersTab(messMembers);
+      attachToggleHandlers();
     };
 
     attachToggleHandlers();

@@ -189,7 +189,7 @@ export default function registerPage(app) {
         `;
       } else {
         showToast('Account created successfully!', 'success');
-        navigate(getHomeRoute(result.profile.role));
+        navigate(result?.profile?.role ? getHomeRoute(result.profile.role) : '#/login');
       }
     } catch (err) {
       errorDiv.textContent = err.message || 'Error creating account. Please try again.';

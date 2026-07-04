@@ -6,7 +6,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { scanOutpass, getGateStats, getRecentGateActivity, getOutpasses } from '../../store.js';
 import { startScanner, stopScanner } from '../../qr.js';
-import { gateNav, statusChip, formatTime, getInitials, showToast, renderAvatar } from '../../helpers.js';
+import { gateNav, statusChip, formatTime, getInitials, showToast, renderAvatar, escapeHtml } from '../../helpers.js';
 
 export default async function gateDashboard(app) {
   const user = getCurrentUser();
@@ -202,7 +202,21 @@ export default async function gateDashboard(app) {
       </div>
     `;
 
-    let result = await scanOutpass(data, user.id);
+    let result;
+    try {
+      result = await scanOutpass(data, user.id);
+    } catch (e) {
+      showToast('Scan error: ' + (e.message || e), 'error');
+      resultDiv.innerHTML = `
+        <div class="scan-result scan-error animate-scale-in mb-md">
+          <span class="material-icons-outlined" style="font-size:48px;">error</span>
+          <h3 class="mt-sm mb-sm">Scan Failed</h3>
+          <p>${escapeHtml(e.message || 'An unexpected error occurred')}</p>
+        </div>
+      `;
+      setTimeout(() => { if (document.getElementById('scanResult')) document.getElementById('scanResult').innerHTML = ''; scanLock = false; }, 3000);
+      return;
+    }
 
     if (!result.success && !data.startsWith('UCEIT') && !data.startsWith('DORMFLOW')) {
       const outpasses = await getOutpasses();

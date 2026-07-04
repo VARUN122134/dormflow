@@ -1,6 +1,6 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { getRecentGateActivity, getUsers } from '../../store.js';
-import { gateNav, statusChip, formatTime, formatDate, getInitials, renderPageHeader, showToast } from '../../helpers.js';
+import { gateNav, statusChip, formatTime, formatDate, getInitials, renderPageHeader, showToast, showModal } from '../../helpers.js';
 
 export async function gateHistory(app) {
   const activity = await getRecentGateActivity(30);
@@ -151,9 +151,12 @@ export function gateSystem(app) {
     };
   }
 
-  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-    await logout();
-    window.location.hash = '#/login';
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    showModal('Sign Out', 'Are you sure you want to sign out?', async () => {
+      await logout();
+      showToast('Signed out', 'info');
+      window.location.hash = '#/login';
+    }, 'Sign Out', 'btn-danger');
   });
 
   document.getElementById('changePwBtn')?.addEventListener('click', async () => {

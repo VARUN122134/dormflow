@@ -189,7 +189,11 @@ export function isMessMember() {
 export async function refreshProfile() {
   if (!_currentProfile?.id) return null;
   const profile = await fetchProfile(_currentProfile.id);
-  if (profile) _currentProfile = profile;
+  if (profile) {
+    _currentProfile = profile;
+  } else {
+    _currentProfile = null;
+  }
   return profile;
 }
 
@@ -197,6 +201,7 @@ export function getHomeRoute(role) {
   if (role === 'admin') return '#/admin/dashboard';
   if (role === 'security') return '#/gate/dashboard';
   if (role === 'boys_warden' || role === 'girls_warden') return '#/warden/dashboard';
+  if (role === 'mess_incharge') return '#/mess/stock';
   return '#/student/dashboard';
 }
 

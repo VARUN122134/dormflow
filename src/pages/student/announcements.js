@@ -171,16 +171,16 @@ export default async function announcementsPage(app) {
     app.querySelectorAll('.announcement-card').forEach(card => {
       card.onclick = () => {
         const preview = card.querySelector('.announcement-preview');
-        if (preview) {
-          preview.style.display = preview.style.display === 'none' ? '-webkit-box' : 'none';
-          // Re-read full content by expanding
-          if (preview.style.display === '-webkit-box') {
-            preview.style.display = 'block';
-            preview.style.webkitLineClamp = 'unset';
-          } else {
-            preview.style.display = '-webkit-box';
-            preview.style.webkitLineClamp = '2';
-          }
+        if (!preview) return;
+        const expanded = preview.dataset.expanded === 'true';
+        if (expanded) {
+          preview.style.display = '-webkit-box';
+          preview.style.webkitLineClamp = '2';
+          preview.dataset.expanded = 'false';
+        } else {
+          preview.style.display = 'block';
+          preview.style.webkitLineClamp = 'unset';
+          preview.dataset.expanded = 'true';
         }
       };
     });

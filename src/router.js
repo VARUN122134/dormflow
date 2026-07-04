@@ -16,6 +16,7 @@ export function navigate(hash) {
 
 export function goBack(fallback) {
   const target = navStack.pop();
+  window.__skipNavStack = true;
   window.location.hash = target || fallback || '#/';
 }
 
@@ -51,7 +52,7 @@ const roleAccess = {
   '#/gate':    ['security'],
   '#/admin':   ['admin'],
   '#/mess':    ['student', 'mess_incharge', 'boys_warden', 'girls_warden', 'admin'],
-  '#/notifications': ['student', 'boys_warden', 'girls_warden', 'admin', 'security'],
+  '#/notifications': ['student', 'boys_warden', 'girls_warden', 'admin', 'security', 'mess_incharge'],
 };
 
 function getHomeRoute(role) {
@@ -80,7 +81,7 @@ function checkAccess(hash, user) {
       return roles.includes(user.role);
     }
   }
-  return true;
+  return false;
 }
 
 export async function handleRoute() {
@@ -88,13 +89,13 @@ export async function handleRoute() {
   let user = getCurrentUser();
 
   const authPages = ['#/splash', '#/login', '#/register', '#/', ''];
-  if (lastHash && lastHash !== hash && !authPages.includes(lastHash)) {
+  if (lastHash && lastHash !== hash && !authPages.includes(lastHash) && !window.__skipNavStack) {
     navStack.push(lastHash);
     if (navStack.length > MAX_STACK) navStack.shift();
   }
+  window.__skipNavStack = false;
   lastHash = hash;
 
-  // Refresh profile for students navigating to mess routes (picks up is_mess_member changes)
   if (hash.startsWith('#/mess') && user?.role === 'student') {
     const updated = await refreshProfile();
     if (updated) user = getCurrentUser();
