@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stock Portal — Warden</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+<script>
+tailwind.config={
+  darkMode:"class",
+  theme:{
+    extend:{
+      colors:{
+        "on-tertiary":"#472a00","surface-container-low":"#f0f4f8","surface-container-lowest":"#ffffff",
+        "on-secondary-fixed-variant":"#005236","on-secondary-fixed":"#002113","surface-dim":"#f8fafc",
+        "primary-fixed-dim":"#005ac2","on-surface-variant":"#44474e","on-tertiary-fixed-variant":"#653e00",
+        "outline":"#74777f","inverse-on-surface":"#f1f0f4","inverse-primary":"#adc6ff",
+        "on-error-container":"#410002","primary-container":"#d8e2ff","tertiary-fixed":"#ffddb8",
+        "surface":"#f8fafc","error":"#ba1a1a","surface-tint":"#005ac2","primary-fixed":"#d8e2ff",
+        "secondary-fixed-dim":"#4edea3","on-surface":"#1a1c1e","on-tertiary-container":"#2a1700",
+        "on-primary-container":"#001a41","secondary-container":"#ceead6","on-secondary-container":"#002113",
+        "on-primary-fixed":"#001a41","error-container":"#ffdad6","surface-container":"#eceef0",
+        "on-error":"#ffffff","on-primary":"#ffffff","tertiary":"#8b5000",
+        "on-primary-fixed-variant":"#004494","on-secondary":"#ffffff","secondary-fixed":"#6ffbbe",
+        "outline-variant":"#c4c6d0","tertiary-fixed-dim":"#ffb95f","secondary":"#006d48",
+        "on-tertiary-fixed":"#2a1700","surface-variant":"#dee3eb","surface-container-high":"#e1e2e6",
+        "surface-bright":"#f8fafc","inverse-surface":"#2f3033","surface-container-highest":"#e1e2e6",
+        "tertiary-container":"#ffddb8","primary":"#005ac2","on-background":"#1a1c1e","background":"#f8fafc"
+      },
+      borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},
+      spacing:{"margin-mobile":"16px",gutter:"20px",unit:"8px","container-padding":"24px","margin-desktop":"40px"},
+      fontFamily:{headline-lg:["Inter"],"title-md":["Inter"],"body-lg":["Inter"],"display-lg":["Inter"],"body-sm":["Inter"],"label-caps":["Inter"]},
+      fontSize:{"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"600"}],
+        "title-md":["20px",{lineHeight:"28px",fontWeight:"600"}],
+        "body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],
+        "display-lg":["48px",{lineHeight:"56px",letterSpacing:"-0.02em",fontWeight:"700"}],
+        "body-sm":["14px",{lineHeight:"20px",fontWeight:"400"}],
+        "label-caps":["12px",{lineHeight:"16px",letterSpacing:"0.05em",fontWeight:"700"}]}
+    }
+  }
+};
+</script>
+<style>
+body{font-family:'Inter',sans-serif;background-color:#f8fafc;background-image:radial-gradient(at 0% 0%,rgba(173,198,255,0.15) 0px,transparent 50%),radial-gradient(at 100% 0%,rgba(78,222,163,0.1) 0px,transparent 50%),radial-gradient(at 100% 100%,rgba(255,221,184,0.15) 0px,transparent 50%),radial-gradient(at 0% 100%,rgba(173,198,255,0.1) 0px,transparent 50%);overflow-x:hidden;min-height:100vh}
+.liquid-glass-card{backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.4);background:linear-gradient(135deg,rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.3) 100%);box-shadow:0 8px 32px 0 rgba(31,38,135,0.07)}
+.liquid-glass-border{border:1px solid rgba(0,0,0,0.08);box-shadow:inset 0 1px 1px rgba(255,255,255,0.5)}
+.inner-glow-primary{box-shadow:inset 0 0 20px rgba(0,90,194,0.03)}
+.inner-glow-error{box-shadow:inset 0 0 20px rgba(147,0,10,0.03)}
+.glass-card-hover:hover{backdrop-filter:blur(40px);background-color:rgba(255,255,255,0.8);transform:translateY(-2px);transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.glass-input{background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-bottom:2px solid rgba(0,0,0,0.1);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);color:#1d2022}
+.glass-input:focus{border-bottom-color:#005ac2;background:rgba(255,255,255,1);outline:none;box-shadow:0 4px 20px -5px rgba(0,90,194,0.15)}
+.primary-glow{box-shadow:0 0 20px rgba(0,90,194,0.2);background:linear-gradient(135deg,#005ac2 0%,#4d8eff 100%)}
+.status-dot-pulse{animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+.table-row-hover:hover{background:rgba(255,255,255,0.6)}
+.high-gloss-indicator::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,rgba(255,255,255,0.4) 0%,rgba(255,255,255,0) 100%);pointer-events:none}
+.page-section{display:none}.page-section.active{display:block}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center;padding:16px;background:rgba(255,255,255,0.2);backdrop-filter:blur(40px)}.modal-overlay.active{display:flex}
+.modal-content{background:rgba(255,255,255,0.6);backdrop-filter:blur(40px);width:100%;max-width:640px;border-radius:32px;overflow:hidden;box-shadow:0 32px 64px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.4)}
+.toast-container{position:fixed;top:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:16px 24px;border-radius:16px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;font-size:14px;animation:slideIn 0.3s ease;max-width:400px}
+.toast.success{background:rgba(16,185,129,0.9);color:#fff}
+.toast.error{background:rgba(186,26,26,0.9);color:#fff}
+.toast.info{background:rgba(0,90,194,0.9);color:#fff}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:#74777f;gap:8px}
+.loading .spinner{width:20px;height:20px;border:2px solid #e1e2e6;border-top-color:#005ac2;border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body class="text-on-surface">
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-screen w-[280px] bg-white/40 backdrop-blur-[40px] border-r border-slate-200/50 flex flex-col py-container-padding z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-black bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary">Stock Portal</h1>
+<p class="text-on-surface-variant/60 font-body-sm tracking-widest uppercase text-xs mt-1">Warden Control</p>
+</div>
+<nav class="flex-1 px-4 space-y-1" id="sidebar-nav">
+<a class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#dashboard" data-section="dashboard">
+<span class="material-symbols-outlined">dashboard</span><span class="font-body-lg">Dashboard Overview</span>
+</a>
+<a class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#fees" data-section="fees">
+<span class="material-symbols-outlined">payments</span><span class="font-body-lg">Student Accounts & Fees</span>
+</a>
+<a class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#inventory" data-section="inventory">
+<span class="material-symbols-outlined">inventory_2</span><span class="font-body-lg">Mess Inventory & Financials</span>
+</a>
+</nav>
+<div class="px-4 pt-8 border-t border-slate-200/50 mt-auto space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#" id="logout-btn">
+<span class="material-symbols-outlined text-error">logout</span><span class="font-body-lg">Logout</span>
+</a>
+</div>
+</aside>
+
+<!-- Main Content -->
+<main class="ml-[280px] min-h-screen">
+
+<!-- Top Nav -->
+<header class="sticky top-0 z-40 bg-white/60 backdrop-blur-[16px] border-b border-slate-200/50 h-20 px-margin-desktop flex justify-between items-center w-full shadow-sm">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary" id="page-title">Dashboard</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center bg-slate-200/30 rounded-full px-4 py-2 border border-slate-300/40 focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant/60 mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-56 text-on-surface placeholder:text-on-surface-variant/40" placeholder="Search..." id="global-search" type="text"/>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200/80">
+<div class="text-right hidden sm:block">
+<p class="font-bold text-sm text-primary" id="user-name">Warden</p>
+<p class="text-[10px] uppercase tracking-tighter text-on-surface-variant" id="user-role">Administrator</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+
+<div class="p-margin-desktop" id="content-area">
+
+<!-- ============ DASHBOARD ============ -->
+<section id="page-dashboard" class="page-section active">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-margin-desktop" id="dash-metrics">
+<div class="liquid-glass-card p-container-padding rounded-xl">
+<div class="flex justify-between items-start mb-4"><span class="material-symbols-outlined text-primary bg-primary/5 p-2 rounded-lg">groups</span><span class="text-primary text-[10px] font-bold uppercase tracking-widest">Total Students</span></div>
+<h2 class="font-display-lg text-[28px] mb-1 text-on-surface" id="dash-total-students">-</h2>
+<p class="text-on-surface-variant font-body-sm">Enrolled Residents</p>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-xl inner-glow-error border border-error/20">
+<div class="flex justify-between items-start mb-4"><span class="material-symbols-outlined text-error bg-error/5 p-2 rounded-lg">payments</span><span class="text-error text-[10px] font-bold uppercase tracking-widest">Outstanding Fees</span></div>
+<h2 class="font-display-lg text-[28px] mb-1 text-error" id="dash-outstanding-fees">₹0</h2>
+<p class="text-on-surface-variant font-body-sm">Total Due</p>
+<p class="text-error font-body-sm mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">warning</span> <span id="dash-overdue-count">0 Overdue</span></p>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-xl">
+<div class="flex justify-between items-start mb-4"><span class="material-symbols-outlined text-tertiary bg-tertiary/5 p-2 rounded-lg">restaurant</span><span class="text-tertiary text-[10px] font-bold uppercase tracking-widest">Mess Burn</span></div>
+<h2 class="font-display-lg text-[28px] mb-1 text-on-surface" id="dash-mess-cost">₹0</h2>
+<p class="text-on-surface-variant font-body-sm">Today's Daily Cost</p>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-xl border border-error/10">
+<div class="flex justify-between items-start mb-4"><span class="material-symbols-outlined text-error/60 bg-error/5 p-2 rounded-lg">inventory</span><span class="text-error/60 text-[10px] font-bold uppercase tracking-widest">Alerts</span></div>
+<h2 class="font-display-lg text-[28px] mb-1 text-on-surface" id="dash-alerts-count">0</h2>
+<p class="text-on-surface-variant font-body-sm">Low Stock Items</p>
+</div>
+</div>
+
+<div class="flex flex-col lg:flex-row gap-gutter">
+<section class="lg:w-[65%] liquid-glass-card rounded-2xl overflow-hidden">
+<div class="p-6 border-b border-slate-200/50 flex justify-between items-center bg-white/40">
+<h3 class="font-title-md flex items-center gap-3 text-on-surface"><span class="material-symbols-outlined text-primary">notification_important</span> System Alerts</h3>
+</div>
+<div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-100/50 text-on-surface-variant uppercase text-[10px] tracking-widest"><tr><th class="px-6 py-4">Status</th><th class="px-6 py-4">Type</th><th class="px-6 py-4">Item</th><th class="px-6 py-4">Description</th></tr></thead><tbody id="dash-alerts-table" class="divide-y divide-slate-100"></tbody></table></div>
+</section>
+<section class="lg:w-[35%] flex flex-col gap-gutter">
+<div class="liquid-glass-card p-container-padding rounded-2xl flex-1">
+<h3 class="font-title-md mb-6 flex items-center gap-3 text-on-surface"><span class="material-symbols-outlined text-secondary">bolt</span> Quick Actions</h3>
+<div class="space-y-4">
+<button class="w-full flex items-center gap-4 p-4 rounded-xl bg-primary text-on-primary font-bold shadow-lg transition-all active:scale-95 group overflow-hidden relative" onclick="openModal('onboard-modal')">
+<div class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+<span class="material-symbols-outlined relative">person_add</span><span class="relative font-body-lg">Onboard Student</span>
+</button>
+<button class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/40 border border-slate-200 hover:bg-white/80 transition-all active:scale-95 group" onclick="navigateTo('inventory')">
+<span class="material-symbols-outlined text-secondary">inventory_2</span><span class="font-body-lg">Manage Inventory</span>
+</button>
+<button class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/40 border border-slate-200 hover:bg-white/80 transition-all active:scale-95 group" onclick="navigateTo('fees')">
+<span class="material-symbols-outlined text-tertiary">account_balance_wallet</span><span class="font-body-lg">View Accounts</span>
+</button>
+</div>
+</div>
+<div class="liquid-glass-card bg-gradient-to-br from-primary/5 to-secondary/5 p-container-padding rounded-2xl h-40 relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-700"><span class="material-symbols-outlined text-primary text-[120px]">partly_cloudy_day</span></div>
+<div class="relative z-10"><h4 class="text-on-surface font-bold text-xl" id="dash-datetime"></h4><p class="text-on-surface-variant text-sm">System Status: <span class="text-secondary font-bold">Operational</span></p></div>
+</div>
+</section>
+</div>
+</section>
+
+<!-- ============ FEES ============ -->
+<section id="page-fees" class="page-section">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-6">
+<div><h2 class="font-headline-lg text-headline-lg text-on-surface">Student Accounts & Fees</h2><p class="text-on-surface-variant font-body-lg">Manage billing and track payments.</p></div>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-xl flex items-center gap-3 font-bold shadow-lg hover:brightness-110 transition-all active:scale-95" onclick="openModal('onboard-modal')">
+<span class="material-symbols-outlined">person_add</span><span class="font-title-md">Onboard Student</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-6" id="fees-stats">
+<div class="liquid-glass-card p-container-padding rounded-2xl"><span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Total Receivables</span><div class="flex items-end justify-between"><span class="font-display-lg text-headline-lg text-on-surface" id="fees-total-receivables">₹0</span></div></div>
+<div class="liquid-glass-card p-container-padding rounded-2xl"><span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Payments Pending</span><div class="flex items-end justify-between"><span class="font-display-lg text-headline-lg text-on-surface" id="fees-pending-count">0</span></div></div>
+<div class="liquid-glass-card p-container-padding rounded-2xl"><span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Collection Rate</span><div class="flex items-end justify-between"><span class="font-display-lg text-headline-lg text-on-surface" id="fees-collection-rate">0%</span></div></div>
+<div class="liquid-glass-card p-container-padding rounded-2xl"><span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Onboarded Students</span><div class="flex items-end justify-between"><span class="font-display-lg text-headline-lg text-on-surface" id="fees-onboarded">0</span></div></div>
+</div>
+<div class="liquid-glass-card rounded-3xl overflow-hidden">
+<div class="p-container-padding border-b border-black/5 flex justify-between items-center bg-white/20"><h3 class="font-title-md text-title-md text-on-surface">Resident Ledger</h3><div class="flex gap-2"><button class="p-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/60" onclick="exportCSV('fees')"><span class="material-symbols-outlined text-on-surface-variant">download</span></button></div></div>
+<div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="bg-black/5 text-on-surface-variant font-label-caps tracking-widest uppercase text-[10px]"><th class="px-6 py-5">Student</th><th class="px-6 py-5">Reg No.</th><th class="px-6 py-5">Dept / Year</th><th class="px-6 py-5">Base Fee</th><th class="px-6 py-5">Paid</th><th class="px-6 py-5">Balance</th><th class="px-6 py-5">Status</th><th class="px-6 py-5 text-right">Actions</th></tr></thead><tbody id="fees-table" class="divide-y divide-black/5"></tbody></table></div>
+<div class="p-container-padding flex items-center justify-between bg-black/5"><p class="text-on-surface-variant/80 text-body-sm" id="fees-pagination">Showing 0 results</p></div>
+</div>
+</section>
+
+<!-- ============ INVENTORY ============ -->
+<section id="page-inventory" class="page-section">
+<section class="grid grid-cols-3 gap-gutter mb-6" id="inv-summary">
+<div class="liquid-glass-card p-container-padding rounded-3xl group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4"><div class="p-3 bg-primary-container rounded-2xl"><span class="material-symbols-outlined text-primary">shopping_cart</span></div><span class="text-body-sm text-secondary font-medium" id="inv-purchase-trend">This month</span></div>
+<p class="text-on-surface-variant text-body-sm uppercase tracking-widest font-bold mb-1">Total Purchased</p>
+<h3 class="text-headline-lg font-bold text-on-surface" id="inv-total-purchased">₹0</h3>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-3xl group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4"><div class="p-3 bg-tertiary-container rounded-2xl"><span class="material-symbols-outlined text-tertiary">trending_down</span></div><span class="text-body-sm text-tertiary font-medium">Today</span></div>
+<p class="text-on-surface-variant text-body-sm uppercase tracking-widest font-bold mb-1">Today's Issues</p>
+<h3 class="text-headline-lg font-bold text-tertiary" id="inv-today-issues">0</h3>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-3xl group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4"><div class="p-3 bg-secondary-container rounded-2xl"><span class="material-symbols-outlined text-secondary">database</span></div><span class="text-body-sm text-secondary font-medium">Asset value</span></div>
+<p class="text-on-surface-variant text-body-sm uppercase tracking-widest font-bold mb-1">Stock Value</p>
+<h3 class="text-headline-lg font-bold text-primary" id="inv-stock-value">₹0</h3>
+</div>
+</section>
+<div class="flex justify-between items-end mb-6">
+<div><h3 class="font-headline-lg text-headline-lg mb-1 text-on-surface">Live Stock Ledger</h3><p class="text-on-surface-variant">Real-time commodity monitoring.</p></div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-3 bg-white/60 border border-black/10 rounded-xl hover:bg-white/90 transition-all active:scale-95 shadow-sm" onclick="openModal('issue-modal')"><span class="material-symbols-outlined text-on-surface-variant">history_edu</span><span class="font-bold">Log Issue</span></button>
+<button class="flex items-center gap-2 px-5 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:brightness-110 transition-all active:scale-95" onclick="openModal('restock-modal')"><span class="material-symbols-outlined">add_circle</span><span>Log Restock</span></button>
+</div>
+</div>
+<div class="liquid-glass-card rounded-3xl overflow-hidden mb-8">
+<table class="w-full text-left border-collapse"><thead><tr class="border-b border-black/5 bg-black/5"><th class="py-5 px-6 font-semibold text-on-surface-variant">Commodity</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Unit Cost</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Stock</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Usage (Today)</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Remaining</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Status</th></tr></thead><tbody id="inv-table" class="divide-y divide-black/5"></tbody></table>
+</div>
+<section>
+<div class="flex items-center justify-between mb-4"><h4 class="font-title-md text-title-md text-on-surface">Recent Activity</h4></div>
+<div id="inv-activity" class="space-y-3"></div>
+</section>
+</section>
+
+</div><!-- end content-area -->
+</main>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ===== MODAL: Log Issue ===== -->
+<div class="modal-overlay" id="issue-modal">
+<div class="modal-content">
+<div class="p-8 pb-4 border-b border-black/5 flex justify-between items-center bg-white/30"><div><h2 class="font-headline-lg text-[28px] font-extrabold text-on-surface">Log Daily Mess Issue</h2><p class="text-on-surface-variant font-body-sm mt-1">Deduct stock for kitchen operations</p></div><button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 text-on-surface-variant transition-colors" onclick="closeModal('issue-modal')"><span class="material-symbols-outlined">close</span></button></div>
+<form class="p-8 space-y-6" id="issue-form">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Commodity</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="issue-commodity" required></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Quantity</label>
+<input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="issue-qty" type="number" step="0.01" min="0.01" required placeholder="0.00"/>
+</div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Kitchen Unit</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="issue-unit"><option>Mess Hall A</option><option>Mess Hall B</option><option>Staff Kitchen</option><option>Guest House</option></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Notes</label>
+<textarea class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg resize-none" id="issue-notes" placeholder="e.g. Daily lunch preparation" rows="2"></textarea></div>
+</div>
+<div class="flex gap-4 pt-4">
+<button class="flex-1 bg-gradient-to-r from-tertiary to-amber-500 text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl hover:brightness-105" type="submit"><span class="material-symbols-outlined" style="font-variation-settings:'FILL'1">bolt</span> Process Issue</button>
+<button class="sm:w-1/3 text-on-surface-variant hover:text-on-surface border border-black/10 hover:bg-black/5 py-5 rounded-2xl font-bold transition-all" type="button" onclick="closeModal('issue-modal')">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- ===== MODAL: Log Restock ===== -->
+<div class="modal-overlay" id="restock-modal">
+<div class="modal-content">
+<div class="p-8 pb-4 border-b border-black/5 flex justify-between items-center bg-white/30"><div><h2 class="font-headline-lg text-[28px] font-extrabold text-on-surface">Log Restock Purchase</h2><p class="text-on-surface-variant font-body-sm mt-1">Update inventory and ledger records</p></div><button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 text-on-surface-variant transition-colors" onclick="closeModal('restock-modal')"><span class="material-symbols-outlined">close</span></button></div>
+<form class="p-8 space-y-6" id="restock-form">
+<div class="grid grid-cols-2 gap-6">
+<div class="col-span-2 space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Commodity</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="restock-commodity" required></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Quantity</label>
+<div class="relative"><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="restock-qty" type="number" step="0.01" min="0.01" required placeholder="0.00" oninput="calcRestockTotal()"/><span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">kg/L</span></div></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Unit Price (₹)</label>
+<div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">₹</span><input class="w-full glass-input px-4 py-4 rounded-2xl pl-8 font-body-lg" id="restock-price" type="number" step="0.01" min="0" required placeholder="0.00" oninput="calcRestockTotal()"/></div></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Total</label>
+<div class="glass-input px-4 py-4 rounded-2xl font-body-lg font-bold text-primary flex items-center" id="restock-total">₹ 0.00</div></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Vendor</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="restock-vendor"><option value="">Select vendor</option></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Invoice Ref</label>
+<input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="restock-invoice" placeholder="INV-001"/>
+</div>
+<div class="col-span-2 space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Notes</label>
+<textarea class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg resize-none" id="restock-notes" placeholder="Additional notes..." rows="2"></textarea></div>
+</div>
+<div class="flex gap-4 pt-4">
+<button class="flex-1 bg-primary text-on-primary py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl hover:brightness-110" type="submit"><span class="material-symbols-outlined" style="font-variation-settings:'FILL'1">add_shopping_cart</span> Record Restock</button>
+<button class="sm:w-1/3 text-on-surface-variant hover:text-on-surface border border-black/10 hover:bg-black/5 py-5 rounded-2xl font-bold transition-all" type="button" onclick="closeModal('restock-modal')">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- ===== MODAL: Onboard Student ===== -->
+<div class="modal-overlay" id="onboard-modal">
+<div class="modal-content">
+<div class="p-8 pb-4 border-b border-black/5 flex justify-between items-center bg-white/30"><div><h2 class="font-headline-lg text-[28px] font-extrabold text-on-surface">Onboard New Student</h2><p class="text-on-surface-variant font-body-sm mt-1">Register a new resident and create fee account</p></div><button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 text-on-surface-variant transition-colors" onclick="closeModal('onboard-modal')"><span class="material-symbols-outlined">close</span></button></div>
+<form class="p-8 space-y-6" id="onboard-form">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Full Name</label><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-name" required/></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Email (Registration)</label><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-email" type="email" placeholder="123456789012@ucea.edu.in" required/></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Department</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-dept"><option>CSE</option><option>ECE</option><option>EEE</option><option>CIVIL</option><option>MECHANICAL</option><option>IT</option></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Year</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-year"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Gender</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-gender"><option>Male</option><option>Female</option></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Hostel Type</label>
+<select class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-hostel"><option>Boys</option><option>Girls</option></select></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Room Number</label><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-room" placeholder="e.g. 101A"/></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Block Name</label><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-block" placeholder="e.g. A-Block"/></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Phone</label><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-phone" type="tel"/></div>
+<div class="space-y-2"><label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Base Fee (₹)</label><input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="onboard-fee" type="number" value="3200"/></div>
+</div>
+<div class="flex gap-4 pt-4">
+<button class="flex-1 bg-primary text-on-primary py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl hover:brightness-110" type="submit"><span class="material-symbols-outlined" style="font-variation-settings:'FILL'1">person_add</span> Onboard Student</button>
+<button class="sm:w-1/3 text-on-surface-variant hover:text-on-surface border border-black/10 hover:bg-black/5 py-5 rounded-2xl font-bold transition-all" type="button" onclick="closeModal('onboard-modal')">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+
+<script type="module">
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL='https://oekdpzoewzkznxghmgby.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la2Rwem9ld3prem54Z2htZ2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjU1MDMsImV4cCI6MjA5NjMwMTUwM30.r_Im6_fzocAFee9d7KfjKBYfApW1QAktd5MdqWn23Ok';
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+// State
+let currentUser=null;
+let commodities=[];
+
+// Toast
+function toast(msg,type='info'){const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span>${msg}`;c.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300)},3500)}
+
+// Auth
+async function checkAuth(){try{const{data:{user}}=await sb.auth.getUser();if(!user){await sb.auth.signInWithOAuth({provider:'google'});return}currentUser=user;document.getElementById('user-name').textContent=user.user_metadata?.full_name||'Warden';document.getElementById('user-role').textContent='Administrator';loadSection(getCurrentSection())}catch(e){console.log('Auth check:',e);document.getElementById('user-name').textContent='Warden';loadSection(getCurrentSection())}}
+document.getElementById('logout-btn').addEventListener('click',async(e)=>{e.preventDefault();await sb.auth.signOut();window.location.reload()});
+
+// Router
+function getCurrentSection(){return window.location.hash.slice(1)||'dashboard'}
+function navigateTo(id){window.location.hash='#'+id}
+
+// Modal
+function openModal(id){document.getElementById(id).classList.add('active');if(id==='issue-modal')loadCommoditiesSelect('issue-commodity');if(id==='restock-modal'){loadCommoditiesSelect('restock-commodity');loadVendorsSelect()}}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')})});
+
+// Page Load
+function loadSection(id){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('page-'+id);
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(a=>{
+    a.classList.remove('bg-primary/10','text-primary','font-bold','border-l-4','border-primary','shadow-sm');
+    if(a.dataset.section===id){
+      a.classList.add('bg-primary/10','text-primary','font-bold','border-l-4','border-primary','shadow-sm')
+    }
+  });
+  const titles={dashboard:'Dashboard',fees:'Student Accounts & Fees',inventory:'Mess Inventory & Financials'};
+  document.getElementById('page-title').textContent=titles[id]||id;
+  switch(id){
+    case'dashboard':loadDashboard();break;
+    case'fees':loadFees();break;
+    case'inventory':loadInventory();break;
+  }
+}
+window.addEventListener('hashchange',()=>loadSection(getCurrentSection()));
+
+// ===== DASHBOARD =====
+async function loadDashboard(){
+  try{
+    const {data:students}=await sb.from('profiles').select('id,role').eq('role','student');
+    const total=students?.length||0;
+    document.getElementById('dash-total-students').textContent=total||'0';
+
+    const {data:fees}=await sb.from('fee_accounts').select('balance,status');
+    let outstanding=0,overdue=0;
+    (fees||[]).forEach(f=>{outstanding+=Number(f.balance||0);if(f.status==='unpaid'||f.status==='overdue')overdue++});
+    document.getElementById('dash-outstanding-fees').textContent='₹'+outstanding.toLocaleString('en-IN');
+    document.getElementById('dash-overdue-count').textContent=overdue+' Overdue';
+
+    const {data:commodities}=await sb.from('stock_commodities').select('current_stock,unit_cost,reorder_level');
+    let lowStock=0,totalStockVal=0;
+    (commodities||[]).forEach(c=>{if(Number(c.current_stock||0)<=Number(c.reorder_level||0))lowStock++;totalStockVal+=Number(c.current_stock||0)*Number(c.unit_cost||0)});
+    document.getElementById('dash-alerts-count').textContent=lowStock;
+    document.getElementById('dash-mess-cost').textContent='₹'+totalStockVal.toLocaleString('en-IN');
+
+    // Alerts table
+    const tbody=document.getElementById('dash-alerts-table');
+    tbody.innerHTML='';
+    const lowItems=(commodities||[]).filter(c=>Number(c.current_stock||0)<=Number(c.reorder_level||0));
+    if(lowItems.length===0){
+      tbody.innerHTML='<tr><td colspan="4" class="px-6 py-8 text-center text-on-surface-variant text-sm">No alerts — all stock levels healthy</td></tr>';
+    }else{
+      lowItems.forEach(c=>{
+        tbody.innerHTML+=`<tr class="hover:bg-white/40 transition-colors"><td class="px-6 py-5"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_rgba(186,26,26,0.3)] status-dot-pulse"></span><span class="text-xs text-on-surface">Critical</span></div></td><td class="px-6 py-5"><span class="text-xs px-2 py-1 bg-error/10 text-error border border-error/10 rounded">Inventory</span></td><td class="px-6 py-5 font-bold text-sm">${c.name||'Unknown'}</td><td class="px-6 py-5 text-on-surface-variant text-sm">Stock at ${c.current_stock||0} ${c.unit||'units'} (reorder at ${c.reorder_level||0})</td></tr>`
+      });
+    }
+
+    document.getElementById('dash-datetime').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric'});
+  }catch(e){console.error('Dashboard load error:',e)}
+}
+
+// ===== FEES =====
+async function loadFees(){
+  try{
+    const {data,error}=await sb.from('profiles').select('id,name,email,department,year,room_number,block_name,fee_accounts(*)').eq('role','student').order('name');
+    if(error)throw error;
+    const students=data||[];
+    let totalReceivables=0,pendingCount=0,paidCount=0;
+    students.forEach(s=>{
+      const fee=s.fee_accounts?.[0];
+      if(fee){totalReceivables+=Number(fee.base_fee||0);if(fee.status==='paid')paidCount++;else pendingCount++}
+    });
+    document.getElementById('fees-total-receivables').textContent='₹'+totalReceivables.toLocaleString('en-IN');
+    document.getElementById('fees-pending-count').textContent=pendingCount;
+    document.getElementById('fees-collection-rate').textContent=students.length?Math.round(paidCount/students.length*100)+'%':'0%';
+    document.getElementById('fees-onboarded').textContent=students.length;
+
+    const tbody=document.getElementById('fees-table');
+    tbody.innerHTML='';
+    if(students.length===0){
+      tbody.innerHTML='<tr><td colspan="8" class="px-6 py-8 text-center text-on-surface-variant text-sm">No students onboarded yet</td></tr>';
+      document.getElementById('fees-pagination').textContent='Showing 0 results';
+      return;
+    }
+    students.forEach(s=>{
+      const fee=s.fee_accounts?.[0]||{};
+      const regMatch=s.email?.match(/^(\d{12})@/);
+      const regNo=regMatch?regMatch[1]:'';
+      const base=Number(fee.base_fee||3200);
+      const paid=Number(fee.amount_paid||0);
+      const bal=Number(fee.balance||(base-paid));
+      const status=fee.status||'unpaid';
+      const statusClass=status==='paid'?'bg-emerald-100 text-emerald-700':status==='partial'?'bg-amber-100 text-amber-700':'bg-red-100 text-red-700';
+      const dotClass=status==='paid'?'bg-emerald-500':status==='partial'?'bg-amber-500':'bg-red-500';
+      tbody.innerHTML+=`<tr class="table-row-hover"><td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-primary text-sm">person</span></div><div><p class="font-bold text-on-surface">${s.name}</p></div></div></td><td class="px-6 py-4 text-on-surface-variant text-xs">${regNo}</td><td class="px-6 py-4"><p class="text-on-surface text-sm">${s.department||'-'}</p><p class="text-on-surface-variant text-xs">Year ${s.year||'-'}</p></td><td class="px-6 py-4 font-semibold">₹${base.toLocaleString('en-IN')}</td><td class="px-6 py-4 text-emerald-700 font-semibold">₹${paid.toLocaleString('en-IN')}</td><td class="px-6 py-4 ${bal>0?'text-amber-700 font-bold':'text-on-surface-variant/40'}">₹${bal.toLocaleString('en-IN')}</td><td class="px-6 py-4"><span class="${statusClass} px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center w-fit"><span class="w-2 h-2 rounded-full ${dotClass} mr-2"></span>${status.charAt(0).toUpperCase()+status.slice(1)}</span></td><td class="px-6 py-4 text-right"><button class="p-2 rounded-lg hover:bg-primary/10 text-on-surface-variant hover:text-primary transition-colors" onclick="editFee('${s.id}')"><span class="material-symbols-outlined text-sm">edit</span></button></td></tr>`
+    });
+    document.getElementById('fees-pagination').textContent=`Showing ${students.length} students`;
+  }catch(e){console.error('Fees load error:',e);document.getElementById('fees-table').innerHTML='<tr><td colspan="8" class="px-6 py-8 text-center text-on-surface-variant text-sm">Error loading data</td></tr>'}
+}
+
+async function editFee(studentId){
+  const amt=prompt('Enter new payment amount (₹):');
+  if(!amt||isNaN(amt)||Number(amt)<=0)return;
+  try{
+    const {data:existing}=await sb.from('fee_accounts').select('*').eq('student_id',studentId).maybeSingle();
+    const newPaid=Number(existing?.amount_paid||0)+Number(amt);
+    const baseFee=Number(existing?.base_fee||3200);
+    const status=newPaid>=baseFee?'paid':newPaid>0?'partial':'unpaid';
+    if(existing){
+      await sb.from('fee_accounts').update({amount_paid:newPaid,status,updated_at:new Date().toISOString()}).eq('student_id',studentId);
+    }else{
+      await sb.from('fee_accounts').insert({student_id:studentId,base_fee:baseFee,amount_paid:newPaid,status});
+    }
+    toast('Payment recorded!','success');
+    loadFees();
+  }catch(e){toast('Error recording payment','error');console.error(e)}
+}
+
+// ===== INVENTORY =====
+async function loadInventory(){
+  try{
+    const {data:comms}=await sb.from('stock_commodities').select('*').order('name');
+    const {data:issues}=await sb.from('stock_issues').select('*,commodity:stock_commodities(name)').order('issued_at',{ascending:false}).limit(10);
+    const {data:restocks}=await sb.from('stock_restocks').select('*,commodity:stock_commodities(name),vendor:stock_vendors(name)').order('restocked_at',{ascending:false}).limit(10);
+
+    commodities=comms||[];
+    const today=new Date().toISOString().slice(0,10);
+    let totalPurchased=0,todayIssues=0,stockValue=0;
+    (restocks||[]).forEach(r=>{totalPurchased+=Number(r.total_cost||0)});
+    (issues||[]).forEach(i=>{if(i.issued_at?.slice(0,10)===today)todayIssues+=Number(i.quantity||0)});
+    commodities.forEach(c=>{stockValue+=Number(c.current_stock||0)*Number(c.unit_cost||0)});
+    document.getElementById('inv-total-purchased').textContent='₹'+totalPurchased.toLocaleString('en-IN');
+    document.getElementById('inv-today-issues').textContent=todayIssues.toFixed(1);
+    document.getElementById('inv-stock-value').textContent='₹'+stockValue.toLocaleString('en-IN');
+
+    const tbody=document.getElementById('inv-table');
+    tbody.innerHTML='';
+    if(commodities.length===0){
+      tbody.innerHTML='<tr><td colspan="6" class="px-6 py-8 text-center text-on-surface-variant text-sm">No commodities — add items to get started</td></tr>';
+    }else{
+      commodities.forEach(c=>{
+        const stock=Number(c.current_stock||0);
+        const reorder=Number(c.reorder_level||0);
+        const todayUsage=issues?.filter(i=>i.commodity_id===c.id&&i.issued_at?.slice(0,10)===today).reduce((s,i)=>s+Number(i.quantity||0),0)||0;
+        const status=stock<=0?'out':stock<=reorder?'low':'stable';
+        const statusColor=status==='stable'?'bg-secondary/20 text-secondary border-secondary/20':'bg-tertiary/20 text-tertiary border-tertiary/20';
+        const dotColor=status==='stable'?'bg-secondary shadow-[0_0_8px_rgba(0,109,72,0.4)]':'bg-tertiary shadow-[0_0_8px_rgba(139,80,0,0.4)]'+(status==='low'?' animate-pulse':'');
+        tbody.innerHTML+=`<tr class="hover:bg-white/40 transition-colors"><td class="py-5 px-6 flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-black/5"><span class="material-symbols-outlined text-primary">${c.category==='Dairy'?'egg':c.category==='Oil'?'opacity':'eco'}</span></div><span class="font-medium text-on-surface">${c.name}</span></td><td class="py-5 px-6">₹${Number(c.unit_cost||0).toFixed(0)}/${c.unit||'kg'}</td><td class="py-5 px-6 text-on-surface">---</td><td class="py-5 px-6 ${todayUsage>0?'text-error font-medium':'text-on-surface-variant'}">${todayUsage>0?todayUsage.toFixed(1)+' '+c.unit:'-'}</td><td class="py-5 px-6 font-bold text-on-surface">${stock.toFixed(1)} ${c.unit||'kg'}</td><td class="py-5 px-6"><span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border ${statusColor} high-gloss-indicator"><span class="w-2 h-2 rounded-full ${dotColor}"></span>${status.toUpperCase()}</span></td></tr>`
+      });
+    }
+
+    const activity=document.getElementById('inv-activity');
+    activity.innerHTML='';
+    const allActivity=[...(restocks||[]).map(r=>({...r,type:'restock',date:r.restocked_at})),...(issues||[]).map(i=>({...i,type:'issue',date:i.issued_at}))].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
+    if(allActivity.length===0){
+      activity.innerHTML='<div class="text-center text-on-surface-variant text-sm py-4">No activity recorded yet</div>';
+    }else{
+      allActivity.forEach(a=>{
+        const isRestock=a.type==='restock';
+        activity.innerHTML+=`<div class="liquid-glass-card p-4 rounded-2xl flex items-center justify-between border-black/5 hover:border-black/20 transition-all cursor-default"><div class="flex items-center gap-4"><div class="p-2 ${isRestock?'bg-secondary/10':'bg-error/10'} rounded-lg"><span class="material-symbols-outlined ${isRestock?'text-secondary':'text-error'}">${isRestock?'local_shipping':'restaurant_menu'}</span></div><div><p class="font-semibold text-on-surface">${isRestock?'Restock: ':'Issue: '}${a.commodity?.name||'Unknown'}</p><p class="text-body-sm text-on-surface-variant">${isRestock?'Vendor: '+(a.vendor?.name||'N/A'):'Kitchen: '+a.kitchen_unit} • ${new Date(a.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</p></div></div><span class="${isRestock?'text-secondary':'text-error'} font-bold">${isRestock?'+ ':'- '}${a.quantity} ${a.commodity?.unit||'units'}</span></div>`
+      });
+    }
+  }catch(e){console.error('Inventory load error:',e)}
+}
+
+async function loadCommoditiesSelect(id){
+  const sel=document.getElementById(id);
+  if(!sel)return;
+  sel.innerHTML='<option value="">Select commodity</option>';
+  try{
+    const {data}=await sb.from('stock_commodities').select('id,name,current_stock,unit').order('name');
+    (data||[]).forEach(c=>{sel.innerHTML+=`<option value="${c.id}">${c.name} (${c.current_stock||0} ${c.unit||'kg'} remaining)</option>`});
+  }catch(e){console.error(e)}
+}
+
+async function loadVendorsSelect(){
+  const sel=document.getElementById('restock-vendor');
+  sel.innerHTML='<option value="">Select vendor</option><option value="new">+ Add new vendor</option>';
+  try{
+    const {data}=await sb.from('stock_vendors').select('id,name').order('name');
+    (data||[]).forEach(v=>{sel.innerHTML+=`<option value="${v.id}">${v.name}</option>`});
+  }catch(e){console.error(e)}
+}
+
+function calcRestockTotal(){
+  const qty=parseFloat(document.getElementById('restock-qty').value)||0;
+  const price=parseFloat(document.getElementById('restock-price').value)||0;
+  document.getElementById('restock-total').textContent='₹ '+(qty*price).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+// ===== CRUD: Issue =====
+document.getElementById('issue-form').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const commodityId=document.getElementById('issue-commodity').value;
+  const qty=parseFloat(document.getElementById('issue-qty').value);
+  const unit=document.getElementById('issue-unit').value;
+  const notes=document.getElementById('issue-notes').value;
+  if(!commodityId||!qty)return toast('Please fill all required fields','error');
+  const btn=e.target.querySelector('button[type="submit"]');
+  btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined animate-spin">progress_activity</span> Processing...';
+  try{
+    const {error}=await sb.from('stock_issues').insert({commodity_id:commodityId,quantity:qty,kitchen_unit:unit,notes,issued_by:currentUser?.id});
+    if(error)throw error;
+    const {data:comm}=await sb.from('stock_commodities').select('current_stock,unit').eq('id',commodityId).single();
+    await sb.from('stock_commodities').update({current_stock:Number(comm.current_stock)-qty,updated_at:new Date().toISOString()}).eq('id',commodityId);
+    toast('Issue logged successfully!','success');
+    closeModal('issue-modal');
+    document.getElementById('issue-form').reset();
+    loadInventory();
+  }catch(e){toast('Error: '+e.message,'error');console.error(e)}
+  finally{btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\'1">bolt</span> Process Issue'}
+});
+
+// ===== CRUD: Restock =====
+document.getElementById('restock-form').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const commodityId=document.getElementById('restock-commodity').value;
+  const qty=parseFloat(document.getElementById('restock-qty').value);
+  const price=parseFloat(document.getElementById('restock-price').value);
+  let vendorId=document.getElementById('restock-vendor').value;
+  const invoice=document.getElementById('restock-invoice').value;
+  const notes=document.getElementById('restock-notes').value;
+  if(!commodityId||!qty||!price)return toast('Please fill commodity, quantity, and price','error');
+  if(vendorId==='new'){
+    const vname=prompt('Enter vendor name:');
+    if(!vname)return;
+    const {data:vData}=await sb.from('stock_vendors').insert({name:vname}).select().single();
+    vendorId=vData.id;
+  }
+  const btn=e.target.querySelector('button[type="submit"]');
+  btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined animate-spin">progress_activity</span> Recording...';
+  try{
+    const {error}=await sb.from('stock_restocks').insert({commodity_id:commodityId,quantity:qty,unit_price:price,vendor_id:vendorId||null,invoice_ref:invoice,notes,restocked_by:currentUser?.id});
+    if(error)throw error;
+    const {data:comm}=await sb.from('stock_commodities').select('current_stock,unit_cost').eq('id',commodityId).single();
+    await sb.from('stock_commodities').update({current_stock:Number(comm.current_stock)+qty,unit_cost:price,updated_at:new Date().toISOString()}).eq('id',commodityId);
+    toast('Restock recorded!','success');
+    closeModal('restock-modal');
+    document.getElementById('restock-form').reset();
+    document.getElementById('restock-total').textContent='₹ 0.00';
+    loadInventory();
+  }catch(e){toast('Error: '+e.message,'error');console.error(e)}
+  finally{btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\'1">add_shopping_cart</span> Record Restock'}
+});
+
+// ===== CRUD: Onboard =====
+document.getElementById('onboard-form').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const name=document.getElementById('onboard-name').value;
+  const email=document.getElementById('onboard-email').value;
+  const dept=document.getElementById('onboard-dept').value;
+  const year=document.getElementById('onboard-year').value;
+  const gender=document.getElementById('onboard-gender').value;
+  const hostel=document.getElementById('onboard-hostel').value;
+  const room=document.getElementById('onboard-room').value;
+  const block=document.getElementById('onboard-block').value;
+  const phone=document.getElementById('onboard-phone').value;
+  const fee=parseFloat(document.getElementById('onboard-fee').value)||3200;
+  const btn=e.target.querySelector('button[type="submit"]');
+  btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined animate-spin">progress_activity</span> Onboarding...';
+  try{
+    const {data:prof,error:pErr}=await sb.from('profiles').insert({name,email,department:dept,year:parseInt(year),gender,hostel_type:hostel,room_number:room,block_name:block,phone,role:'student',is_approved:true}).select().single();
+    if(pErr)throw pErr;
+    await sb.from('fee_accounts').insert({student_id:prof.id,base_fee:fee,amount_paid:0,status:'unpaid',due_date:new Date(Date.now()+30*86400000).toISOString().slice(0,10)});
+    toast(`${name} onboarded successfully!`,'success');
+    closeModal('onboard-modal');
+    document.getElementById('onboard-form').reset();
+    loadFees();
+    loadDashboard();
+  }catch(e){toast('Error: '+e.message,'error');console.error(e)}
+  finally{btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\'1">person_add</span> Onboard Student'}
+});
+
+// ===== Export CSV =====
+function exportCSV(type){
+  if(type==='fees'){
+    const rows=document.querySelectorAll('#fees-table tr');
+    let csv='Name,Reg No,Department,Year,Base Fee,Paid,Balance,Status\n';
+    rows.forEach(r=>{
+      const cells=r.querySelectorAll('td');
+      if(cells.length>=6){
+        const name=cells[0]?.textContent?.trim()||'';
+        const reg=cells[1]?.textContent?.trim()||'';
+        const dept=cells[2]?.textContent?.trim()||'';
+        const base=cells[3]?.textContent?.trim()||'';
+        const paid=cells[4]?.textContent?.trim()||'';
+        const bal=cells[5]?.textContent?.trim()||'';
+        const stat=cells[6]?.textContent?.trim()||'';
+        csv+=`"${name}","${reg}","${dept}","${base}","${paid}","${bal}","${stat}"\n`;
+      }
+    });
+    downloadCSV(csv,'student_fees_ledger.csv');
+  }
+}
+function downloadCSV(csv,name){
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ===== Add Commodity Quick Action (for inventory page) =====
+function addNewCommodity(){
+  const name=prompt('Commodity name:');
+  if(!name)return;
+  const category=prompt('Category (Grains, Oil, Dairy, Vegetables, Other):')||'Other';
+  const unit=prompt('Unit (kg, L, pieces):')||'kg';
+  const reorder=parseFloat(prompt('Reorder level:')||'0');
+  sb.from('stock_commodities').insert({name,category,unit,reorder_level:reorder,current_stock:0}).then(()=>{toast('Commodity added!','success');loadInventory();loadCommoditiesSelect('issue-commodity');loadCommoditiesSelect('restock-commodity')}).catch(e=>toast(e.message,'error'));
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded',()=>{
+  // Add "Add Commodity" button to inventory section
+  const invHeader=document.querySelector('#page-inventory .flex.justify-between.items-end.mb-6');
+  if(invHeader){
+    const btn=document.createElement('button');
+    btn.className='flex items-center gap-2 px-5 py-3 bg-white/60 border border-black/10 rounded-xl hover:bg-white/90 transition-all active:scale-95 shadow-sm';
+    btn.innerHTML='<span class="material-symbols-outlined text-on-surface-variant">add</span><span class="font-bold">Add Item</span>';
+    btn.onclick=addNewCommodity;
+    invHeader.querySelector('.flex.gap-3').appendChild(btn);
+  }
+  checkAuth();
+});
+</script>
+</body>
+</html>

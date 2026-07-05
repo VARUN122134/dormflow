@@ -1,7 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy Stock Portal
 on:
   push:
     branches: [master]
+    paths:
+      - 'warden-stock-portal/**'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -9,10 +11,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy docs to gh-pages
+      - name: Deploy warden-stock-portal to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./warden-stock-portal
           publish_branch: gh-pages
+          destination_dir: warden-stock-portal
           keep_files: true
