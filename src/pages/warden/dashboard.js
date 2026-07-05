@@ -3,7 +3,7 @@ import {
   getLeavesByHostel, approveLeave, rejectLeave,
   getHostelStats, getUsers
 } from '../../store.js';
-import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, renderLogoutIcon, escapeHtml } from '../../helpers.js';
+import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, escapeHtml } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
 export default async function wardenDashboard(app) {
@@ -22,11 +22,11 @@ export default async function wardenDashboard(app) {
 
     app.innerHTML = `
       <header class="stitch-header">
-        <div class="stitch-header-left flex items-center gap-sm">
+        <div class="stitch-header-left" style="display:flex;align-items:center;gap:8px;">
           <img src="logo.png" alt="Anna University Logo" style="width: 28px; height: 28px; object-fit: contain;" />
           <span class="stitch-brand">UCE IT</span>
         </div>
-        <div class="flex items-center gap-sm">${renderLogoutIcon()}${renderAvatar(user, 'stitch-avatar-sm')}</div>
+        ${renderAvatar(user, 'stitch-avatar-sm')}
       </header>
 
       <div class="page page-warden">
@@ -37,7 +37,7 @@ export default async function wardenDashboard(app) {
 
         <div class="warden-stats-banner">
           <div class="warden-stat-banner-item" style="background:var(--primary-container);color:#fff;">
-            <span class="material-icons-outlined fs-20">pending_actions</span>
+            <span class="material-icons-outlined" style="font-size:20px;">pending_actions</span>
             <div>
               <div class="warden-stat-num">${freshPending.length}</div>
               <div class="warden-stat-sub">Pending Approvals</div>
@@ -52,7 +52,7 @@ export default async function wardenDashboard(app) {
             </div>
           </div>
           <div class="warden-stat-banner-item">
-            <span class="material-icons-outlined fs-20 c-success">group</span>
+            <span class="material-icons-outlined" style="font-size:20px;color:var(--status-success);">group</span>
             <div>
               <div class="warden-stat-num">${freshStats.totalStudents || 0}</div>
               <div class="warden-stat-sub">Total Residents</div>
@@ -60,9 +60,9 @@ export default async function wardenDashboard(app) {
           </div>
         </div>
 
-        <div class="section-row mt-lg">
+        <div class="section-row" style="margin-top:var(--space-lg);">
           <span class="section-title">Action Required</span>
-          ${freshPending.length > 0 ? `<a href="#/warden/requests" class="fs-13" style="color:var(--primary-container);font-weight:500;">View All</a>` : ''}
+          ${freshPending.length > 0 ? `<a href="#/warden/requests" style="font-size:13px;color:var(--primary-container);font-weight:500;">View All</a>` : ''}
         </div>
 
         ${freshPending.length > 0 ? `
@@ -76,8 +76,8 @@ export default async function wardenDashboard(app) {
                     ${renderAvatar(student, 'action-avatar')}
                     <div class="action-info">
                       <div class="action-name">${escapeHtml(student?.name || 'Unknown')}</div>
-                      <div class="action-meta">${formatDateRange(l.outDate, l.inDate)} • ${escapeHtml(l.reason)}</div>
-                      <div class="action-meta">${escapeHtml(student?.department || '')} — ${escapeHtml(l.type)}</div>
+                      <div class="action-meta">${formatDateRange(l.outDate, l.inDate)} • ${escapeHtml(l.reason || '')}</div>
+                      <div class="action-meta">${escapeHtml(student?.department || '')} — ${escapeHtml(l.type || '')}</div>
                     </div>
                   </div>
                   <div class="action-btns">
@@ -89,41 +89,37 @@ export default async function wardenDashboard(app) {
             }).join('')}
           </div>
         ` : `
-          <div class="card animate-fade-in text-center p-lg mb-md">
-            <span class="material-icons-outlined fs-36 c-success mb-xs">task_alt</span>
-            <div class="fs-14 c-on-surface-variant">All caught up! No pending requests.</div>
+          <div class="card animate-fade-in" style="text-align:center;padding:var(--space-xl);margin-bottom:var(--space-md);">
+            <span class="material-icons-outlined" style="font-size:36px;color:var(--status-success);margin-bottom:8px;">task_alt</span>
+            <div style="font-size:14px;color:var(--on-surface-variant);">All caught up! No pending requests.</div>
           </div>
         `}
 
-        <div class="mb-lg" style="position:relative;">
+        <div style="position:relative;margin-bottom:var(--space-lg);">
           <span class="material-icons-outlined" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--outline);">search</span>
           <input class="form-input" type="text" placeholder="Search students by name or ID..." style="padding-left:36px;cursor:pointer;" readonly onclick="window.location.hash='#/warden/residents'"/>
         </div>
 
         <div class="section-title">Weekly Leave Trends</div>
-        <div class="card animate-fade-in p-md mb-lg">
+        <div class="card animate-fade-in" style="padding:var(--space-md);margin-bottom:var(--space-lg);">
           <canvas id="wardenChart" height="150"></canvas>
         </div>
 
-        <div class="section-title">Management Tools</div>
-        <div class="feature-grid mb-lg">
-          <a href="#/warden/rooms" class="feature-card">
-            <span class="material-icons-outlined">meeting_room</span>
-            <div class="feature-label">Rooms</div>
-          </a>
-          <a href="#/warden/auto-attendance" class="feature-card">
-            <span class="material-icons-outlined">fact_check</span>
-            <div class="feature-label">Attendance</div>
-          </a>
-          <a href="#/notifications" class="feature-card">
-            <span class="material-icons-outlined">notifications</span>
-            <div class="feature-label">Notifications</div>
-          </a>
-          <a href="#/warden/announcements" class="feature-card">
-            <span class="material-icons-outlined">campaign</span>
-            <div class="feature-label">Announce</div>
-          </a>
+        <div class="section-title">Quick Announcements</div>
+        <div class="announcements-list animate-fade-in">
+          <div class="announcement-card announcement-maintenance">
+            <span class="announcement-tag">MAINTENANCE</span>
+            <p class="announcement-text">Block B water supply maintenance tomorrow 10AM–1PM.</p>
+          </div>
+          <div class="announcement-card announcement-policy">
+            <span class="announcement-tag">POLICY UPDATE</span>
+            <p class="announcement-text">New late-night entry registration starting next week.</p>
+          </div>
         </div>
+        <a href="#" class="post-announcement-link" onclick="event.preventDefault();">
+          <span class="material-icons-outlined" style="font-size:14px;">add</span>
+          Post Announcement
+        </a>
       </div>
 
       <button class="fab" onclick="window.location.hash='#/warden/requests'" title="Leave Requests">

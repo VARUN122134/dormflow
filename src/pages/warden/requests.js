@@ -40,8 +40,8 @@ export default async function wardenRequests(app) {
         </div>
 
         <!-- Department Filter -->
-        <div class="mt-sm mb-md">
-          <select class="form-select fs-12" id="deptFilter" style="padding:8px 12px;">
+        <div style="margin-top:var(--space-sm);margin-bottom:var(--space-md);">
+          <select class="form-select" id="deptFilter" style="padding:8px 12px;font-size:12px;">
             <option value="All">All Departments</option>
             <option value="CSE" ${deptFilter === 'CSE' ? 'selected' : ''}>CSE</option>
             <option value="ECE" ${deptFilter === 'ECE' ? 'selected' : ''}>ECE</option>
@@ -68,7 +68,7 @@ export default async function wardenRequests(app) {
                   ${statusChip(l.approvalStatus)}
                 </div>
                 <div class="leave-card-meta" style="margin:4px 0;">
-                  ${formatDateRange(l.outDate, l.inDate)} • ${l.type}
+                  ${formatDateRange(l.outDate, l.inDate)} • ${escapeHtml(l.type)}
                 </div>
                 ${l.reason ? `<div class="leave-card-reason">"${escapeHtml(l.reason)}"</div>` : ''}
                 ${l.approvalStatus === 'Pending' ? `

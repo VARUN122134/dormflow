@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMenuWithStats, submitRating, getMyRating } from '../../store.js';
-import { renderPageHeader, studentNav, showToast, escapeHtml, renderStars, renderNotifBell } from '../../helpers.js';
+import { renderPageHeader, studentNav, showToast, escapeHtml, renderStars } from '../../helpers.js';
 
 export default async function messPage(app) {
   const user = getCurrentUser();
@@ -20,16 +20,12 @@ export default async function messPage(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Mess Menu</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            ${renderNotifBell()}
-            <span style="font-size:13px;color:var(--on-surface-variant);">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
-          </div>
+          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
         </header>
 
         <div style="padding:16px;padding-bottom:80px;">
           <h2 style="margin:0 0 4px 0;font-size:20px;font-weight:600;">Today's Mess Menu</h2>
           <p style="margin:0 0 16px 0;font-size:13px;color:var(--outline);">${new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
-          ${user.isMessMember ? `<a href="#/mess/dashboard" class="btn btn-sm btn-primary mb-md" style="display:inline-flex;align-items:center;gap:4px;"><span class="material-icons-outlined" style="font-size:16px;">dashboard</span> Manage Mess</a>` : ''}
 
           <div class="meal-tabs" id="mealTabs" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;">
             ${mealTypes.map((mt, i) => `
@@ -45,7 +41,7 @@ export default async function messPage(app) {
           </div>
         </div>
 
-        ${studentNav('mess', user.isMessMember)}
+        ${studentNav('mess')}
       </div>
     `;
 

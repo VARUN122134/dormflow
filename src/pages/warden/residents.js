@@ -4,7 +4,7 @@
 
 import { getCurrentUser } from '../../auth.js';
 import { getUsers } from '../../store.js';
-import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar, renderBackButton, escapeHtml } from '../../helpers.js';
+import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
 export default async function wardenResidents(app) {
   const user = getCurrentUser();
@@ -33,14 +33,14 @@ export default async function wardenResidents(app) {
     students.sort((a, b) => a.name.localeCompare(b.name));
 
     app.innerHTML = `
-      ${renderPageHeader('Residents', `${hostelType} Hostel • ${students.length} students`, renderBackButton())}
+      ${renderPageHeader('Residents', `${hostelType} Hostel • ${students.length} students`)}
       <div class="page">
         <!-- Search -->
-        <div class="flex gap-sm mb-md">
+        <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);">
           <div style="flex:1;position:relative;">
-            <span class="material-icons-outlined fs-20 c-outline" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);">search</span>
+            <span class="material-icons-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--outline);">search</span>
             <input class="form-input" type="text" id="searchInput" placeholder="Search by name, ID, or department..." 
-              style="padding-left:40px;" value="${search}" />
+              style="padding-left:40px;" value="${escapeHtml(search)}" />
           </div>
         </div>
 

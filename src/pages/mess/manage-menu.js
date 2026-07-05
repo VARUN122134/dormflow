@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getMenuByDate, createMenuEntry, updateMenuEntry, deleteMenuEntry } from '../../store.js';
-import { messMemberNav, showToast, escapeHtml, showModal, renderNotifBell } from '../../helpers.js';
+import { messMemberNav, showToast, escapeHtml, showModal } from '../../helpers.js';
 
 export default async function manageMenu(app) {
   const user = getCurrentUser();
@@ -21,10 +21,7 @@ export default async function manageMenu(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Manage Menu</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            ${renderNotifBell()}
-            ${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}
-          </div>
+          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
         </header>
 
         <div style="padding:16px;padding-bottom:80px;">

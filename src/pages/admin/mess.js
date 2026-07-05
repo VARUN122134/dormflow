@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { toggleMessMember, getUsers, getMessMembers } from '../../store.js';
-import { adminNav, showToast, escapeHtml, getInitials, renderNotifBell } from '../../helpers.js';
+import { adminNav, showToast, escapeHtml, getInitials } from '../../helpers.js';
 
 export default async function adminMess(app) {
   const user = getCurrentUser();
@@ -18,10 +18,7 @@ export default async function adminMess(app) {
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Mess Management</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            ${renderNotifBell()}
-            ${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}
-          </div>
+          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
         </header>
 
         <div style="padding:16px;padding-bottom:80px;">
@@ -49,7 +46,6 @@ export default async function adminMess(app) {
       document.getElementById('tabMembers').className = 'btn btn-sm btn-primary';
       document.getElementById('tabStudents').className = 'btn btn-sm btn-ghost';
       document.getElementById('tabContent').innerHTML = renderMembersTab(messMembers);
-      attachToggleHandlers();
     };
 
     attachToggleHandlers();
@@ -66,7 +62,7 @@ export default async function adminMess(app) {
           <div class="profile-avatar-large" style="width:40px;height:40px;font-size:14px;flex-shrink:0;">${getInitials(s.name)}</div>
           <div style="flex:1;min-width:0;">
             <div style="font-weight:600;font-size:14px;">${escapeHtml(s.name)}</div>
-            <div style="font-size:12px;color:var(--outline);">${s.roomNumber || ''} ${s.hostelType || ''}</div>
+            <div style="font-size:12px;color:var(--outline);">${escapeHtml(s.roomNumber || '')} ${escapeHtml(s.hostelType || '')}</div>
           </div>
           <label class="toggle-switch" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
             <input type="checkbox" ${memberIds.has(s.id) ? 'checked' : ''} class="mess-member-toggle" data-user-id="${s.id}" style="width:20px;height:20px;accent-color:var(--primary);">
@@ -87,7 +83,7 @@ export default async function adminMess(app) {
           <div class="profile-avatar-large" style="width:40px;height:40px;font-size:14px;flex-shrink:0;">${getInitials(m.name)}</div>
           <div style="flex:1;min-width:0;">
             <div style="font-weight:600;font-size:14px;">${escapeHtml(m.name)}</div>
-            <div style="font-size:12px;color:var(--outline);">${m.roomNumber || ''} ${m.hostelType || ''}</div>
+            <div style="font-size:12px;color:var(--outline);">${escapeHtml(m.roomNumber || '')} ${escapeHtml(m.hostelType || '')}</div>
           </div>
           <button class="btn btn-danger btn-sm remove-member-btn" data-user-id="${m.id}">Remove</button>
         </div>
@@ -99,14 +95,11 @@ export default async function adminMess(app) {
     app.querySelectorAll('.mess-member-toggle').forEach(cb => {
       cb.onchange = async () => {
         try {
-          cb.disabled = true;
           await toggleMessMember(cb.dataset.userId, cb.checked);
           showToast(cb.checked ? 'Mess member added' : 'Mess member removed', 'success');
-          await render();
         } catch (e) {
           showToast(e.message || 'Failed to update', 'error');
           cb.checked = !cb.checked;
-          cb.disabled = false;
         }
       };
     });
@@ -114,13 +107,11 @@ export default async function adminMess(app) {
     app.querySelectorAll('.remove-member-btn').forEach(btn => {
       btn.onclick = async () => {
         try {
-          btn.disabled = true;
           await toggleMessMember(btn.dataset.userId, false);
           showToast('Mess member removed', 'success');
-          await render();
+          document.getElementById('tabMembers').click();
         } catch (e) {
           showToast(e.message || 'Failed to remove', 'error');
-          btn.disabled = false;
         }
       };
     });

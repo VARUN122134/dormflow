@@ -1,3 +1,8 @@
+/* ========================================
+   UCE IT Global Styles
+   ======================================== */
+
+/* ---- Reset ---- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -33,9 +38,12 @@ body {
 }
 
 @media (min-width: 481px) {
-  body { background: var(--surface-container); }
+  body {
+    background: var(--surface-container);
+  }
 }
 
+/* ---- Typography ---- */
 h1, .headline-lg {
   font-size: var(--headline-lg-mobile-size);
   font-weight: var(--headline-lg-mobile-weight);
@@ -43,23 +51,77 @@ h1, .headline-lg {
   letter-spacing: var(--headline-lg-mobile-letter);
   color: var(--on-surface);
 }
-h2, .headline-md { font-size: var(--headline-md-size); font-weight: var(--headline-md-weight); line-height: var(--headline-md-line); color: var(--on-surface); }
-h3, .headline-sm { font-size: var(--headline-sm-size); font-weight: var(--headline-sm-weight); line-height: var(--headline-sm-line); color: var(--on-surface); }
-.body-lg { font-size: var(--body-lg-size); font-weight: var(--body-lg-weight); line-height: var(--body-lg-line); }
-.body-md { font-size: var(--body-md-size); font-weight: var(--body-md-weight); line-height: var(--body-md-line); }
-.label-md { font-size: var(--label-md-size); font-weight: var(--label-md-weight); line-height: var(--label-md-line); letter-spacing: var(--label-md-letter); text-transform: uppercase; }
-.label-sm { font-size: var(--label-sm-size); font-weight: var(--label-sm-weight); line-height: var(--label-sm-line); }
 
-a { color: var(--primary-container); text-decoration: none; font-weight: 500; transition: color var(--transition-fast); }
+h2, .headline-md {
+  font-size: var(--headline-md-size);
+  font-weight: var(--headline-md-weight);
+  line-height: var(--headline-md-line);
+  color: var(--on-surface);
+}
+
+h3, .headline-sm {
+  font-size: var(--headline-sm-size);
+  font-weight: var(--headline-sm-weight);
+  line-height: var(--headline-sm-line);
+  color: var(--on-surface);
+}
+
+.body-lg {
+  font-size: var(--body-lg-size);
+  font-weight: var(--body-lg-weight);
+  line-height: var(--body-lg-line);
+}
+
+.body-md {
+  font-size: var(--body-md-size);
+  font-weight: var(--body-md-weight);
+  line-height: var(--body-md-line);
+}
+
+.label-md {
+  font-size: var(--label-md-size);
+  font-weight: var(--label-md-weight);
+  line-height: var(--label-md-line);
+  letter-spacing: var(--label-md-letter);
+  text-transform: uppercase;
+}
+
+.label-sm {
+  font-size: var(--label-sm-size);
+  font-weight: var(--label-sm-weight);
+  line-height: var(--label-sm-line);
+}
+
+/* ---- Links ---- */
+a {
+  color: var(--primary-container);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
 a:hover { color: var(--primary); }
+
+/* ---- Lists ---- */
 ul, ol { list-style: none; }
+
+/* ---- Images ---- */
 img, svg { max-width: 100%; display: block; }
 
+/* ---- Scrollbar ---- */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: var(--radius-full); }
-::selection { background: var(--primary-fixed-dim); color: var(--on-primary-fixed); }
+::-webkit-scrollbar-thumb {
+  background: var(--outline-variant);
+  border-radius: var(--radius-full);
+}
 
+/* ---- Selection ---- */
+::selection {
+  background: var(--primary-fixed-dim);
+  color: var(--on-primary-fixed);
+}
+
+/* ---- Utility ---- */
 .text-muted { color: var(--on-surface-variant); }
 .text-primary { color: var(--primary-container); }
 .text-error { color: var(--error); }
@@ -69,6 +131,7 @@ img, svg { max-width: 100%; display: block; }
 .font-medium { font-weight: 500; }
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }
+
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
@@ -78,77 +141,46 @@ img, svg { max-width: 100%; display: block; }
 .gap-sm { gap: var(--space-sm); }
 .gap-md { gap: var(--space-md); }
 .gap-lg { gap: var(--space-lg); }
+
 .w-full { width: 100%; }
 .hidden { display: none !important; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); border: 0;
+}
 
-/* ===== SPACING & LAYOUT UTILITIES ===== */
-.p-0 { padding: 0; }
-.p-xs { padding: var(--space-xs); }
-.p-sm { padding: var(--space-sm); }
-.p-md { padding: var(--space-md); }
-.p-lg { padding: var(--space-lg); }
-.p-xl { padding: var(--space-xl); }
-.px-md { padding-left: var(--space-md); padding-right: var(--space-md); }
-.py-sm { padding-top: var(--space-sm); padding-bottom: var(--space-sm); }
-.py-md { padding-top: var(--space-md); padding-bottom: var(--space-md); }
-.pb-nav { padding-bottom: 80px; }
-.m-0 { margin: 0; }
-.mb-xs { margin-bottom: var(--space-xs); }
-.mb-sm { margin-bottom: var(--space-sm); }
-.mb-md { margin-bottom: var(--space-md); }
-.mb-lg { margin-bottom: var(--space-lg); }
-.mt-sm { margin-top: var(--space-sm); }
-.mt-md { margin-top: var(--space-md); }
-.mt-lg { margin-top: var(--space-lg); }
-.mx-auto { margin-left: auto; margin-right: auto; }
-
-/* ===== SIZING ===== */
-.fs-12 { font-size: 12px; }
-.fs-13 { font-size: 13px; }
-.fs-14 { font-size: 14px; }
-.fs-16 { font-size: 16px; }
-.fs-20 { font-size: 20px; }
-.fs-28 { font-size: 28px; }
-.fs-36 { font-size: 36px; }
-.fw-600 { font-weight: 600; }
-.fw-700 { font-weight: 700; }
-.lh-1 { line-height: 1; }
-.text-cap { text-transform: capitalize; }
-.text-upp { text-transform: uppercase; }
-.text-nowrap { white-space: nowrap; }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* ===== BORDERS ===== */
-.br-md { border-radius: var(--radius-md); }
-.br-lg { border-radius: var(--radius-lg); }
-.br-full { border-radius: var(--radius-full); }
-.border-bottom { border-bottom: 1px solid var(--surface-container-high); }
-
-/* ===== COLORS ===== */
-.c-primary { color: var(--primary-container); }
-.c-on-surface { color: var(--on-surface); }
-.c-on-surface-variant { color: var(--on-surface-variant); }
-.c-outline { color: var(--outline); }
-.c-success { color: var(--status-success); }
-.c-warning { color: var(--status-warning); }
-.c-danger { color: var(--status-danger); }
-.bg-surface { background: var(--surface); }
-.bg-surface-low { background: var(--surface-container-low); }
-.bg-surface-highest { background: var(--surface-container-highest); }
-
-/* ===== ANIMATIONS ===== */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+/* ---- Animations ---- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
 
 .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
 .animate-fade-in-up { animation: fadeInUp 0.4s ease forwards; }
 .animate-scale-in { animation: scaleIn 0.25s ease forwards; }
 
+/* Stagger children */
 .stagger > *:nth-child(1) { animation-delay: 0.05s; }
 .stagger > *:nth-child(2) { animation-delay: 0.1s; }
 .stagger > *:nth-child(3) { animation-delay: 0.15s; }

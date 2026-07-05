@@ -5,7 +5,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { createLeave } from '../../store.js';
 import { navigate } from '../../router.js';
-import { studentNav, showToast, renderPageHeader, renderBackButton, escapeHtml } from '../../helpers.js';
+import { studentNav, showToast, renderPageHeader } from '../../helpers.js';
 
 export default function applyLeavePage(app) {
   const user = getCurrentUser();
@@ -18,7 +18,11 @@ export default function applyLeavePage(app) {
   const today = new Date().toISOString().split('T')[0];
 
   app.innerHTML = `
-    ${renderPageHeader('Leave Application', '', renderBackButton('#/student/dashboard'))}
+    ${renderPageHeader('Leave Application', '', `
+      <a href="#/student/dashboard" style="color:var(--on-surface-variant);text-decoration:none;">
+        <span class="material-icons-outlined">close</span>
+      </a>
+    `)}
     <div class="page">
       <p class="body-md text-muted" style="margin-bottom:var(--space-lg);">
         Complete the form below to submit your leave request for approval.
@@ -57,7 +61,7 @@ export default function applyLeavePage(app) {
 
         <div class="form-group">
           <label class="form-label" for="outDate">Departure Date</label>
-          <input class="form-input" type="date" id="outDate" required min="${today}" />
+          <input class="form-input" type="date" id="outDate" required min="${minDate}" />
         </div>
 
         <div class="form-group">
@@ -73,7 +77,7 @@ export default function applyLeavePage(app) {
 
         <div class="form-group">
           <label class="form-label" for="guardianContact">Guardian Contact</label>
-          <input class="form-input" type="tel" id="guardianContact" value="${escapeHtml(user.guardianPhone || '')}" placeholder="Guardian phone number" required />
+          <input class="form-input" type="tel" id="guardianContact" value="${user.guardianPhone || ''}" placeholder="Guardian phone number" required />
         </div>
 
         <div id="formError" style="display:none;margin-top:var(--space-md);padding:10px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-md);font-size:var(--body-md-size);text-align:center;"></div>
@@ -88,7 +92,7 @@ export default function applyLeavePage(app) {
         </div>
       </form>
     </div>
-    ${studentNav('apply', user.isMessMember)}
+    ${studentNav('apply')}
   `;
 
   // Date validation
@@ -119,7 +123,6 @@ export default function applyLeavePage(app) {
         reason: document.getElementById('leaveReason').value.trim(),
         outDate,
         inDate,
-        guardianContact: document.getElementById('guardianContact').value.trim(),
       });
 
       showToast('Leave request submitted successfully!', 'success');

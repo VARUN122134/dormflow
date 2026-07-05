@@ -1,7 +1,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { getActiveOutpassByStudent, getLeaveById } from '../../store.js';
 import { generateQR } from '../../qr.js';
-import { studentNav, statusChip, formatDate, formatTime, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
+import { studentNav, statusChip, formatDate, formatTime, renderPageHeader, renderAvatar } from '../../helpers.js';
 
 export default async function outpassPage(app) {
   const user = getCurrentUser();
@@ -22,7 +22,7 @@ export default async function outpassPage(app) {
           <a href="#/student/apply" class="btn btn-primary" style="margin-top:var(--space-md);">Apply for Leave</a>
         </div>
       </div>
-      ${studentNav('dashboard', user.isMessMember)}
+      ${studentNav('dashboard')}
     `;
     return;
   }
@@ -51,9 +51,9 @@ export default async function outpassPage(app) {
         <div style="display:flex; align-items:center; justify-content:center; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border-bottom: 1px dashed var(--outline-variant); margin-bottom: var(--space-md); text-align:left;">
           ${renderAvatar(user, 'profile-avatar-large')}
           <div>
-            <div style="font-weight:700;font-size:var(--headline-sm-size); color:var(--on-surface);">${escapeHtml(user.name)}</div>
-            <div class="label-md text-muted" style="margin-top:4px;">${escapeHtml(user.department)} • Room ${escapeHtml(user.roomNumber)}</div>
-            <div class="label-md text-muted">${escapeHtml(user.hostelType)} Hostel</div>
+            <div style="font-weight:700;font-size:var(--headline-sm-size); color:var(--on-surface);">${user.name}</div>
+            <div class="label-md text-muted" style="margin-top:4px;">${user.department} • Room ${user.roomNumber}</div>
+            <div class="label-md text-muted">${user.hostelType} Hostel</div>
           </div>
         </div>
 
@@ -62,13 +62,13 @@ export default async function outpassPage(app) {
         </div>
 
         <div class="label-md text-muted" style="margin-top:var(--space-sm);">
-          Pass ID: ${escapeHtml(outpass.passId)}
+          Pass ID: ${outpass.passId}
         </div>
 
         <div class="outpass-details">
           <div class="outpass-detail-row">
             <span class="outpass-detail-label">Leave Type</span>
-            <span class="outpass-detail-value">${escapeHtml(leave?.type || '\u2014')}</span>
+            <span class="outpass-detail-value">${leave?.type || '\u2014'}</span>
           </div>
           <div class="outpass-detail-row">
             <span class="outpass-detail-label">Departure</span>
@@ -101,10 +101,12 @@ export default async function outpassPage(app) {
         <p class="label-sm text-muted">Present this QR code to the gate security for scanning</p>
       </div>
     </div>
-    ${studentNav('dashboard', user.isMessMember)}
+    ${studentNav('dashboard')}
   `;
 
-  setTimeout(async () => {
+  const qrTimer = setTimeout(async () => {
     await generateQR('qrCode', outpass.qrData, 220);
   }, 100);
+
+  return () => clearTimeout(qrTimer);
 }

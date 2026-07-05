@@ -9,21 +9,6 @@ function ensureToastContainer() {
   return toastContainer;
 }
 
-export function goBack(fallbackRoute) {
-  const { goBack: routerBack } = window.__router || {};
-  if (routerBack) {
-    routerBack(fallbackRoute);
-  } else {
-    window.location.hash = fallbackRoute || '#/';
-  }
-}
-
-export function renderBackButton(fallbackRoute) {
-  const fb = fallbackRoute || '#/';
-  const safeFb = fb.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  return `<a href="javascript:void(0)" onclick="(function(){const r=window.__router;if(r&&r.goBack){r.goBack('${safeFb}')}else{window.location.hash='${safeFb}'}})()" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--on-surface-variant);margin-right:4px;" aria-label="Back"><span class="material-icons-outlined" style="font-size:24px;">arrow_back</span></a>`;
-}
-
 export function escapeHtml(str) {
   if (!str) return '';
   const div = document.createElement('div');
@@ -96,12 +81,10 @@ export function getInitials(name) {
 
 export function renderAvatar(user, customClass = 'profile-avatar-large') {
   if (user && user.avatarUrl) {
-    const initials = escapeHtml(getInitials(user.name));
-    const safeClass = escapeHtml(customClass).replace(/"/g, '&quot;');
-    return `<img src="${escapeHtml(user.avatarUrl)}" class="${escapeHtml(customClass)}" alt="${escapeHtml(user.name || 'Avatar')}" style="object-fit: cover; border-radius: 50%;" onerror="this.outerHTML='<div class=&quot;${safeClass}&quot;>${initials}</div>'" />`;
+    return `<img src="${escapeHtml(user.avatarUrl)}" class="${escapeHtml(customClass)}" alt="${escapeHtml(user.name || 'Avatar')}" style="object-fit: cover; border-radius: 50%;" />`;
   }
-  const name = user ? user.name : '';
-  return `<div class="${customClass}">${escapeHtml(getInitials(name))}</div>`;
+  const initials = getInitials(user ? user.name : '');
+  return `<div class="${escapeHtml(customClass)}">${initials}</div>`;
 }
 
 export function statusChip(status) {
@@ -131,18 +114,13 @@ export function renderBottomNav(activeItem, items) {
   `;
 }
 
-export function studentNav(active, isMessMember = false) {
-  const items = [
+export function studentNav(active) {
+  return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/student/dashboard' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/student/mess' },
-    { id: 'wallet', icon: 'account_balance_wallet', label: 'Wallet', route: '#/student/wallet' },
-    { id: 'room', icon: 'meeting_room', label: 'My Room', route: '#/student/room' },
+    { id: 'updates', icon: 'campaign', label: 'Updates', route: '#/student/announcements' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/student/profile' },
-  ];
-  if (isMessMember) {
-    items.splice(2, 0, { id: 'mess-mgmt', icon: 'restaurant', label: 'Mgmt', route: '#/mess/dashboard' });
-  }
-  return renderBottomNav(active, items);
+  ]);
 }
 
 export function messMemberNav(active) {
@@ -153,22 +131,12 @@ export function messMemberNav(active) {
   ]);
 }
 
-export function messInchargeNav(active) {
-  return renderBottomNav(active, [
-    { id: 'stock-manager', icon: 'inventory_2', label: 'Stock', route: 'https://varun122134.github.io/dormflow/stock-manager/' },
-    { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
-    { id: 'reports', icon: 'bar_chart', label: 'Reports', route: '#/mess/reports' },
-    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/mess/attendance' },
-  ]);
-}
-
 export function wardenNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/warden/dashboard' },
+    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/warden/attendance' },
     { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/warden/requests' },
-    { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/warden/rooms' },
-    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/warden/auto-attendance' },
-    { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
+    { id: 'announce', icon: 'campaign', label: 'Announce', route: '#/warden/announcements' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/warden/profile' },
   ]);
 }
@@ -186,37 +154,9 @@ export function adminNav(active) {
   return renderBottomNav(active, [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/admin/dashboard' },
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
-    { id: 'rooms', icon: 'meeting_room', label: 'Rooms', route: '#/admin/rooms' },
-    { id: 'mess', icon: 'restaurant', label: 'Mess', route: '#/admin/mess' },
+    { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/admin/mess' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
-    { id: 'wallets', icon: 'account_balance_wallet', label: 'Wallets', route: '#/mess/wallets' },
-    { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
   ]);
-}
-
-export function renderSkeletonPage() {
-  return `
-    <div class="page-container">
-      <header class="stitch-header">
-        <div class="stitch-left"><span class="stitch-brand">UCE IT</span></div>
-      </header>
-      <div class="page-content">
-        <div class="skeleton skeleton-title mb-md"></div>
-        <div class="flex gap-sm mb-md">
-          <div class="skeleton stat-card" style="height:80px;"></div>
-          <div class="skeleton stat-card" style="height:80px;"></div>
-          <div class="skeleton stat-card" style="height:80px;"></div>
-        </div>
-        <div class="skeleton skeleton-text"></div>
-        <div class="skeleton skeleton-text" style="width:80%;"></div>
-        <div class="skeleton skeleton-text"></div>
-        <div class="skeleton skeleton-text" style="width:60%;"></div>
-      </div>
-    </div>`;
-}
-
-export function renderLogoutIcon() {
-  return `<button onclick="(async function(){const m=await import('./auth.js');const h=await import('./helpers.js');const r=await import('./router.js');if(confirm('Sign out of UCE IT?')){await m.logout();h.showToast('Signed out','info');r.navigate('#/login');}})()" class="icon-btn" aria-label="Sign out" title="Sign out"><span class="material-icons-outlined">logout</span></button>`;
 }
 
 export function renderStars(rating) {
@@ -244,41 +184,13 @@ export function renderPageHeader(title, subtitle = '', rightAction = '') {
   `;
 }
 
-export function renderNotifBell() {
-  return `
-    <a href="#/notifications" style="position:relative;display:inline-flex;align-items:center;text-decoration:none;color:inherit;">
-      <span class="material-icons-outlined" style="font-size:24px;color:var(--on-surface-variant);">notifications</span>
-      <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
-    </a>
-  `;
-}
-
-export function refreshNotifBadge() {
-  const badge = document.getElementById('notifBadge');
-  if (!badge) return;
-  import('./store.js').then(store => {
-    import('./auth.js').then(auth => {
-      const user = auth.getCurrentUser();
-      if (!user) { badge.style.display = 'none'; return; }
-      store.getUnreadCount(user.id).then(count => {
-        if (count > 0) {
-          badge.textContent = count > 99 ? '99+' : count;
-          badge.style.display = 'flex';
-        } else {
-          badge.style.display = 'none';
-        }
-      });
-    });
-  });
-}
-
-export function showModal(title, body, onConfirm, confirmText = 'Confirm', confirmClass = 'btn-danger', isHtml = false) {
+export function showModal(title, body, onConfirm, confirmText = 'Confirm', confirmClass = 'btn-danger') {
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
   backdrop.innerHTML = `
     <div class="modal">
       <div class="modal-title">${escapeHtml(title)}</div>
-      <div class="modal-body">${isHtml ? body : escapeHtml(body)}</div>
+      <div class="modal-body">${escapeHtml(body)}</div>
       <div class="modal-actions">
         <button class="btn btn-secondary btn-sm" id="modalCancel">Cancel</button>
         <button class="btn ${confirmClass} btn-sm" id="modalConfirm">${escapeHtml(confirmText)}</button>
@@ -288,9 +200,10 @@ export function showModal(title, body, onConfirm, confirmText = 'Confirm', confi
 
   document.body.appendChild(backdrop);
 
-  const cancelBtn = backdrop.querySelector('#modalCancel');
-  const confirmBtn = backdrop.querySelector('#modalConfirm');
-  if (cancelBtn) cancelBtn.onclick = () => backdrop.remove();
-  if (confirmBtn) confirmBtn.onclick = () => { onConfirm(); backdrop.remove(); };
+  backdrop.querySelector('#modalCancel').onclick = () => backdrop.remove();
+  backdrop.querySelector('#modalConfirm').onclick = () => {
+    onConfirm();
+    backdrop.remove();
+  };
   backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
 }

@@ -1,6 +1,6 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, createAnnouncement, deleteAnnouncement, getPolls, createPoll, deletePoll, getPollOptions, getPollResults, hasVoted } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, formatDate, showModal, renderNotifBell, renderBackButton, renderLogoutIcon } from '../../helpers.js';
+import { wardenNav, showToast, escapeHtml, formatDate, showModal } from '../../helpers.js';
 
 export default async function wardenAnnouncements(app) {
   const user = getCurrentUser();
@@ -14,19 +14,14 @@ export default async function wardenAnnouncements(app) {
       <div class="page-container">
         <header class="stitch-header">
           <div class="stitch-left">
-            ${renderBackButton()}
             <span class="stitch-brand">UCE IT</span>
             <span class="stitch-sub">Manage Announcements</span>
           </div>
-          <div class="flex items-center gap-sm">
-            ${renderLogoutIcon()}
-            ${renderNotifBell()}
-            <span class="fs-13 c-on-surface-variant">${escapeHtml(user.name?.split(' ')[0] || '')}</span>
-          </div>
+          <div class="stitch-right">${user.name ? `<span style="font-size:13px;color:var(--on-surface-variant)">${escapeHtml(user.name.split(' ')[0])}</span>` : ''}</div>
         </header>
 
-        <div class="page-content">
-          <div class="flex gap-sm mb-md">
+        <div style="padding:16px;padding-bottom:80px;">
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
             <button class="btn btn-primary btn-sm" id="newAnnouncementBtn" style="flex:1;">
               <span class="material-icons-outlined" style="font-size:16px;vertical-align:text-bottom;">add</span> New Announcement
             </button>
@@ -35,22 +30,22 @@ export default async function wardenAnnouncements(app) {
             </button>
           </div>
 
-          <h3 class="fs-16 m-0 mb-md">Announcements</h3>
+          <h3 style="font-size:16px;margin:0 0 12px 0;">Announcements</h3>
           <div id="announcementsList">
-            ${announcements.length === 0 ? '<div class="card p-lg text-center c-outline">No announcements yet.</div>' : ''}
+            ${announcements.length === 0 ? '<div class="card" style="padding:24px;text-align:center;color:var(--outline);">No announcements yet.</div>' : ''}
             ${announcements.map(a => {
               const typeLabels = { announcement: 'Announcement', event: 'Event', news: 'News' };
               const typeColors = { announcement: 'chip-info', event: 'chip-pending', news: 'chip-success' };
               return `
-                <div class="card mb-sm">
-                  <div class="flex justify-between items-start">
+                <div class="card" style="margin-bottom:8px;">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                     <div style="flex:1;">
-                      <div class="flex gap-xs items-center mb-xs">
+                      <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
                         <span class="chip ${typeColors[a.type] || 'chip-neutral'}">${typeLabels[a.type] || a.type}</span>
-                        <span class="fs-12 c-outline">${formatDate(a.createdAt)}</span>
+                        <span style="font-size:11px;color:var(--outline);">${formatDate(a.createdAt)}</span>
                       </div>
-                      <h4 class="m-0 mb-xs fs-16">${escapeHtml(a.title)}</h4>
-                      <p class="m-0 fs-13 c-on-surface-variant">${escapeHtml(a.content)}</p>
+                      <h4 style="margin:0 0 4px 0;font-size:15px;">${escapeHtml(a.title)}</h4>
+                      <p style="margin:0;font-size:13px;color:var(--on-surface-variant);">${escapeHtml(a.content)}</p>
                     </div>
                     <button class="btn btn-ghost btn-sm deleteAnnouncement" data-id="${a.id}" style="flex-shrink:0;color:var(--error);">
                       <span class="material-icons-outlined" style="font-size:18px;">delete</span>
@@ -61,19 +56,19 @@ export default async function wardenAnnouncements(app) {
             }).join('')}
           </div>
 
-          <h3 class="fs-16 mt-lg mb-md">Polls</h3>
+          <h3 style="font-size:16px;margin:24px 0 12px 0;">Polls</h3>
           <div id="pollsList">
-            ${polls.length === 0 ? '<div class="card p-lg text-center c-outline">No polls created yet.</div>' : ''}
+            ${polls.length === 0 ? '<div class="card" style="padding:24px;text-align:center;color:var(--outline);">No polls created yet.</div>' : ''}
             ${polls.map(p => `
-              <div class="card mb-sm">
-                <div class="flex justify-between items-start">
+              <div class="card" style="margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                   <div style="flex:1;">
-                    <div class="flex gap-xs items-center mb-xs">
+                    <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
                       <span class="chip ${p.isActive ? 'chip-pending' : 'chip-neutral'}">${p.isActive ? 'Active' : 'Closed'}</span>
-                      <span class="fs-12 c-outline">${formatDate(p.createdAt)}</span>
+                      <span style="font-size:11px;color:var(--outline);">${formatDate(p.createdAt)}</span>
                     </div>
-                    <h4 class="m-0 mb-xs fs-16">${escapeHtml(p.title)}</h4>
-                    ${p.description ? `<p class="m-0 fs-13 c-on-surface-variant">${escapeHtml(p.description)}</p>` : ''}
+                    <h4 style="margin:0 0 4px 0;font-size:15px;">${escapeHtml(p.title)}</h4>
+                    ${p.description ? `<p style="margin:0;font-size:13px;color:var(--on-surface-variant);">${escapeHtml(p.description)}</p>` : ''}
                   </div>
                   <button class="btn btn-ghost btn-sm deletePoll" data-id="${p.id}" style="flex-shrink:0;color:var(--error);">
                     <span class="material-icons-outlined" style="font-size:18px;">delete</span>

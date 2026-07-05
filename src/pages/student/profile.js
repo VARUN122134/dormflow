@@ -1,7 +1,6 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { navigate } from '../../router.js';
 import { studentNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
-import { getUnreadCount } from '../../store.js';
 
 export default function profilePage(app) {
   const user = getCurrentUser();
@@ -65,33 +64,11 @@ export default function profilePage(app) {
         </div>
       </div>
 
-      <div class="profile-section card animate-fade-in" style="margin-bottom:12px;">
-        <div class="profile-section-title" style="margin-bottom:8px;">Features</div>
-        <div class="feature-grid">
-          <a href="#/student/room" class="feature-card">
-            <span class="material-icons-outlined">meeting_room</span>
-            <div class="feature-label">My Room</div>
-          </a>
-          <a href="#/student/complaints" class="feature-card">
-            <span class="material-icons-outlined">feedback</span>
-            <div class="feature-label">Complaints</div>
-          </a>
-          <a href="#/student/attendance" class="feature-card">
-            <span class="material-icons-outlined">fact_check</span>
-            <div class="feature-label">Attendance</div>
-          </a>
-          <a href="#/notifications" class="feature-card">
-            <span class="material-icons-outlined">notifications</span>
-            <div class="feature-label">Notifications</div>
-          </a>
-        </div>
-      </div>
-
       <div class="profile-section card animate-fade-in">
         <div class="profile-section-title">Account & Security</div>
         <div class="profile-field">
           <span class="profile-field-label">Status</span>
-          <span class="chip ${user.activeStatus === 'IN' ? 'chip-in' : 'chip-out'}">${escapeHtml(user.activeStatus)}</span>
+          <span class="chip ${user.activeStatus === 'IN' ? 'chip-in' : 'chip-out'}">${user.activeStatus}</span>
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Account Created</span>
@@ -142,7 +119,7 @@ export default function profilePage(app) {
         Sign Out
       </button>
     </div>
-    ${studentNav('profile', user.isMessMember)}
+    ${studentNav('profile')}
   `;
 
   const devPhoto = app.querySelector('#dev-photo');
@@ -202,11 +179,11 @@ export default function profilePage(app) {
   document.getElementById('changePwBtn').addEventListener('click', async () => {
     const current = document.getElementById('cpCurrent').value;
     const newPw = document.getElementById('cpNew').value;
-    const cpConfirmEl = document.getElementById('cpConfirm').value;
+    const confirm = document.getElementById('cpConfirm').value;
     const cpError = document.getElementById('cpError');
     cpError.style.display = 'none';
 
-    if (!current || !newPw || !cpConfirmEl) {
+    if (!current || !newPw || !confirm) {
       cpError.textContent = 'Please fill in all password fields';
       cpError.style.display = 'block';
       return;
@@ -216,7 +193,7 @@ export default function profilePage(app) {
       cpError.style.display = 'block';
       return;
     }
-    if (newPw !== cpConfirmEl) {
+    if (newPw !== confirm) {
       cpError.textContent = 'New passwords do not match';
       cpError.style.display = 'block';
       return;
