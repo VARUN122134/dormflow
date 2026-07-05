@@ -1,10 +1,12 @@
-import { getCurrentUser, refreshProfile, getHomeRoute } from './auth.js';
+/* ========================================
+   UCE IT Router — Supabase-compatible
+   Hash-based SPA router with role guards
+   ======================================== */
 
-const MAX_STACK = 20;
+import { getCurrentUser } from './auth.js';
+
 const routes = {};
 let currentCleanup = null;
-const navStack = [];
-let lastHash = '';
 
 export function registerRoute(path, handler) {
   routes[path] = handler;
@@ -12,12 +14,6 @@ export function registerRoute(path, handler) {
 
 export function navigate(hash) {
   window.location.hash = hash;
-}
-
-export function goBack(fallback) {
-  const target = navStack.pop();
-  window.__skipNavStack = true;
-  window.location.hash = target || fallback || '#/';
 }
 
 function getHash() {
@@ -46,14 +42,25 @@ function matchRoute(hash) {
   return null;
 }
 
+// Role access map
 const roleAccess = {
   '#/student': ['student'],
-  '#/warden':  ['boys_warden', 'girls_warden', 'mess_incharge'],
+  '#/mess':    ['student'],    // additionally requires isMessMember check
+  '#/warden':  ['boys_warden', 'girls_warden'],
   '#/gate':    ['security'],
   '#/admin':   ['admin'],
-  '#/mess':    ['student', 'mess_incharge', 'boys_warden', 'girls_warden', 'admin'],
-  '#/notifications': ['student', 'boys_warden', 'girls_warden', 'admin', 'security', 'mess_incharge'],
 };
+
+function getHomeRoute(role) {
+  const map = {
+    student:      '#/student/dashboard',
+    boys_warden:  '#/warden/dashboard',
+    girls_warden: '#/warden/dashboard',
+    security:     '#/gate/dashboard',
+    admin:        '#/admin/dashboard',
+  };
+  return map[role] || '#/student/dashboard';
+}
 
 function checkAccess(hash, user) {
   if (['#/splash', '#/login', '#/register'].includes(hash)) return true;
@@ -61,46 +68,41 @@ function checkAccess(hash, user) {
 
   for (const [prefix, roles] of Object.entries(roleAccess)) {
     if (hash.startsWith(prefix)) {
+      // Mess routes require student role + isMessMember flag
       if (prefix === '#/mess') {
-        if (!roles.includes(user.role)) return false;
-        if (user.role === 'student') return user.isMessMember === true;
-        return true;
+        return roles.includes(user.role) && user.isMessMember === true;
       }
       return roles.includes(user.role);
     }
   }
-  return false;
+  return true;
 }
 
 export async function handleRoute() {
   const hash = getHash();
-  let user = getCurrentUser();
+  const user = getCurrentUser();   // cached — set by loadCurrentUser() on boot
 
-  const authPages = ['#/splash', '#/login', '#/register', '#/', ''];
-  if (lastHash && lastHash !== hash && !authPages.includes(lastHash) && !window.__skipNavStack) {
-    navStack.push(lastHash);
-    if (navStack.length > MAX_STACK) navStack.shift();
-  }
-  window.__skipNavStack = false;
-  lastHash = hash;
-
-  if (hash.startsWith('#/mess') && user?.role === 'student') {
-    const updated = await refreshProfile();
-    if (updated) user = getCurrentUser();
-  }
-
+  // Cleanup previous page
   if (currentCleanup && typeof currentCleanup === 'function') {
     currentCleanup();
     currentCleanup = null;
   }
 
+  // Auto-redirect logged-in users from auth pages
   if (['#/splash', '#/login', '#/', ''].includes(hash) && user) {
     navigate(getHomeRoute(user.role));
     return;
   }
 
+  // Access check
   if (!checkAccess(hash, user)) {
-    navigate(user ? getHomeRoute(user.role) : '#/login');
+    const target = user ? getHomeRoute(user.role) : '#/login';
+    if (target === hash) {
+      // Would loop silently — force to login or safe fallback
+      navigate(user ? '#/login' : '#/splash');
+    } else {
+      navigate(target);
+    }
     return;
   }
 
@@ -109,6 +111,7 @@ export async function handleRoute() {
     const app = document.getElementById('app');
     app.innerHTML = '';
     const result = match.handler(app, match.params);
+    // Support both sync and async page handlers
     const cleanup = result instanceof Promise ? await result : result;
     if (typeof cleanup === 'function') currentCleanup = cleanup;
   } else {
@@ -117,7 +120,6 @@ export async function handleRoute() {
 }
 
 export function initRouter() {
-  window.__router = { goBack, navigate };
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
 }

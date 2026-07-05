@@ -107,7 +107,12 @@ export default function loginPage(app) {
         security:     '#/gate/dashboard',
         admin:        '#/admin/dashboard',
       };
-      navigate(homeRoutes[profile.role] || '#/student/dashboard');
+      const target = homeRoutes[profile.role] || '#/student/dashboard';
+      if (target !== window.location.hash) {
+        navigate(target);
+      } else {
+        navigate('#/student/dashboard');
+      }
     } catch (err) {
       const msg = err.message || 'Invalid credentials. Please try again.';
       errorDiv.textContent = msg;
