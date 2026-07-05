@@ -4,6 +4,7 @@ on:
     branches: [master]
     paths:
       - 'warden-stock-portal/**'
+      - '.github/workflows/deploy-stock-portal.yml'
 jobs:
   deploy:
     runs-on: ubuntu-latest
