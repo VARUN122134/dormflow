@@ -863,3 +863,67 @@ export async function getMonthlyAttendance(year, month) {
   if (error) throw error;
   return data || [];
 }
+
+// ======== AUTO ATTENDANCE SUPPORT ========
+
+export async function saveAttendanceSnapshot(hostelType, students) {
+  const present = students.filter(s => s.activeStatus === 'IN');
+  const absent = students.filter(s => s.activeStatus === 'OUT');
+  const depts = [...new Set(students.map(s => s.department).filter(Boolean))].sort();
+
+  let csv = `Department,Year,Name,Register Number,Room,Status\n`;
+  depts.forEach(dept => {
+    const deptStudents = students.filter(s => s.department === dept);
+    const years = [...new Set(deptStudents.map(s => s.year).filter(Boolean))].sort();
+    years.forEach(year => {
+      deptStudents.filter(s => s.year === year).forEach(s => {
+        csv += `"${dept}","${year}","${s.name}","${s.registrationNo}","${s.roomNumber || ''}","${s.activeStatus === 'IN' ? 'Present' : 'Absent'}"\n`;
+      });
+    });
+  });
+
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const fileName = `${hostelType.toLowerCase()}_hostel_attendance_${dateStr}.csv`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const file = new File([blob], fileName, { type: 'text/csv' });
+
+  const { error } = await supabase.storage.from('attendance-snapshots').upload(fileName, file, { upsert: true });
+  if (error) throw error;
+  return csv;
+}
+
+export async function getDailyBill(dateStr) {
+  try {
+    const { data, error } = await supabase.from('mess_daily_bills').select('*').eq('bill_date', dateStr).maybeSingle();
+    if (error) return null;
+    return data ? { id: data.id, billDate: data.bill_date, totalStockCost: data.total_stock_cost, totalStudents: data.total_students, perStudentCost: data.per_student_cost, calculatedAt: data.calculated_at, calculatedBy: data.calculated_by } : null;
+  } catch { return null; }
+}
+
+export async function getDailyUsage(dateStr) {
+  try {
+    const { data, error } = await supabase.from('mess_daily_usage').select('*, mess_daily_usage_items!mess_daily_usage_items_usage_id_fkey(*, mess_stock_items!mess_daily_usage_items_item_id_fkey(*))').eq('usage_date', dateStr).maybeSingle();
+    if (error) return null;
+    if (!data) return null;
+    return { id: data.id, usageDate: data.usage_date, createdAt: data.created_at, items: (data.mess_daily_usage_items || []).map(i => ({ id: i.id, itemId: i.item_id, quantityUsed: i.quantity_used, item: i.mess_stock_items ? { id: i.mess_stock_items.id, name: i.mess_stock_items.name } : undefined })) };
+  } catch { return null; }
+}
+
+export async function calculateDailyBill(dateStr, userId) {
+  try {
+    const usage = await getDailyUsage(dateStr);
+    if (!usage || !usage.items || usage.items.length === 0) return null;
+    let totalStockCost = 0;
+    for (const u of usage.items) {
+      const { data: purchases } = await supabase.from('mess_stock_purchases').select('unit_price').eq('item_id', u.itemId).order('purchased_date', { ascending: false }).limit(1);
+      const price = (purchases && purchases.length > 0) ? purchases[0].unit_price : 0;
+      totalStockCost += u.quantityUsed * price;
+    }
+    const { data: attendance } = await supabase.from('mess_attendance').select('student_id').eq('attendance_date', dateStr);
+    const uniqueStudents = [...new Set((attendance || []).map(a => a.student_id))];
+    if (uniqueStudents.length === 0) return null;
+    const perStudentCost = Math.round((totalStockCost / uniqueStudents.length) * 100) / 100;
+    const { data: bill } = await supabase.from('mess_daily_bills').upsert({ bill_date: dateStr, total_stock_cost: totalStockCost, total_students: uniqueStudents.length, per_student_cost: perStudentCost, calculated_by: userId }).select().single();
+    return bill;
+  } catch { return null; }
+}

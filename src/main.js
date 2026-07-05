@@ -43,12 +43,27 @@ import messRatings from './pages/mess/ratings.js';
 
 import wardenAnnouncements from './pages/warden/announcements.js';
 import wardenAttendance from './pages/warden/attendance.js';
+import wardenAutoAttendance from './pages/warden/auto-attendance.js';
+import { startAutoAttendanceScheduler, stopAutoAttendanceScheduler } from './auto-attendance-scheduler.js';
 
 import adminMess from './pages/admin/mess.js';
 import adminManage from './pages/admin/manage.js';
 
 async function boot() {
-  await loadCurrentUser();
+  const user = await loadCurrentUser();
+  if (user) {
+    document.addEventListener('routechange', () => {
+      const hash = location.hash;
+      if (hash.startsWith('#/warden') || hash.startsWith('#/admin') || hash.startsWith('#/mess')) {
+        startAutoAttendanceScheduler(user);
+      } else {
+        stopAutoAttendanceScheduler();
+      }
+    });
+    if (location.hash.startsWith('#/warden') || location.hash.startsWith('#/admin') || location.hash.startsWith('#/mess')) {
+      startAutoAttendanceScheduler(user);
+    }
+  }
   initRouter();
 }
 boot();
@@ -91,6 +106,7 @@ registerRoute('#/mess/ratings', messRatings);
 // Warden new routes
 registerRoute('#/warden/announcements', wardenAnnouncements);
 registerRoute('#/warden/attendance', wardenAttendance);
+registerRoute('#/warden/auto-attendance', wardenAutoAttendance);
 
 // Admin new routes
 registerRoute('#/admin/mess', adminMess);
