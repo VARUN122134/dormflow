@@ -337,7 +337,11 @@ import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL='https://oekdpzoewzkznxghmgby.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la2Rwem9ld3prem54Z2htZ2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjU1MDMsImV4cCI6MjA5NjMwMTUwM30.r_Im6_fzocAFee9d7KfjKBYfApW1QAktd5MdqWn23Ok';
-const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+// Clear leftover OAuth params from URL (stale redirect)
+if(window.location.search.includes('provider')||window.location.hash.includes('access_token')){window.history.replaceState({},'',window.location.pathname+window.location.hash.split('?')[0])}
+// Clear any stale Supabase auth session from localStorage
+try{Object.keys(localStorage).filter(k=>k.startsWith('sb-')||k.includes('supabase')).forEach(k=>localStorage.removeItem(k))}catch(e){}
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 
 // State
 let currentUser=null;
