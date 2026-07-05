@@ -346,9 +346,8 @@ let commodities=[];
 // Toast
 function toast(msg,type='info'){const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span>${msg}`;c.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300)},3500)}
 
-// Auth
-async function checkAuth(){try{const{data:{user}}=await sb.auth.getUser();if(!user){await sb.auth.signInWithOAuth({provider:'google'});return}currentUser=user;document.getElementById('user-name').textContent=user.user_metadata?.full_name||'Warden';document.getElementById('user-role').textContent='Administrator';loadSection(getCurrentSection())}catch(e){console.log('Auth check:',e);document.getElementById('user-name').textContent='Warden';loadSection(getCurrentSection())}}
-document.getElementById('logout-btn').addEventListener('click',async(e)=>{e.preventDefault();await sb.auth.signOut();window.location.reload()});
+// Auth — try existing session first, fall back to anon
+async function checkAuth(){try{const{data:{user}}=await sb.auth.getUser();if(user){currentUser=user;document.getElementById('user-name').textContent=user.user_metadata?.full_name||'Warden'}}catch(e){}document.getElementById('user-role').textContent='Administrator';loadSection(getCurrentSection())}
 
 // Router
 function getCurrentSection(){return window.location.hash.slice(1)||'dashboard'}
