@@ -11,11 +11,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy warden-stock-portal to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - uses: actions/checkout@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./warden-stock-portal
-          publish_branch: gh-pages
-          destination_dir: warden-stock-portal
-          keep_files: true
+          ref: gh-pages
+          path: gh-pages
+      - run: |
+          rm -rf gh-pages/warden-stock-portal
+          cp -r warden-stock-portal gh-pages/warden-stock-portal
+      - name: Push to gh-pages
+        run: |
+          cd gh-pages
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A
+          git diff --quiet && git diff --staged --quiet || git commit -m "Deploy warden-stock-portal"
+          git push origin gh-pages
