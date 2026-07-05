@@ -1,0 +1,349 @@
+<!DOCTYPE html><html class="light" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#472a00",
+                    "surface-container-low": "#f0f4f8",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-secondary-fixed": "#002113",
+                    "surface-dim": "#f8fafc",
+                    "primary-fixed-dim": "#005ac2",
+                    "on-surface-variant": "#44474e",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "outline": "#74777f",
+                    "inverse-on-surface": "#f1f0f4",
+                    "inverse-primary": "#adc6ff",
+                    "on-error-container": "#410002",
+                    "primary-container": "#d8e2ff",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface": "#f8fafc",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#005ac2",
+                    "primary-fixed": "#d8e2ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-surface": "#1a1c1e",
+                    "on-tertiary-container": "#2a1700",
+                    "on-primary-container": "#001a41",
+                    "secondary-container": "#ceead6",
+                    "on-secondary-container": "#002113",
+                    "on-primary-fixed": "#001a41",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eceef0",
+                    "background": "#f8fafc",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#8b5000",
+                    "on-primary-fixed-variant": "#004494",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "outline-variant": "#c4c6d0",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "secondary": "#006d48",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-variant": "#dee3eb",
+                    "surface-container-high": "#e1e2e6",
+                    "surface-bright": "#f8fafc",
+                    "inverse-surface": "#2f3033",
+                    "surface-container-highest": "#e1e2e6",
+                    "tertiary-container": "#ffddb8",
+                    "primary": "#005ac2",
+                    "on-background": "#1a1c1e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "gutter": "20px",
+                    "unit": "8px",
+                    "container-padding": "24px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    }catch(_e){}</script><script src="api.js"></script></head><body class="min-h-screen flex flex-col md:flex-row">
+
+<!-- Side Navigation Shell -->
+<aside class="side-nav-glass fixed left-0 top-0 h-screen w-[280px] hidden md:flex flex-col py-container-padding z-50">
+    <div class="px-8 mb-12">
+        <h1 class="font-headline-lg text-headline-lg font-black bg-clip-text text-transparent bg-gradient-to-br from-primary to-blue-700 leading-tight">
+            Warden Portal
+        </h1>
+        <p class="text-on-surface-variant/60 font-body-sm text-body-sm tracking-widest uppercase mt-1">Admin Control</p>
+    </div>
+    <nav class="flex-1 px-4 space-y-2">
+        <a class="flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/40 transition-all duration-300 group" href="dashboard.html">
+            <span class="material-symbols-outlined mr-4 group-hover:translate-x-1 transition-transform">dashboard</span>
+            <span class="font-body-lg text-body-lg">Dashboard Overview</span>
+        </a>
+        <!-- Active Tab: Student Accounts & Fees -->
+        <a class="flex items-center px-4 py-3 rounded-xl bg-white/60 text-primary font-bold border-l-4 border-primary shadow-sm" href="#">
+            <span class="material-symbols-outlined mr-4">payments</span>
+            <span class="font-body-lg text-body-lg">Student Accounts &amp; Fees</span>
+        </a>
+        <a class="flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/40 transition-all duration-300 group" href="inventory.html">
+            <span class="material-symbols-outlined mr-4 group-hover:translate-x-1 transition-transform">inventory_2</span>
+            <span class="font-body-lg text-body-lg">Mess Inventory &amp; Financials</span>
+        </a>
+    </nav>
+    <div class="px-4 pt-8 border-t border-black/5 space-y-2">
+        <a class="flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/40 transition-all duration-300 group" href="#">
+            <span class="material-symbols-outlined mr-4 group-hover:translate-x-1 transition-transform">settings</span>
+            <span class="font-body-lg text-body-lg">Settings</span>
+        </a>
+        <a id="logoutBtn" class="flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-white/40 transition-all duration-300 group" href="#">
+            <span class="material-symbols-outlined mr-4 group-hover:translate-x-1 transition-transform text-error">logout</span>
+            <span class="font-body-lg text-body-lg">Logout</span>
+        </a>
+    </div>
+</aside>
+
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-[280px] min-h-screen flex flex-col relative">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav-glass flex justify-between items-center w-full px-margin-desktop py-unit h-20 sticky top-0 z-40">
+        <div class="flex items-center space-x-6">
+            <div class="relative group">
+                <input class="bg-white/40 border border-black/5 rounded-full py-2 px-10 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none text-body-sm w-64 transition-all duration-300 group-hover:w-80 backdrop-blur-md placeholder:text-on-surface-variant/50" placeholder="Search student records..." type="text">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">search</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="p-2 rounded-full hover:bg-black/5 transition-colors duration-200 relative">
+                <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border border-white"></span>
+            </button>
+            <div class="flex items-center space-x-3 ml-4 bg-white/40 py-1 px-3 rounded-full border border-black/5">
+                <div class="text-right hidden sm:block">
+                    <p id="profileName" class="font-title-md text-body-sm font-bold leading-none text-on-surface">Warden Alex</p>
+                    <p id="profileRole" class="text-[10px] text-primary font-bold uppercase tracking-tighter">Chief Administrator</p>
+                </div>
+                <img class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm" data-alt="A professional headshot of a middle-aged male administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMXqWrJxU3urDboxS9xyLdOjzMPwnSsrL9EEnMtvBNgHeMTVcJG0ZHD3e9KXOlbKloz9wxMFTCywKp48xrz-8itRVlGIRdIhZ3Rk0j_b7qyxjKgtVWI6nR21nDr6Ie3MVHpkYQlQyWCH0u1iTqCkIWoMZ1kkOZjTjIVmj_LE9Y2iDpDwS4obfXzaUZ_ZIFjN7hBZ962jSFeameMwhVNJmdsPP9qsFLNV2vfIpqjBDG4EY8r2kSysYwmQ">
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <section class="flex-1 p-margin-desktop space-y-gutter">
+        <!-- Action Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter">
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface">Student Accounts &amp; Fees</h2>
+                <p class="text-on-surface-variant font-body-lg text-body-lg">Manage billing cycles, track payments, and onboard new residents.</p>
+            </div>
+            <button class="primary-glow-button px-8 py-4 rounded-xl flex items-center space-x-3 font-bold group" data-allowed-departments="CSE, ECE, EEE, CIVIL, MECHANICAL">
+                <span class="material-symbols-outlined">person_add</span>
+                <span class="font-title-md">Onboard New Student</span>
+            </button>
+        </div>
+
+        <!-- Dashboard Quick Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mt-4">
+            <div class="liquid-glass-card p-container-padding rounded-2xl flex flex-col justify-between">
+                <span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Total Receivables</span>
+                <div class="flex items-end justify-between">
+                    <span class="font-display-lg text-headline-lg text-on-surface">₹1,42,500</span>
+                    <span class="text-emerald-600 text-body-sm font-bold">+12%</span>
+                </div>
+            </div>
+            <div class="liquid-glass-card p-container-padding rounded-2xl flex flex-col justify-between">
+                <span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Payments Pending</span>
+                <div class="flex items-end justify-between">
+                    <span class="font-display-lg text-headline-lg text-on-surface">42</span>
+                    <span class="text-red-600 text-body-sm font-bold">-4</span>
+                </div>
+            </div>
+            <div class="liquid-glass-card p-container-padding rounded-2xl flex flex-col justify-between">
+                <span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Collection Rate</span>
+                <div class="flex items-end justify-between">
+                    <span class="font-display-lg text-headline-lg text-on-surface">89%</span>
+                    <span class="text-emerald-600 text-body-sm font-bold">Optimal</span>
+                </div>
+            </div>
+            <div class="liquid-glass-card p-container-padding rounded-2xl flex flex-col justify-between">
+                <span class="text-on-surface-variant text-label-caps uppercase tracking-widest mb-4 block">Avg. Payment Time</span>
+                <div class="flex items-end justify-between">
+                    <span class="font-display-lg text-headline-lg text-on-surface">4.2d</span>
+                    <span class="text-primary text-body-sm font-bold">Fast</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Master Student Data Table -->
+        <div class="liquid-glass-card rounded-3xl overflow-hidden mt-8">
+            <div class="p-container-padding border-b border-black/5 flex justify-between items-center bg-white/20">
+                <h3 class="font-title-md text-title-md text-on-surface">Resident Ledger</h3>
+                <div class="flex space-x-2">
+                    <button class="p-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/60">
+                        <span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+                    </button>
+                    <button class="p-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/60">
+                        <span class="material-symbols-outlined text-on-surface-variant">download</span>
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-black/5 text-on-surface-variant font-label-caps tracking-widest uppercase text-[10px]">
+                            <th class="px-6 py-5">Student Identification</th>
+                            <th class="px-6 py-5">Room &amp; Year</th>
+                            <th class="px-6 py-5">Base Fee</th>
+                            <th class="px-6 py-5">Amount Paid</th>
+                            <th class="px-6 py-5">Balance Due</th>
+                            <th class="px-6 py-5">Status</th>
+                            <th class="px-6 py-5 text-right">Actions</th>
+                        </tr>
+                    </thead>
+<tbody id="studentTableBody" class="divide-y divide-black/5">
+                        <tr><td colspan="7" class="px-6 py-8 text-center text-on-surface-variant">Loading student records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="p-container-padding flex items-center justify-between bg-black/5">
+                <p id="paginationInfo" class="text-on-surface-variant/80 text-body-sm font-medium">Loading...</p>
+                <div class="flex space-x-1">
+                    <button class="px-4 py-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/80 transition-colors text-on-surface text-sm font-medium">Previous</button>
+                    <button class="px-4 py-2 rounded-lg bg-primary text-white font-bold shadow-sm text-sm">1</button>
+                    <button class="px-4 py-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/80 transition-colors text-on-surface text-sm font-medium">2</button>
+                    <button class="px-4 py-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/80 transition-colors text-on-surface text-sm font-medium">3</button>
+                    <button class="px-4 py-2 rounded-lg bg-white/40 border border-black/5 hover:bg-white/80 transition-colors text-on-surface text-sm font-medium">Next</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Interactive Layer: Notification Toast -->
+
+
+<script>
+  API.requireAuth();
+
+  const profile = API.getProfile();
+  if (profile) {
+    document.getElementById('profileName').textContent = profile.name || 'Warden';
+    document.getElementById('profileRole').textContent = profile.role || 'Administrator';
+  }
+
+  function formatCurrency(amount) {
+    return '₹' + Number(amount || 0).toLocaleString('en-IN');
+  }
+
+  function getStatusHTML(status) {
+    const s = (status || '').toLowerCase();
+    if (s === 'paid' || s === 'cleared') {
+      return '<span class="status-pill-emerald px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center w-fit"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>Paid</span>';
+    } else if (s === 'partial') {
+      return '<span class="status-pill-amber px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center w-fit"><span class="w-2 h-2 rounded-full bg-amber-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]"></span>Partial</span>';
+    }
+    return '<span class="status-pill-red px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center w-fit"><span class="w-2 h-2 rounded-full bg-red-500 mr-2 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>Unpaid</span>';
+  }
+
+  API.getStudentStats()
+    .then(stats => {
+      const cards = document.querySelectorAll('.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 > div');
+      if (cards.length >= 4 && cards[0]) {
+        const valueEls = cards[0].querySelectorAll('span.font-display-lg');
+        if (valueEls.length) valueEls[0].textContent = formatCurrency(stats.totalReceivables ?? stats.total_receivables ?? 0);
+      }
+      if (cards.length >= 4 && cards[1]) {
+        const valueEls = cards[1].querySelectorAll('span.font-display-lg');
+        if (valueEls.length) valueEls[0].textContent = stats.paymentsPending ?? stats.payments_pending ?? 0;
+      }
+      if (cards.length >= 4 && cards[2]) {
+        const valueEls = cards[2].querySelectorAll('span.font-display-lg');
+        if (valueEls.length) valueEls[0].textContent = (stats.collectionRate ?? stats.collection_rate ?? 0) + '%';
+      }
+      if (cards.length >= 4 && cards[3]) {
+        const valueEls = cards[3].querySelectorAll('span.font-display-lg');
+        if (valueEls.length) valueEls[0].textContent = (stats.avgPaymentTime ?? stats.avg_payment_time ?? 0) + 'd';
+      }
+    })
+    .catch(err => console.error('Failed to load stats:', err));
+
+  async function loadStudents(query) {
+    try {
+      const params = {};
+      if (query) params.search = query;
+      const data = await API.getStudents(params);
+      const students = data.students || data.data || [];
+      const total = data.total ?? students.length;
+
+      const tbody = document.getElementById('studentTableBody');
+      if (!students.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-on-surface-variant">No students found.</td></tr>';
+        document.getElementById('paginationInfo').textContent = '0 students';
+        return;
+      }
+
+      tbody.innerHTML = students.map(s => {
+        const balance = (s.balance ?? s.balance_due ?? 0);
+        const balanceClass = balance > 0 ? (s.status === 'partial' ? 'text-amber-700 font-bold' : 'text-red-700 font-bold') : 'text-on-surface-variant/40';
+        return '<tr class="table-row-hover transition-colors duration-200">' +
+          '<td class="px-6 py-4"><div class="flex items-center space-x-4"><div class="w-10 h-10 rounded-xl overflow-hidden bg-primary/10 flex-shrink-0">' +
+          '<img class="w-full h-full object-cover" data-alt="Student photo" src="' + (s.photo || s.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.name || '') + '&background=005ac2&color=fff') + '"></div>' +
+          '<div><p class="font-bold text-on-surface">' + (s.name || 'Unknown') + '</p>' +
+          '<p class="text-on-surface-variant/70 text-xs">ID: #' + (s.studentId || s.student_id || s.id || '') + '</p></div></div></td>' +
+          '<td class="px-6 py-4"><p class="text-on-surface">' + (s.room || '-') + '</p><p class="text-on-surface-variant/70 text-xs">' + (s.year || s.year_of_study || '-') + '</p></td>' +
+          '<td class="px-6 py-4 font-semibold text-on-surface">' + formatCurrency(s.baseFee ?? s.base_fee ?? 0) + '</td>' +
+          '<td class="px-6 py-4 text-emerald-700 font-semibold">' + formatCurrency(s.amountPaid ?? s.amount_paid ?? 0) + '</td>' +
+          '<td class="px-6 py-4 ' + balanceClass + '">' + formatCurrency(balance) + '</td>' +
+          '<td class="px-6 py-4">' + getStatusHTML(s.status) + '</td>' +
+          '<td class="px-6 py-4 text-right"><div class="flex items-center justify-end space-x-2">' +
+          '<button class="p-2 rounded-lg hover:bg-primary/10 text-on-surface-variant hover:text-primary transition-colors" data-action="edit" data-id="' + (s.id || '') + '"><span class="material-symbols-outlined text-sm">edit</span></button>' +
+          '<button class="p-2 rounded-lg hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors" data-action="delete" data-id="' + (s.id || '') + '"><span class="material-symbols-outlined text-sm">delete</span></button>' +
+          '</div></td></tr>';
+      }).join('');
+
+      document.getElementById('paginationInfo').textContent = 'Showing 1 to ' + students.length + ' of ' + total + ' students';
+    } catch (err) {
+      console.error('Failed to load students:', err);
+      document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-red-600">Failed to load student records.</td></tr>';
+    }
+  }
+
+  loadStudents();
+
+  const searchInput = document.querySelector('input[placeholder*="Search"]');
+  if (searchInput) {
+    let debounceTimer;
+    searchInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => loadStudents(this.value), 300);
+    });
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    API.logout();
+    window.location.href = 'login.html';
+  });
+</script>
+</body></html>
