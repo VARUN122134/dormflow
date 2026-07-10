@@ -110,7 +110,7 @@ export default function registerPage(app) {
 
       <div class="auth-footer">
         <div class="auth-footer-brand">Powered by MooN Software Solutions</div>
-        <div>UCE IT Management System v3.0.0</div>
+        <div>UCE IT Management System v3.0.6</div>
       </div>
     </div>
   `;

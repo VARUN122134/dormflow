@@ -245,7 +245,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
       <div class="auth-footer">
         <div class="auth-footer-brand">Powered by MooN Software Solutions</div>
-        <div>UCE IT Management System v3.0.0</div>
+        <div>UCE IT Management System v3.0.6</div>
       </div>
     </div>
   `;let t=document.getElementById(`registerForm`),n=document.getElementById(`registerError`);t.addEventListener(`submit`,async r=>{r.preventDefault(),n.style.display=`none`;let i=`${document.getElementById(`regNum`).value.trim()}@ucea.edu.in`,a=document.getElementById(`regPassword`).value,o=t.querySelector(`input[name="gender"]:checked`)?.value;if(!o){n.textContent=`Please select your gender`,n.style.display=`block`;return}let s={name:document.getElementById(`regName`).value.trim(),email:i,role:`student`,gender:o,hostelType:document.getElementById(`regHostel`).value,department:document.getElementById(`regDept`).value,year:document.getElementById(`regYear`).value,roomNumber:document.getElementById(`regRoom`).value.trim(),blockName:document.getElementById(`regBlock`).value.trim(),phone:document.getElementById(`regPhone`).value.trim(),guardianName:document.getElementById(`regGuardian`).value.trim(),guardianPhone:document.getElementById(`regGuardianPhone`).value.trim()},c=document.getElementById(`registerBtn`),l=c.innerHTML;c.disabled=!0,c.innerHTML=`Creating account...`;try{let t=await Ng(i,a,s);t.requiresApproval?e.innerHTML=`
@@ -651,7 +651,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.0</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1052,7 +1052,7 @@ Minimum version required to store current data is: `+c+`.
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.0</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
