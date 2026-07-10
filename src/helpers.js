@@ -156,6 +156,7 @@ export function adminNav(active) {
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/admin/mess' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
+    { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
   ]);
 }
 
