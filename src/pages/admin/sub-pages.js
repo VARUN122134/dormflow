@@ -39,17 +39,22 @@ export function adminProfile(app) {
   const user = getCurrentUser();
   if (!user) return;
 
+  const roleLabels = {admin:'Super Admin',mess_incharge:'Mess Incharge',security:'Gate Security',boys_warden:'Boys Warden',girls_warden:'Girls Warden',student:'Student'};
+  const roleLabel = roleLabels[user.role] || user.role.replace('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const locationLabels = {admin:'System Administrator • University Central',mess_incharge:'Mess Stock Manager • Hostel Kitchen',security:'Gate Security • Main Entrance',boys_warden:'Boys Hostel Warden',girls_warden:'Girls Hostel Warden',student:'Student • Resident'};
+  const locationLabel = locationLabels[user.role] || 'UCE Ariyalur';
+
   app.innerHTML = `
     ${renderPageHeader('UCE IT', '')}
     <div class="page">
       <div class="profile-avatar-large animate-scale-in">${getInitials(user.name)}</div>
       <div class="profile-name">${escapeHtml(user.name)}</div>
-      <div class="profile-location">System Administrator • University Central</div>
+      <div class="profile-location">${escapeHtml(locationLabel)}</div>
 
       <div class="profile-section card animate-fade-in">
-        <div class="profile-section-title">Admin Details</div>
+        <div class="profile-section-title">Account Details</div>
         <div class="profile-field">
-          <span class="profile-field-label">Admin ID</span>
+          <span class="profile-field-label">User ID</span>
           <span class="profile-field-value">${escapeHtml(user.id)}</span>
         </div>
         <div class="profile-field">
@@ -58,7 +63,7 @@ export function adminProfile(app) {
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Role</span>
-          <span class="chip chip-info">Super Admin</span>
+          <span class="chip chip-info">${escapeHtml(roleLabel)}</span>
         </div>
       </div>
 
@@ -92,7 +97,7 @@ export function adminProfile(app) {
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.0</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.2</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c

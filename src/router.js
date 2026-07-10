@@ -47,7 +47,7 @@ const roleAccess = {
   '#/student': ['student'],
   '#/mess':    ['student'],    // additionally requires isMessMember check
   '#/warden':  ['boys_warden', 'girls_warden'],
-  '#/gate':    ['security'],
+  '#/gate':    ['security', 'mess_incharge'],
   '#/admin':   ['admin', 'mess_incharge'],
 };
 
