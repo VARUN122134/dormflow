@@ -134,7 +134,7 @@ export async function createUser(userData) {
 export async function deleteUser(id) {
   const user = getCurrentUser();
   const target = await getUserById(id);
-  const { error } = await supabase.from('profiles').delete().eq('id', id);
+  const { error } = await supabase.rpc('admin_delete_user', { user_id: id });
   if (error) throw error;
   if (user && target) {
     logAudit('USER_DELETED', user.id, 'user', id, `${target.name} deleted by ${user.name}`);

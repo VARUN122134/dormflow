@@ -28,7 +28,7 @@ export async function adminSettings(app) {
           </div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:var(--on-surface-variant);">Version</span>
-            <span style="font-weight:600;">v3.0.4</span>
+            <span style="font-weight:600;">v3.0.5</span>
           </div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:var(--on-surface-variant);">Developer</span>
@@ -59,7 +59,7 @@ export async function adminSettings(app) {
         <button class="btn btn-secondary btn-sm" id="refreshStatsBtn" style="margin-bottom:8px;">
           <span class="material-icons-outlined" style="font-size:18px;">refresh</span> Refresh Statistics
         </button>
-        <p style="font-size:11px;color:var(--outline);margin-top:4px;">v3.0.4</p>
+        <p style="font-size:11px;color:var(--outline);margin-top:4px;">v3.0.5</p>
       </div>
     </div>
     ${adminNav('settings')}

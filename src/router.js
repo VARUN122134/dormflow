@@ -64,7 +64,7 @@ function getHomeRoute(role) {
 }
 
 function checkAccess(hash, user) {
-  if (['#/splash', '#/login', '#/register'].includes(hash)) return true;
+  if (['#/splash', '#/login', '#/register', '#/reset-password'].includes(hash)) return true;
   if (!user) return false;
 
   for (const [prefix, roles] of Object.entries(roleAccess)) {
