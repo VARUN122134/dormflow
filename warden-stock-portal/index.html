@@ -76,9 +76,42 @@ body{font-family:'Inter',sans-serif;background-color:#f8fafc;background-image:ra
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;color:#74777f;gap:8px}
 .loading .spinner{width:20px;height:20px;border:2px solid #e1e2e6;border-top-color:#005ac2;border-radius:50%;animation:spin 0.6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.app-wrapper{display:flex;min-height:100vh}.app-wrapper.hidden{display:none}
+#login-page{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+#login-page.active{display:flex}
 </style>
 </head>
 <body class="text-on-surface">
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="login-page" class="active">
+  <div class="liquid-glass-card p-container-padding rounded-3xl w-full max-w-md mx-auto">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-primary text-3xl">admin_panel_settings</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg font-black text-on-surface">Warden Login</h1>
+      <p class="text-on-surface-variant text-sm mt-2">Stock Management Portal</p>
+    </div>
+    <form id="login-form" class="space-y-5">
+      <div class="space-y-2">
+        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Email</label>
+        <input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="login-email" type="email" placeholder="warden@ucea.edu.in" required autocomplete="email"/>
+      </div>
+      <div class="space-y-2">
+        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Password</label>
+        <input class="w-full glass-input px-4 py-4 rounded-2xl font-body-lg" id="login-password" type="password" placeholder="Enter password" required autocomplete="current-password"/>
+      </div>
+      <button class="w-full primary-glow text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl" type="submit" id="login-btn">
+        <span class="material-symbols-outlined">login</span> Sign In
+      </button>
+      <p id="login-error" class="text-error text-sm text-center hidden"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ===== APP WRAPPER ===== -->
+<div class="app-wrapper hidden" id="app-wrapper">
 
 <!-- Sidebar -->
 <aside class="fixed left-0 top-0 h-screen w-[280px] bg-white/40 backdrop-blur-[40px] border-r border-slate-200/50 flex flex-col py-container-padding z-50">
@@ -95,6 +128,12 @@ body{font-family:'Inter',sans-serif;background-color:#f8fafc;background-image:ra
 </a>
 <a class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#inventory" data-section="inventory">
 <span class="material-symbols-outlined">inventory_2</span><span class="font-body-lg">Mess Inventory & Financials</span>
+</a>
+<a class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#auditlogs" data-section="auditlogs">
+<span class="material-symbols-outlined">history</span><span class="font-body-lg">Audit Logs</span>
+</a>
+<a class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant hover:text-on-surface hover:bg-white/60" href="#settings" data-section="settings">
+<span class="material-symbols-outlined">settings</span><span class="font-body-lg">Settings</span>
 </a>
 </nav>
 <div class="px-4 pt-8 border-t border-slate-200/50 mt-auto space-y-1">
@@ -178,6 +217,9 @@ body{font-family:'Inter',sans-serif;background-color:#f8fafc;background-image:ra
 <button class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/40 border border-slate-200 hover:bg-white/80 transition-all active:scale-95 group" onclick="navigateTo('fees')">
 <span class="material-symbols-outlined text-tertiary">account_balance_wallet</span><span class="font-body-lg">View Accounts</span>
 </button>
+<button class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/40 border border-slate-200 hover:bg-white/80 transition-all active:scale-95 group" onclick="navigateTo('auditlogs')">
+<span class="material-symbols-outlined text-on-surface-variant">history</span><span class="font-body-lg">View History</span>
+</button>
 </div>
 </div>
 <div class="liquid-glass-card bg-gradient-to-br from-primary/5 to-secondary/5 p-container-padding rounded-2xl h-40 relative overflow-hidden group">
@@ -239,13 +281,62 @@ body{font-family:'Inter',sans-serif;background-color:#f8fafc;background-image:ra
 <table class="w-full text-left border-collapse"><thead><tr class="border-b border-black/5 bg-black/5"><th class="py-5 px-6 font-semibold text-on-surface-variant">Commodity</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Unit Cost</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Stock</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Usage (Today)</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Remaining</th><th class="py-5 px-6 font-semibold text-on-surface-variant">Status</th></tr></thead><tbody id="inv-table" class="divide-y divide-black/5"></tbody></table>
 </div>
 <section>
-<div class="flex items-center justify-between mb-4"><h4 class="font-title-md text-title-md text-on-surface">Recent Activity</h4></div>
+<div class="flex items-center justify-between mb-4"><h4 class="font-title-md text-title-md text-on-surface">Recent Activity</h4><button class="text-primary text-sm font-bold flex items-center gap-1 hover:underline" onclick="navigateTo('auditlogs')">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></button></div>
 <div id="inv-activity" class="space-y-3"></div>
 </section>
 </section>
 
+<!-- ============ AUDIT LOGS ============ -->
+<section id="page-auditlogs" class="page-section">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div><h2 class="font-headline-lg text-headline-lg text-on-surface">Audit Logs</h2><p class="text-on-surface-variant font-body-lg">Complete trail of stock activities, issues, and restocks.</p></div>
+    <div class="flex gap-3">
+      <div class="relative flex items-center bg-slate-200/30 rounded-full px-4 py-2 border border-slate-300/40 focus-within:border-primary transition-all">
+        <span class="material-symbols-outlined text-on-surface-variant/60 mr-2 text-sm">search</span>
+        <input class="bg-transparent border-none focus:ring-0 text-body-sm w-40 text-on-surface placeholder:text-on-surface-variant/40" placeholder="Filter logs..." id="audit-search" type="text" oninput="filterAuditLogs()"/>
+      </div>
+      <div class="flex gap-2">
+        <select class="glass-input px-4 py-2 rounded-xl text-sm" id="audit-type-filter" onchange="filterAuditLogs()">
+          <option value="all">All Types</option>
+          <option value="issue">Issues</option>
+          <option value="restock">Restocks</option>
+          <option value="onboard">Onboarding</option>
+        </select>
+        <button class="p-3 rounded-xl bg-white/40 border border-black/5 hover:bg-white/60 transition-all" onclick="exportAuditLogs()"><span class="material-symbols-outlined text-on-surface-variant">download</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="liquid-glass-card rounded-3xl overflow-hidden">
+    <div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-black/5 bg-black/5"><th class="py-5 px-6 font-semibold text-on-surface-variant text-xs uppercase tracking-wider">Timestamp</th><th class="py-5 px-6 font-semibold text-on-surface-variant text-xs uppercase tracking-wider">Type</th><th class="py-5 px-6 font-semibold text-on-surface-variant text-xs uppercase tracking-wider">Details</th><th class="py-5 px-6 font-semibold text-on-surface-variant text-xs uppercase tracking-wider">Quantity</th><th class="py-5 px-6 font-semibold text-on-surface-variant text-xs uppercase tracking-wider">Performed By</th></tr></thead><tbody id="audit-table" class="divide-y divide-black/5"></tbody></table></div>
+    <div class="p-container-padding flex items-center justify-between bg-black/5"><p class="text-on-surface-variant/80 text-body-sm" id="audit-pagination">Loading...</p></div>
+  </div>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section id="page-settings" class="page-section">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+    <div><h2 class="font-headline-lg text-headline-lg text-on-surface">Settings</h2><p class="text-on-surface-variant font-body-lg">Manage commodities, vendors, and categories.</p></div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter mb-gutter">
+    <!-- Commodities -->
+    <div class="liquid-glass-card rounded-3xl overflow-hidden">
+      <div class="p-container-padding border-b border-black/5 flex justify-between items-center bg-white/20"><h3 class="font-title-md text-title-md text-on-surface">Commodities</h3><button class="p-2 rounded-lg bg-primary text-on-primary hover:brightness-110 transition-all" onclick="addNewCommodity()"><span class="material-symbols-outlined">add</span></button></div>
+      <div class="overflow-x-auto max-h-80 overflow-y-auto"><table class="w-full text-left"><thead class="bg-black/5 text-on-surface-variant uppercase text-[10px] tracking-widest sticky top-0"><tr><th class="px-6 py-4">Name</th><th class="px-6 py-4">Category</th><th class="px-6 py-4">Unit</th><th class="px-6 py-4">Stock</th></tr></thead><tbody id="settings-commodities" class="divide-y divide-black/5"></tbody></table></div>
+    </div>
+
+    <!-- Vendors -->
+    <div class="liquid-glass-card rounded-3xl overflow-hidden">
+      <div class="p-container-padding border-b border-black/5 flex justify-between items-center bg-white/20"><h3 class="font-title-md text-title-md text-on-surface">Vendors</h3><button class="p-2 rounded-lg bg-primary text-on-primary hover:brightness-110 transition-all" onclick="addNewVendor()"><span class="material-symbols-outlined">add</span></button></div>
+      <div class="overflow-x-auto max-h-80 overflow-y-auto"><table class="w-full text-left"><thead class="bg-black/5 text-on-surface-variant uppercase text-[10px] tracking-widest sticky top-0"><tr><th class="px-6 py-4">Name</th><th class="px-6 py-4">Contact</th><th class="px-6 py-4">Orders</th></tr></thead><tbody id="settings-vendors" class="divide-y divide-black/5"></tbody></table></div>
+    </div>
+  </div>
+</section>
+
 </div><!-- end content-area -->
 </main>
+
+</div><!-- end app-wrapper -->
 
 <!-- ===== TOAST CONTAINER ===== -->
 <div class="toast-container" id="toast-container"></div>
@@ -340,19 +431,60 @@ const SUPABASE_URL='https://oekdpzoewzkznxghmgby.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la2Rwem9ld3prem54Z2htZ2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjU1MDMsImV4cCI6MjA5NjMwMTUwM30.r_Im6_fzocAFee9d7KfjKBYfApW1QAktd5MdqWn23Ok';
 // Clear leftover OAuth params from URL (stale redirect)
 if(window.location.search.includes('provider')||window.location.hash.includes('access_token')){window.history.replaceState({},'',window.location.pathname+window.location.hash.split('?')[0])}
-// Clear any stale Supabase auth session from localStorage
-try{Object.keys(localStorage).filter(k=>k.startsWith('sb-')||k.includes('supabase')).forEach(k=>localStorage.removeItem(k))}catch(e){}
-const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+
+// Login form
+document.getElementById('login-form').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const btn=document.getElementById('login-btn');
+  const errEl=document.getElementById('login-error');
+  errEl.classList.add('hidden');
+  btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined animate-spin">progress_activity</span> Signing In...';
+  try{
+    await handleLogin(document.getElementById('login-email').value,document.getElementById('login-password').value);
+    document.getElementById('login-form').reset()
+  }catch(err){
+    errEl.textContent=err.message||'Invalid credentials';
+    errEl.classList.remove('hidden')
+  }finally{
+    btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined">login</span> Sign In'
+  }
+});
+
+// Logout
+document.getElementById('logout-btn').addEventListener('click',(e)=>{e.preventDefault();handleLogout()});
 
 // State
 let currentUser=null;
 let commodities=[];
+let allAuditLogs=[];
 
 // Toast
 function toast(msg,type='info'){const c=document.getElementById('toast-container');const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span>${msg}`;c.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300)},3500)}
 
-// Auth — try existing session first, fall back to anon
-async function checkAuth(){try{const{data:{user}}=await sb.auth.getUser();if(user){currentUser=user;document.getElementById('user-name').textContent=user.user_metadata?.full_name||'Warden'}}catch(e){}document.getElementById('user-role').textContent='Administrator';loadSection(getCurrentSection())}
+// Auth
+async function checkAuth(){
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(session?.user){currentUser=session.user;showApp();return}
+  }catch(e){}
+  showLogin()
+}
+function showLogin(){document.getElementById('login-page').classList.add('active');document.getElementById('app-wrapper').classList.add('hidden')}
+function showApp(){document.getElementById('login-page').classList.remove('active');document.getElementById('app-wrapper').classList.remove('hidden');document.getElementById('user-name').textContent=currentUser?.email?.split('@')[0]||'Warden';document.getElementById('user-role').textContent='Administrator';loadSection(getCurrentSection())}
+async function handleLogin(email,password){
+  const{data,error}=await sb.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  currentUser=data.user;
+  showApp();
+  toast('Welcome back, Warden!','success')
+}
+async function handleLogout(){
+  await sb.auth.signOut();
+  currentUser=null;
+  showLogin();
+  toast('Signed out','info')
+}
 
 // Router
 function getCurrentSection(){return window.location.hash.slice(1)||'dashboard'}
@@ -374,12 +506,14 @@ function loadSection(id){
       a.classList.add('bg-primary/10','text-primary','font-bold','border-l-4','border-primary','shadow-sm')
     }
   });
-  const titles={dashboard:'Dashboard',fees:'Student Accounts & Fees',inventory:'Mess Inventory & Financials'};
+  const titles={dashboard:'Dashboard',fees:'Student Accounts & Fees',inventory:'Mess Inventory & Financials',auditlogs:'Audit Logs',settings:'Settings'};
   document.getElementById('page-title').textContent=titles[id]||id;
   switch(id){
     case'dashboard':loadDashboard();break;
     case'fees':loadFees();break;
     case'inventory':loadInventory();break;
+    case'auditlogs':loadAuditLogs();break;
+    case'settings':loadSettings();break;
   }
 }
 window.addEventListener('hashchange',()=>loadSection(getCurrentSection()));
@@ -523,6 +657,86 @@ async function loadInventory(){
   }catch(e){console.error('Inventory load error:',e)}
 }
 
+// ===== AUDIT LOGS =====
+async function loadAuditLogs(){
+  const tbody=document.getElementById('audit-table');
+  const pagination=document.getElementById('audit-pagination');
+  tbody.innerHTML='<tr><td colspan="5" class="px-6 py-8"><div class="loading"><div class="spinner"></div>Loading logs...</div></td></tr>';
+  try{
+    const[issuesRes,restocksRes,onboardsRes]=await Promise.all([
+      sb.from('stock_issues').select('*,commodity:stock_commodities(name)').order('issued_at',{ascending:false}),
+      sb.from('stock_restocks').select('*,commodity:stock_commodities(name),vendor:stock_vendors(name)').order('restocked_at',{ascending:false}),
+      sb.from('profiles').select('id,name,created_at').eq('role','student').order('created_at',{ascending:false})
+    ]);
+    const logs=[];
+    (issuesRes.data||[]).forEach(i=>{logs.push({type:'issue',ts:i.issued_at,details:`Issue: ${i.commodity?.name||'Unknown'} → ${i.kitchen_unit||'N/A'}`,qty:`-${i.quantity} ${i.commodity?.unit||'units'}`,by:i.issued_by||'System'})});
+    (restocksRes.data||[]).forEach(r=>{logs.push({type:'restock',ts:r.restocked_at,details:`Restock: ${r.commodity?.name||'Unknown'} from ${r.vendor?.name||'Unknown'}`,qty:`+${r.quantity} ${r.commodity?.unit||'units'}`,by:r.restocked_by||'System'})});
+    (onboardsRes.data||[]).forEach(p=>{logs.push({type:'onboard',ts:p.created_at,details:`Onboarded: ${p.name}`,qty:'-',by:'System'})});
+    logs.sort((a,b)=>new Date(b.ts)-new Date(a.ts));
+    allAuditLogs=logs;
+    renderAuditLogs(logs);
+    pagination.textContent=`${logs.length} total entries`;
+  }catch(e){console.error('Audit log error:',e);tbody.innerHTML='<tr><td colspan="5" class="px-6 py-8 text-center text-on-surface-variant text-sm">Error loading logs</td></tr>';pagination.textContent='Error'}
+}
+function renderAuditLogs(logs){
+  const tbody=document.getElementById('audit-table');
+  tbody.innerHTML='';
+  if(logs.length===0){tbody.innerHTML='<tr><td colspan="5" class="px-6 py-8 text-center text-on-surface-variant text-sm">No matching logs found</td></tr>';return}
+  logs.forEach(l=>{
+    const typeIcon=l.type==='issue'?'restaurant_menu':l.type==='restock'?'local_shipping':'person_add';
+    const typeColor=l.type==='issue'?'bg-error/10 text-error border-error/10':l.type==='restock'?'bg-secondary/10 text-secondary border-secondary/10':'bg-primary/10 text-primary border-primary/10';
+    const dotColor=l.type==='issue'?'bg-error':l.type==='restock'?'bg-secondary':'bg-primary';
+    tbody.innerHTML+=`<tr class="hover:bg-white/40 transition-colors"><td class="px-6 py-4 text-on-surface-variant text-xs">${new Date(l.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</td><td class="px-6 py-4"><span class="${typeColor} px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center w-fit border"><span class="w-2 h-2 rounded-full ${dotColor} mr-2"></span>${l.type}</span></td><td class="px-6 py-4 text-on-surface text-sm">${l.details}</td><td class="px-6 py-4 ${l.type==='restock'?'text-secondary font-bold':'text-error font-bold'}">${l.qty}</td><td class="px-6 py-4 text-on-surface-variant text-xs">${l.by}</td></tr>`
+  });
+}
+function filterAuditLogs(){
+  const q=document.getElementById('audit-search').value.toLowerCase();
+  const typeFilter=document.getElementById('audit-type-filter').value;
+  let filtered=allAuditLogs;
+  if(typeFilter!=='all')filtered=filtered.filter(l=>l.type===typeFilter);
+  if(q)filtered=filtered.filter(l=>l.details.toLowerCase().includes(q));
+  renderAuditLogs(filtered);
+  document.getElementById('audit-pagination').textContent=`${filtered.length} of ${allAuditLogs.length} entries`;
+}
+function exportAuditLogs(){
+  let csv='Timestamp,Type,Details,Quantity,Performed By\n';
+  allAuditLogs.forEach(l=>{csv+=`"${l.ts}","${l.type}","${l.details}","${l.qty}","${l.by}"\n`});
+  downloadCSV(csv,'audit_logs.csv')
+}
+
+// ===== SETTINGS =====
+async function loadSettings(){
+  try{
+    const[commRes,vendRes]=await Promise.all([
+      sb.from('stock_commodities').select('*').order('name'),
+      sb.from('stock_vendors').select('*,stock_restocks(id)').order('name')
+    ]);
+    const commTbody=document.getElementById('settings-commodities');
+    commTbody.innerHTML='';
+    (commRes.data||[]).forEach(c=>{
+      commTbody.innerHTML+=`<tr class="hover:bg-white/40"><td class="px-6 py-4 text-on-surface font-medium text-sm">${c.name}</td><td class="px-6 py-4 text-on-surface-variant text-xs">${c.category||'Other'}</td><td class="px-6 py-4 text-on-surface-variant text-xs">${c.unit||'kg'}</td><td class="px-6 py-4"><span class="font-bold text-sm ${Number(c.current_stock)<=Number(c.reorder_level)?'text-error':'text-secondary'}">${c.current_stock||0}</span></td></tr>`
+    });
+    if(!(commRes.data||[]).length)commTbody.innerHTML='<tr><td colspan="4" class="px-6 py-8 text-center text-on-surface-variant text-sm">No commodities yet</td></tr>';
+
+    const vendTbody=document.getElementById('settings-vendors');
+    vendTbody.innerHTML='';
+    (vendRes.data||[]).forEach(v=>{
+      vendTbody.innerHTML+=`<tr class="hover:bg-white/40"><td class="px-6 py-4 text-on-surface font-medium text-sm">${v.name}</td><td class="px-6 py-4 text-on-surface-variant text-xs">${v.contact||'-'}</td><td class="px-6 py-4 text-on-surface-variant text-xs">${v.stock_restocks?.length||0}</td></tr>`
+    });
+    if(!(vendRes.data||[]).length)vendTbody.innerHTML='<tr><td colspan="3" class="px-6 py-8 text-center text-on-surface-variant text-sm">No vendors yet</td></tr>';
+  }catch(e){console.error('Settings load error:',e)}
+}
+async function addNewVendor(){
+  const name=prompt('Vendor name:');
+  if(!name)return;
+  try{
+    await sb.from('stock_vendors').insert({name});
+    toast('Vendor added!','success');
+    loadSettings();
+    loadVendorsSelect()
+  }catch(e){toast(e.message,'error')}
+}
+
 async function loadCommoditiesSelect(id){
   const sel=document.getElementById(id);
   if(!sel)return;
@@ -659,14 +873,14 @@ function downloadCSV(csv,name){
   URL.revokeObjectURL(a.href);
 }
 
-// ===== Add Commodity Quick Action (for inventory page) =====
+// ===== Add Commodity =====
 function addNewCommodity(){
   const name=prompt('Commodity name:');
   if(!name)return;
   const category=prompt('Category (Grains, Oil, Dairy, Vegetables, Other):')||'Other';
   const unit=prompt('Unit (kg, L, pieces):')||'kg';
   const reorder=parseFloat(prompt('Reorder level:')||'0');
-  sb.from('stock_commodities').insert({name,category,unit,reorder_level:reorder,current_stock:0}).then(()=>{toast('Commodity added!','success');loadInventory();loadCommoditiesSelect('issue-commodity');loadCommoditiesSelect('restock-commodity')}).catch(e=>toast(e.message,'error'));
+  sb.from('stock_commodities').insert({name,category,unit,reorder_level:reorder,current_stock:0}).then(()=>{toast('Commodity added!','success');loadInventory();loadCommoditiesSelect('issue-commodity');loadCommoditiesSelect('restock-commodity');loadSettings()}).catch(e=>toast(e.message,'error'));
 }
 
 // ===== Init =====
