@@ -431,6 +431,8 @@ const SUPABASE_URL='https://oekdpzoewzkznxghmgby.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la2Rwem9ld3prem54Z2htZ2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjU1MDMsImV4cCI6MjA5NjMwMTUwM30.r_Im6_fzocAFee9d7KfjKBYfApW1QAktd5MdqWn23Ok';
 // Clear leftover OAuth params from URL (stale redirect)
 if(window.location.search.includes('provider')||window.location.hash.includes('access_token')){window.history.replaceState({},'',window.location.pathname+window.location.hash.split('?')[0])}
+// Clear stale session data from prior persistSession:false visits
+try{Object.keys(localStorage).filter(k=>{try{return k.startsWith('sb-'+SUPABASE_URL.split('//')[1].split('.')[0])}catch(e){return false}}).forEach(k=>localStorage.removeItem(k))}catch(e){}
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 
 // Login form
@@ -473,8 +475,13 @@ async function checkAuth(){
 function showLogin(){document.getElementById('login-page').classList.add('active');document.getElementById('app-wrapper').classList.add('hidden')}
 function showApp(){document.getElementById('login-page').classList.remove('active');document.getElementById('app-wrapper').classList.remove('hidden');document.getElementById('user-name').textContent=currentUser?.email?.split('@')[0]||'Warden';document.getElementById('user-role').textContent='Administrator';loadSection(getCurrentSection())}
 async function handleLogin(email,password){
-  const{data,error}=await sb.auth.signInWithPassword({email,password});
+  const result=await Promise.race([
+    sb.auth.signInWithPassword({email,password}),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Request timed out. Check your network or VPN.')),15000))
+  ]);
+  const{data,error}=result;
   if(error)throw error;
+  if(!data?.user)throw new Error('No user returned');
   currentUser=data.user;
   showApp();
   toast('Welcome back, Warden!','success')
