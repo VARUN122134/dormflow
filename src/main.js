@@ -31,6 +31,9 @@ import { gateHistory, gateInHouse, gateSystem } from './pages/gate/sub-pages.js'
 import adminDashboard from './pages/admin/dashboard.js';
 import userManagement from './pages/admin/users.js';
 import { adminLeaves, adminProfile } from './pages/admin/sub-pages.js';
+import { adminAuditLogs } from './pages/admin/audit-logs.js';
+import { adminConfiguration } from './pages/admin/configuration.js';
+import { adminSettings } from './pages/admin/settings.js';
 
 // New feature pages
 import studentMessPage from './pages/student/mess.js';
@@ -92,6 +95,9 @@ registerRoute('#/admin/dashboard', adminDashboard);
 registerRoute('#/admin/users', userManagement);
 registerRoute('#/admin/leaves', adminLeaves);
 registerRoute('#/admin/profile', adminProfile);
+registerRoute('#/admin/audit', adminAuditLogs);
+registerRoute('#/admin/configuration', adminConfiguration);
+registerRoute('#/admin/settings', adminSettings);
 
 // Student new routes
 registerRoute('#/student/mess', studentMessPage);
@@ -115,5 +121,5 @@ registerRoute('#/admin/manage', adminManage);
 const defaultStyle = document.querySelector('link[href="/src/style.css"]');
 if (defaultStyle) defaultStyle.remove();
 
-console.log('%cUCE IT v3.0.3', 'color:#1a56db;font-size:16px;font-weight:bold;');
+console.log('%cUCE IT v3.0.4', 'color:#1a56db;font-size:16px;font-weight:bold;');
 console.log('%cHostel Management · Mess · Announcements · Powered by Supabase', 'color:#555;font-size:12px;');

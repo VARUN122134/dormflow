@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { logAudit } from './store.js';
 
 let _currentProfile = null;
 
@@ -18,6 +19,7 @@ export async function login(email, password) {
   }
 
   _currentProfile = profile;
+  logAudit('LOGIN', profile.id, 'user', profile.id, `${profile.name} signed in`);
   return { user: data.user, profile };
 }
 
@@ -112,8 +114,12 @@ export async function register(email, password, profileData) {
 }
 
 export async function logout() {
+  const user = _currentProfile;
   _currentProfile = null;
   const { error } = await supabase.auth.signOut();
+  if (!error && user) {
+    logAudit('LOGOUT', user.id, 'user', user.id, `${user.name} signed out`);
+  }
   if (error) throw error;
 }
 

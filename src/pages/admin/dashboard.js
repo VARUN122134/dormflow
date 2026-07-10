@@ -1,5 +1,5 @@
 import { getCurrentUser } from '../../auth.js';
-import { getSystemStats, getRecentGateActivity, getUsers } from '../../store.js';
+import { getSystemStats, getRecentGateActivity, getUsers, getMonthlyLeaveTrends } from '../../store.js';
 import { adminNav, formatRelativeTime, renderPageHeader, getInitials, escapeHtml } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
@@ -7,9 +7,12 @@ export default async function adminDashboard(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const stats = await getSystemStats();
-  const recentActivity = await getRecentGateActivity(5);
-  const allUsers = await getUsers();
+  const [stats, recentActivity, allUsers, trendData] = await Promise.all([
+    getSystemStats(),
+    getRecentGateActivity(5),
+    getUsers(),
+    getMonthlyLeaveTrends(6),
+  ]);
   const wardens = allUsers.filter(u => u.role === 'boys_warden' || u.role === 'girls_warden');
   const security = allUsers.filter(u => u.role === 'security');
   let chartInstance = null;
@@ -36,13 +39,13 @@ export default async function adminDashboard(app) {
       <a href="#/admin/users" class="sidebar-item">
         <span class="material-icons-outlined">badge</span> Staff Management
       </a>
-      <a href="#" class="sidebar-item" onclick="event.preventDefault();">
+      <a href="#/admin/configuration" class="sidebar-item">
         <span class="material-icons-outlined">settings_applications</span> Configurations
       </a>
-      <a href="#" class="sidebar-item" onclick="event.preventDefault();">
+      <a href="#/admin/audit" class="sidebar-item">
         <span class="material-icons-outlined">history_edu</span> Audit Logs
       </a>
-      <a href="#" class="sidebar-item" onclick="event.preventDefault();">
+      <a href="#/admin/settings" class="sidebar-item">
         <span class="material-icons-outlined">settings</span> Settings
       </a>
     </nav>
@@ -115,7 +118,7 @@ export default async function adminDashboard(app) {
     ${adminNav('dashboard')}
   `;
 
-  renderMonthlyChart();
+  renderMonthlyChart(trendData);
 
   return () => {
     if (chartInstance) {
@@ -124,19 +127,18 @@ export default async function adminDashboard(app) {
     }
   };
 
-  function renderMonthlyChart() {
+  function renderMonthlyChart(data) {
     const canvas = document.getElementById('monthlyChart');
     if (!canvas) return;
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     chartInstance = new Chart(canvas, {
       type: 'line',
       data: {
-        labels: months,
+        labels: data.labels,
         datasets: [
           {
             label: 'Boys Hostel',
-            data: [45, 52, 38, 65, 58, 72],
+            data: data.boys,
             borderColor: 'rgba(26, 86, 219, 0.8)',
             backgroundColor: 'rgba(26, 86, 219, 0.1)',
             fill: true,
@@ -147,7 +149,7 @@ export default async function adminDashboard(app) {
           },
           {
             label: 'Girls Hostel',
-            data: [32, 40, 35, 48, 42, 55],
+            data: data.girls,
             borderColor: 'rgba(173, 59, 0, 0.8)',
             backgroundColor: 'rgba(173, 59, 0, 0.1)',
             fill: true,

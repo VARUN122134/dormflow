@@ -119,7 +119,12 @@ export async function uploadAvatar(userId, file) {
 }
 
 export async function approveUser(userId) {
-  return updateUser(userId, { isApproved: true });
+  await updateUser(userId, { isApproved: true });
+  const user = getCurrentUser();
+  const target = await getUserById(userId);
+  if (user && target) {
+    logAudit('USER_APPROVED', user.id, 'user', userId, `${target.name} approved by ${user.name}`);
+  }
 }
 
 export async function createUser(userData) {
@@ -127,8 +132,13 @@ export async function createUser(userData) {
 }
 
 export async function deleteUser(id) {
+  const user = getCurrentUser();
+  const target = await getUserById(id);
   const { error } = await supabase.from('profiles').delete().eq('id', id);
   if (error) throw error;
+  if (user && target) {
+    logAudit('USER_DELETED', user.id, 'user', id, `${target.name} deleted by ${user.name}`);
+  }
 }
 
 export async function getLeaves() {
@@ -222,6 +232,12 @@ export async function approveLeave(leaveId, wardenId) {
   }).select().single();
   if (opErr) throw opErr;
 
+  const actor = getCurrentUser();
+  if (actor) {
+    const student = await getUserById(leave.studentId);
+    logAudit('LEAVE_APPROVED', actor.id, 'leave', leaveId, `${student?.name || 'Student'}'s leave approved by ${actor.name}`);
+  }
+
   return { leave, outpass: normOutpass(opData) };
 }
 
@@ -233,6 +249,12 @@ export async function rejectLeave(leaveId, wardenId, reason = '') {
     rejection_reason: reason,
   }).eq('leave_id', leaveId).select().single();
   if (error) throw error;
+  const actor = getCurrentUser();
+  if (actor) {
+    const leave = normLeave(data);
+    const student = await getUserById(leave.studentId);
+    logAudit('LEAVE_REJECTED', actor.id, 'leave', leaveId, `${student?.name || 'Student'}'s leave rejected by ${actor.name}${reason ? ': ' + reason : ''}`);
+  }
   return normLeave(data);
 }
 
@@ -305,6 +327,8 @@ export async function scanOutpass(qrData, securityId) {
       scanned_out_by: securityId,
     }).eq('pass_id', passId);
     await updateUser(outpass.studentId, { activeStatus: 'OUT' });
+    const actor = getCurrentUser();
+    if (actor) logAudit('GATE_SCAN_OUT', securityId, 'outpass', passId, `${student.name} scanned OUT by ${actor.name}`);
     return { success: true, action: 'DEPARTURE', student, leave, message: `${student.name} checked OUT successfully` };
   }
 
@@ -322,6 +346,8 @@ export async function scanOutpass(qrData, securityId) {
       scanned_in_by: securityId,
     }).eq('pass_id', passId);
     await updateUser(outpass.studentId, { activeStatus: 'IN' });
+    const actor = getCurrentUser();
+    if (actor) logAudit('GATE_SCAN_IN', securityId, 'outpass', passId, `${student.name} scanned IN by ${actor.name}`);
     return { success: true, action: 'RETURN', student, leave, message: `${student.name} checked IN successfully` };
   }
 
@@ -926,4 +952,100 @@ export async function calculateDailyBill(dateStr, userId) {
     const { data: bill } = await supabase.from('mess_daily_bills').upsert({ bill_date: dateStr, total_stock_cost: totalStockCost, total_students: uniqueStudents.length, per_student_cost: perStudentCost, calculated_by: userId }).select().single();
     return bill;
   } catch { return null; }
+}
+
+/* ========================================
+   AUDIT LOGS
+   ======================================== */
+
+export async function logAudit(action, actorId, targetType, targetId, details) {
+  try {
+    await supabase.from('audit_logs').insert({
+      action,
+      actor_id: actorId,
+      target_type: targetType,
+      target_id: targetId,
+      details,
+    });
+  } catch { /* silent */ }
+}
+
+export async function getAuditLogs(limit = 50) {
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('*, actor:profiles!audit_logs_actor_id_fkey(name)')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) return [];
+  return (data || []).map(r => ({
+    id: r.id,
+    action: r.action,
+    actorName: r.actor?.name || 'System',
+    actorId: r.actor_id,
+    targetType: r.target_type,
+    targetId: r.target_id,
+    details: r.details,
+    createdAt: r.created_at,
+  }));
+}
+
+/* ========================================
+   APP CONFIG
+   ======================================== */
+
+export async function getAppConfig() {
+  const { data, error } = await supabase.from('app_config').select('*');
+  if (error) return {};
+  const config = {};
+  (data || []).forEach(r => { config[r.key] = r.value; });
+  return config;
+}
+
+export async function updateAppConfig(key, value, userId) {
+  const { data, error } = await supabase
+    .from('app_config')
+    .upsert({ key, value, updated_at: new Date().toISOString(), updated_by: userId })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+/* ========================================
+   MONTHLY LEAVE TRENDS (for chart)
+   ======================================== */
+
+export async function getMonthlyLeaveTrends(monthsBack = 6) {
+  const months = [];
+  const now = new Date();
+  for (let i = monthsBack - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    months.push({ label: d.toLocaleString('en-US', { month: 'short' }), year: y, month: m, start: `${y}-${m}-01` });
+  }
+
+  const { data: leaves, error } = await supabase
+    .from('leaves')
+    .select('created_at, profiles!leaves_student_id_fkey(hostel_type)')
+    .gte('created_at', months[0].start);
+  if (error) return { labels: months.map(m => m.label), boys: months.map(() => 0), girls: months.map(() => 0) };
+
+  const boys = months.map(() => 0);
+  const girls = months.map(() => 0);
+
+  (leaves || []).forEach(l => {
+    const created = new Date(l.created_at);
+    const monthStr = `${created.getFullYear()}-${String(created.getMonth() + 1).padStart(2, '0')}`;
+    const idx = months.findIndex(m => `${m.year}-${m.month}` === monthStr);
+    if (idx === -1) return;
+    const hostel = l.profiles?.hostel_type || '';
+    if (hostel.toLowerCase().includes('boys')) {
+      boys[idx]++;
+    } else if (hostel.toLowerCase().includes('girls')) {
+      girls[idx]++;
+    }
+  });
+
+  return { labels: months.map(m => m.label), boys, girls };
 }
