@@ -90,54 +90,21 @@ export default function loginPage(app) {
       <div class="modal">
         <div class="modal-title">Reset Password</div>
         <div class="modal-body">
-          <p style="margin-bottom:var(--space-md);font-size:13px;color:var(--on-surface-variant);">Enter your email address and we'll send you a password reset link.</p>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" id="resetEmail" placeholder="Enter your email" />
+          <div style="text-align:center;padding:var(--space-md) 0;">
+            <span class="material-icons-outlined" style="font-size:48px;color:var(--primary-container);">support_agent</span>
+            <p style="margin-top:var(--space-md);font-size:14px;color:var(--on-surface-variant);line-height:1.6;">
+              Users do not have email access. Please contact the <strong>Admin</strong> to reset your password.
+            </p>
           </div>
-          <div id="resetError" style="display:none;margin-top:8px;padding:8px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-md);font-size:12px;text-align:center;"></div>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-secondary btn-sm" id="resetCancel">Cancel</button>
-          <button class="btn btn-primary btn-sm" id="resetSend">Send Reset Link</button>
+          <button class="btn btn-primary btn-sm" id="resetOk">Got it</button>
         </div>
       </div>
     `;
     document.body.appendChild(backdrop);
-
-    backdrop.querySelector('#resetCancel').onclick = () => backdrop.remove();
+    backdrop.querySelector('#resetOk').onclick = () => backdrop.remove();
     backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
-
-    backdrop.querySelector('#resetSend').addEventListener('click', async () => {
-      const emailInput = backdrop.querySelector('#resetEmail');
-      const email = emailInput.value.trim();
-      const errorDiv = backdrop.querySelector('#resetError');
-      errorDiv.style.display = 'none';
-
-      if (!email) {
-        errorDiv.textContent = 'Please enter your email';
-        errorDiv.style.display = 'block';
-        return;
-      }
-
-      const btn = backdrop.querySelector('#resetSend');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-
-      try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + window.location.pathname + '#/reset-password',
-        });
-        if (error) throw error;
-        showToast('Password reset link sent! Check your email.', 'success');
-        backdrop.remove();
-      } catch (err) {
-        errorDiv.textContent = err.message || 'Failed to send reset link';
-        errorDiv.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Send Reset Link';
-      }
-    });
   });
 
   document.getElementById('loginBtn').addEventListener('click', async () => {

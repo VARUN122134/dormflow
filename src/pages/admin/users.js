@@ -1,6 +1,7 @@
 import { getCurrentUser } from '../../auth.js';
 import { getUsers, deleteUser, approveUser } from '../../store.js';
 import { adminNav, statusChip, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
+import { supabase } from '../../supabase.js';
 
 export default async function userManagement(app) {
   const user = getCurrentUser();
@@ -97,6 +98,9 @@ export default async function userManagement(app) {
                   </button>
                 ` : ''}
                 ${u.id !== user.id ? `
+                  <button class="btn btn-icon btn-ghost" style="width:36px;height:36px;" data-reset-pw="${u.id}" title="Reset password">
+                    <span class="material-icons-outlined" style="font-size:18px;color:var(--primary);">lock_reset</span>
+                  </button>
                   <button class="btn btn-icon btn-ghost" style="width:36px;height:36px;" data-delete="${u.id}" title="Delete user">
                     <span class="material-icons-outlined" style="font-size:18px;color:var(--error);">delete</span>
                   </button>
@@ -162,6 +166,52 @@ export default async function userManagement(app) {
           'Delete',
           'btn-danger'
         );
+      });
+    });
+
+    document.querySelectorAll('[data-reset-pw]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetUser = displayUsers.find(u => u.id === btn.dataset.resetPw);
+        if (!targetUser) return;
+        const existing = document.querySelector('#resetPwModal');
+        if (existing) existing.remove();
+        const modal = document.createElement('div');
+        modal.id = 'resetPwModal';
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+          <div class="modal">
+            <div class="modal-header">
+              <h3>Reset Password</h3>
+              <button class="btn btn-icon btn-ghost modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p>Set a new password for <strong>${escapeHtml(targetUser.name)}</strong> (${escapeHtml(targetUser.email)})</p>
+              <input class="form-input" type="text" id="newPasswordInput" placeholder="Enter new password" autocomplete="new-password" style="margin-top:var(--space-sm);" />
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost modal-close">Cancel</button>
+              <button class="btn btn-primary" id="confirmResetPw">Reset Password</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('visible'), 10);
+        const close = () => { modal.classList.remove('visible'); setTimeout(() => modal.remove(), 200); };
+        modal.querySelectorAll('.modal-close').forEach(el => el.addEventListener('click', close));
+        modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+        document.getElementById('confirmResetPw').addEventListener('click', async () => {
+          const pw = document.getElementById('newPasswordInput').value.trim();
+          if (!pw || pw.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+          document.getElementById('confirmResetPw').disabled = true;
+          try {
+            await supabase.rpc('admin_reset_password', { user_id: targetUser.id, new_password: pw });
+            showToast(`Password reset for ${targetUser.name}`, 'success');
+            close();
+          } catch (err) {
+            showToast('Failed to reset password: ' + err.message, 'error');
+            document.getElementById('confirmResetPw').disabled = false;
+          }
+        });
       });
     });
   }

@@ -127,19 +127,18 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       <div class="modal">
         <div class="modal-title">Reset Password</div>
         <div class="modal-body">
-          <p style="margin-bottom:var(--space-md);font-size:13px;color:var(--on-surface-variant);">Enter your email address and we'll send you a password reset link.</p>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" id="resetEmail" placeholder="Enter your email" />
+          <div style="text-align:center;padding:var(--space-md) 0;">
+            <span class="material-icons-outlined" style="font-size:48px;color:var(--primary-container);">support_agent</span>
+            <p style="margin-top:var(--space-md);font-size:14px;color:var(--on-surface-variant);line-height:1.6;">
+              Users do not have email access. Please contact the <strong>Admin</strong> to reset your password.
+            </p>
           </div>
-          <div id="resetError" style="display:none;margin-top:8px;padding:8px;background:var(--error-container);color:var(--on-error-container);border-radius:var(--radius-md);font-size:12px;text-align:center;"></div>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-secondary btn-sm" id="resetCancel">Cancel</button>
-          <button class="btn btn-primary btn-sm" id="resetSend">Send Reset Link</button>
+          <button class="btn btn-primary btn-sm" id="resetOk">Got it</button>
         </div>
       </div>
-    `,document.body.appendChild(t),t.querySelector(`#resetCancel`).onclick=()=>t.remove(),t.onclick=e=>{e.target===t&&t.remove()},t.querySelector(`#resetSend`).addEventListener(`click`,async()=>{let e=t.querySelector(`#resetEmail`).value.trim(),n=t.querySelector(`#resetError`);if(n.style.display=`none`,!e){n.textContent=`Please enter your email`,n.style.display=`block`;return}let r=t.querySelector(`#resetSend`);r.disabled=!0,r.textContent=`Sending...`;try{let{error:n}=await X.auth.resetPasswordForEmail(e,{redirectTo:window.location.origin+window.location.pathname+`#/reset-password`});if(n)throw n;Q(`Password reset link sent! Check your email.`,`success`),t.remove()}catch(e){n.textContent=e.message||`Failed to send reset link`,n.style.display=`block`,r.disabled=!1,r.textContent=`Send Reset Link`}})}),document.getElementById(`loginBtn`).addEventListener(`click`,async()=>{let e=document.getElementById(`loginEmail`).value.trim(),t=document.getElementById(`loginPassword`).value,n=document.getElementById(`loginError`);if(n.style.display=`none`,!e||!t){Q(`Please enter your credentials`,`error`);return}/^\d{12}$/.test(e)&&(e=`${e}@ucea.edu.in`);let r=document.getElementById(`loginBtn`);r.disabled=!0,r.innerHTML=`<span class="material-icons-outlined" style="font-size:18px;animation:spin 1s linear infinite;">refresh</span> Signing in…`;try{let{profile:n}=await Mg(e,t);Q(`Welcome back, ${n.name.split(` `)[0]}!`,`success`);let r={student:`#/student/dashboard`,boys_warden:`#/warden/dashboard`,girls_warden:`#/warden/dashboard`,security:`#/gate/dashboard`,admin:`#/admin/dashboard`}[n.role]||`#/student/dashboard`;r===window.location.hash?Kg(`#/student/dashboard`):Kg(r)}catch(e){n.textContent=e.message||`Invalid credentials. Please try again.`,n.style.display=`block`,r.disabled=!1,r.innerHTML=`<span class="material-icons-outlined" style="font-size:18px;">login</span> Login`}}),document.getElementById(`loginPassword`).addEventListener(`keydown`,e=>{e.key===`Enter`&&document.getElementById(`loginBtn`).click()})}function S_(e){e.innerHTML=`
+    `,document.body.appendChild(t),t.querySelector(`#resetOk`).onclick=()=>t.remove(),t.onclick=e=>{e.target===t&&t.remove()}}),document.getElementById(`loginBtn`).addEventListener(`click`,async()=>{let e=document.getElementById(`loginEmail`).value.trim(),t=document.getElementById(`loginPassword`).value,n=document.getElementById(`loginError`);if(n.style.display=`none`,!e||!t){Q(`Please enter your credentials`,`error`);return}/^\d{12}$/.test(e)&&(e=`${e}@ucea.edu.in`);let r=document.getElementById(`loginBtn`);r.disabled=!0,r.innerHTML=`<span class="material-icons-outlined" style="font-size:18px;animation:spin 1s linear infinite;">refresh</span> Signing in…`;try{let{profile:n}=await Mg(e,t);Q(`Welcome back, ${n.name.split(` `)[0]}!`,`success`);let r={student:`#/student/dashboard`,boys_warden:`#/warden/dashboard`,girls_warden:`#/warden/dashboard`,security:`#/gate/dashboard`,admin:`#/admin/dashboard`}[n.role]||`#/student/dashboard`;r===window.location.hash?Kg(`#/student/dashboard`):Kg(r)}catch(e){n.textContent=e.message||`Invalid credentials. Please try again.`,n.style.display=`block`,r.disabled=!1,r.innerHTML=`<span class="material-icons-outlined" style="font-size:18px;">login</span> Login`}}),document.getElementById(`loginPassword`).addEventListener(`keydown`,e=>{e.key===`Enter`&&document.getElementById(`loginBtn`).click()})}function S_(e){e.innerHTML=`
     <div class="auth-screen">
       <div class="auth-header">
         <div class="auth-header-icon" style="background: transparent; box-shadow: none; border-radius: 0; width: 64px; height: 64px;">
@@ -1272,7 +1271,7 @@ Minimum version required to store current data is: `+c+`.
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Version</span>
-          <span class="profile-field-value">v3.0.5</span>
+          <span class="profile-field-value">v3.0.6</span>
         </div>
       </div>
 
@@ -1306,7 +1305,7 @@ Minimum version required to store current data is: `+c+`.
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.5</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1480,6 +1479,9 @@ Minimum version required to store current data is: `+c+`.
                   </button>
                 `}
                 ${e.id===t.id?``:`
+                  <button class="btn btn-icon btn-ghost" style="width:36px;height:36px;" data-reset-pw="${e.id}" title="Reset password">
+                    <span class="material-icons-outlined" style="font-size:18px;color:var(--primary);">lock_reset</span>
+                  </button>
                   <button class="btn btn-icon btn-ghost" style="width:36px;height:36px;" data-delete="${e.id}" title="Delete user">
                     <span class="material-icons-outlined" style="font-size:18px;color:var(--error);">delete</span>
                   </button>
@@ -1490,7 +1492,22 @@ Minimum version required to store current data is: `+c+`.
         </div>
       </div>
       ${g_(`users`)}
-    `,document.getElementById(`userSearch`)?.addEventListener(`input`,async e=>{n=e.target.value,await a();let t=document.getElementById(`userSearch`);t&&(t.focus(),t.setSelectionRange(t.value.length,t.value.length))}),document.querySelectorAll(`[data-role]`).forEach(e=>{e.addEventListener(`click`,async()=>{r=e.dataset.role,await a()})}),document.querySelectorAll(`[data-tab]`).forEach(e=>{e.addEventListener(`click`,async()=>{i=e.dataset.tab,await a()})}),document.querySelectorAll(`[data-approve]`).forEach(e=>{e.addEventListener(`click`,async()=>{let t=c.find(t=>t.id===e.dataset.approve);t&&b_(`Approve User`,`Approve <strong>${t.name}</strong>? They will be able to log in immediately after approval.`,async()=>{try{await jh(e.dataset.approve),Q(`${t.name} approved successfully`,`success`),await a()}catch(e){Q(`Failed to approve user: `+e.message,`error`)}},`Approve`,`btn-success`)})}),document.querySelectorAll(`[data-delete]`).forEach(e=>{e.addEventListener(`click`,()=>{b_(`Confirm Deletion`,`Are you sure you want to delete <strong>${c.find(t=>t.id===e.dataset.delete)?.name}</strong>? This action is permanent and will remove all associated records from the hostel database.`,async()=>{await Mh(e.dataset.delete),Q(`User deleted`,`info`),await a()},`Delete`,`btn-danger`)})})}}async function Fy(e){let t=(await Nh()).sort((e,t)=>new Date(t.createdAt)-new Date(e.createdAt));e.innerHTML=`
+    `,document.getElementById(`userSearch`)?.addEventListener(`input`,async e=>{n=e.target.value,await a();let t=document.getElementById(`userSearch`);t&&(t.focus(),t.setSelectionRange(t.value.length,t.value.length))}),document.querySelectorAll(`[data-role]`).forEach(e=>{e.addEventListener(`click`,async()=>{r=e.dataset.role,await a()})}),document.querySelectorAll(`[data-tab]`).forEach(e=>{e.addEventListener(`click`,async()=>{i=e.dataset.tab,await a()})}),document.querySelectorAll(`[data-approve]`).forEach(e=>{e.addEventListener(`click`,async()=>{let t=c.find(t=>t.id===e.dataset.approve);t&&b_(`Approve User`,`Approve <strong>${t.name}</strong>? They will be able to log in immediately after approval.`,async()=>{try{await jh(e.dataset.approve),Q(`${t.name} approved successfully`,`success`),await a()}catch(e){Q(`Failed to approve user: `+e.message,`error`)}},`Approve`,`btn-success`)})}),document.querySelectorAll(`[data-delete]`).forEach(e=>{e.addEventListener(`click`,()=>{b_(`Confirm Deletion`,`Are you sure you want to delete <strong>${c.find(t=>t.id===e.dataset.delete)?.name}</strong>? This action is permanent and will remove all associated records from the hostel database.`,async()=>{await Mh(e.dataset.delete),Q(`User deleted`,`info`),await a()},`Delete`,`btn-danger`)})}),document.querySelectorAll(`[data-reset-pw]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=c.find(t=>t.id===e.dataset.resetPw);if(!t)return;let n=document.querySelector(`#resetPwModal`);n&&n.remove();let r=document.createElement(`div`);r.id=`resetPwModal`,r.className=`modal-overlay`,r.innerHTML=`
+          <div class="modal">
+            <div class="modal-header">
+              <h3>Reset Password</h3>
+              <button class="btn btn-icon btn-ghost modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p>Set a new password for <strong>${Z(t.name)}</strong> (${Z(t.email)})</p>
+              <input class="form-input" type="text" id="newPasswordInput" placeholder="Enter new password" autocomplete="new-password" style="margin-top:var(--space-sm);" />
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost modal-close">Cancel</button>
+              <button class="btn btn-primary" id="confirmResetPw">Reset Password</button>
+            </div>
+          </div>
+        `,document.body.appendChild(r),setTimeout(()=>r.classList.add(`visible`),10);let i=()=>{r.classList.remove(`visible`),setTimeout(()=>r.remove(),200)};r.querySelectorAll(`.modal-close`).forEach(e=>e.addEventListener(`click`,i)),r.addEventListener(`click`,e=>{e.target===r&&i()}),document.getElementById(`confirmResetPw`).addEventListener(`click`,async()=>{let e=document.getElementById(`newPasswordInput`).value.trim();if(!e||e.length<6){Q(`Password must be at least 6 characters`,`error`);return}document.getElementById(`confirmResetPw`).disabled=!0;try{await X.rpc(`admin_reset_password`,{user_id:t.id,new_password:e}),Q(`Password reset for ${t.name}`,`success`),i()}catch(e){Q(`Failed to reset password: `+e.message,`error`),document.getElementById(`confirmResetPw`).disabled=!1}})})})}}async function Fy(e){let t=(await Nh()).sort((e,t)=>new Date(t.createdAt)-new Date(e.createdAt));e.innerHTML=`
     ${y_(`All Leave Requests`,`${t.length} total`)}
     <div class="page">
       <div style="display:flex;flex-direction:column;gap:var(--space-sm);" class="stagger">
@@ -1565,7 +1582,7 @@ Minimum version required to store current data is: `+c+`.
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.5</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1666,7 +1683,7 @@ Minimum version required to store current data is: `+c+`.
           </div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:var(--on-surface-variant);">Version</span>
-            <span style="font-weight:600;">v3.0.5</span>
+            <span style="font-weight:600;">v3.0.6</span>
           </div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:var(--on-surface-variant);">Developer</span>
@@ -1697,7 +1714,7 @@ Minimum version required to store current data is: `+c+`.
         <button class="btn btn-secondary btn-sm" id="refreshStatsBtn" style="margin-bottom:8px;">
           <span class="material-icons-outlined" style="font-size:18px;">refresh</span> Refresh Statistics
         </button>
-        <p style="font-size:11px;color:var(--outline);margin-top:4px;">v3.0.5</p>
+        <p style="font-size:11px;color:var(--outline);margin-top:4px;">v3.0.6</p>
       </div>
     </div>
     ${g_(`settings`)}
@@ -2670,4 +2687,4 @@ Minimum version required to store current data is: `+c+`.
           <button class="btn btn-primary btn-sm" id="modalConfirm">Create Poll</button>
         </div>
       </div>
-    `,document.body.appendChild(e);let r=2;document.getElementById(`addOptionBtn`).onclick=()=>{r++;let e=document.createElement(`input`);e.className=`form-input`,e.style.marginBottom=`6px`,e.placeholder=`Option ${r}`,document.getElementById(`pollOptions`).appendChild(e)},e.querySelector(`#modalCancel`).onclick=()=>e.remove(),e.querySelector(`#modalConfirm`).onclick=async()=>{let r=document.getElementById(`pollTitle`).value.trim();if(!r){Q(`Title required`,`warning`);return}let i=document.getElementById(`pollOptions`).querySelectorAll(`input`),a=Array.from(i).map(e=>e.value.trim()).filter(Boolean);if(a.length<2){Q(`At least 2 options`,`warning`);return}try{await dg({title:r,description:document.getElementById(`pollDesc`).value.trim(),authorId:t.id,options:a,expiresAt:document.getElementById(`pollExpires`).value||null}),Q(`Poll created!`,`success`),e.remove(),n()}catch(e){Q(e.message||`Failed`,`error`)}},e.onclick=t=>{t.target===e&&e.remove()}}n()}Vo.register(...Wl);async function fb(){let e=await Ig();e&&(document.addEventListener(`routechange`,()=>{let t=location.hash;t.startsWith(`#/warden`)||t.startsWith(`#/admin`)||t.startsWith(`#/mess`)?cb(e):lb()}),(location.hash.startsWith(`#/warden`)||location.hash.startsWith(`#/admin`)||location.hash.startsWith(`#/mess`))&&cb(e)),$g()}fb(),Gg(`#/splash`,e_),Gg(`#/login`,x_),Gg(`#/register`,S_),Gg(`#/reset-password`,C_),Gg(`#/student/dashboard`,w_),Gg(`#/student/apply`,T_),Gg(`#/student/history`,E_),Gg(`#/student/profile`,D_),Gg(`#/student/outpass`,wy),Gg(`#/warden/dashboard`,Ty),Gg(`#/warden/requests`,Ey),Gg(`#/warden/residents`,Dy),Gg(`#/warden/profile`,Oy),Gg(`#/gate/dashboard`,ky),Gg(`#/gate/history`,Ay),Gg(`#/gate/inhouse`,jy),Gg(`#/gate/system`,My),Gg(`#/admin/dashboard`,Ny),Gg(`#/admin/users`,Py),Gg(`#/admin/leaves`,Fy),Gg(`#/admin/profile`,Iy),Gg(`#/admin/audit`,Ly),Gg(`#/admin/configuration`,Ry),Gg(`#/admin/settings`,zy),Gg(`#/student/mess`,By),Gg(`#/student/announcements`,Vy),Gg(`#/student/polls`,Hy),Gg(`#/mess/dashboard`,Uy),Gg(`#/mess/manage-menu`,Wy),Gg(`#/mess/ratings`,Gy),Gg(`#/warden/announcements`,Ky),Gg(`#/warden/attendance`,qy),Gg(`#/warden/auto-attendance`,nb),Gg(`#/admin/mess`,ub),Gg(`#/admin/manage`,db);var pb=document.querySelector(`link[href="/src/style.css"]`);pb&&pb.remove(),console.log(`%cUCE IT v3.0.5`,`color:#1a56db;font-size:16px;font-weight:bold;`),console.log(`%cHostel Management · Mess · Announcements · Powered by Supabase`,`color:#555;font-size:12px;`);
+    `,document.body.appendChild(e);let r=2;document.getElementById(`addOptionBtn`).onclick=()=>{r++;let e=document.createElement(`input`);e.className=`form-input`,e.style.marginBottom=`6px`,e.placeholder=`Option ${r}`,document.getElementById(`pollOptions`).appendChild(e)},e.querySelector(`#modalCancel`).onclick=()=>e.remove(),e.querySelector(`#modalConfirm`).onclick=async()=>{let r=document.getElementById(`pollTitle`).value.trim();if(!r){Q(`Title required`,`warning`);return}let i=document.getElementById(`pollOptions`).querySelectorAll(`input`),a=Array.from(i).map(e=>e.value.trim()).filter(Boolean);if(a.length<2){Q(`At least 2 options`,`warning`);return}try{await dg({title:r,description:document.getElementById(`pollDesc`).value.trim(),authorId:t.id,options:a,expiresAt:document.getElementById(`pollExpires`).value||null}),Q(`Poll created!`,`success`),e.remove(),n()}catch(e){Q(e.message||`Failed`,`error`)}},e.onclick=t=>{t.target===e&&e.remove()}}n()}Vo.register(...Wl);async function fb(){let e=await Ig();e&&(document.addEventListener(`routechange`,()=>{let t=location.hash;t.startsWith(`#/warden`)||t.startsWith(`#/admin`)||t.startsWith(`#/mess`)?cb(e):lb()}),(location.hash.startsWith(`#/warden`)||location.hash.startsWith(`#/admin`)||location.hash.startsWith(`#/mess`))&&cb(e)),$g()}fb(),Gg(`#/splash`,e_),Gg(`#/login`,x_),Gg(`#/register`,S_),Gg(`#/reset-password`,C_),Gg(`#/student/dashboard`,w_),Gg(`#/student/apply`,T_),Gg(`#/student/history`,E_),Gg(`#/student/profile`,D_),Gg(`#/student/outpass`,wy),Gg(`#/warden/dashboard`,Ty),Gg(`#/warden/requests`,Ey),Gg(`#/warden/residents`,Dy),Gg(`#/warden/profile`,Oy),Gg(`#/gate/dashboard`,ky),Gg(`#/gate/history`,Ay),Gg(`#/gate/inhouse`,jy),Gg(`#/gate/system`,My),Gg(`#/admin/dashboard`,Ny),Gg(`#/admin/users`,Py),Gg(`#/admin/leaves`,Fy),Gg(`#/admin/profile`,Iy),Gg(`#/admin/audit`,Ly),Gg(`#/admin/configuration`,Ry),Gg(`#/admin/settings`,zy),Gg(`#/student/mess`,By),Gg(`#/student/announcements`,Vy),Gg(`#/student/polls`,Hy),Gg(`#/mess/dashboard`,Uy),Gg(`#/mess/manage-menu`,Wy),Gg(`#/mess/ratings`,Gy),Gg(`#/warden/announcements`,Ky),Gg(`#/warden/attendance`,qy),Gg(`#/warden/auto-attendance`,nb),Gg(`#/admin/mess`,ub),Gg(`#/admin/manage`,db);var pb=document.querySelector(`link[href="/src/style.css"]`);pb&&pb.remove(),console.log(`%cUCE IT v3.0.6`,`color:#1a56db;font-size:16px;font-weight:bold;`),console.log(`%cHostel Management · Mess · Announcements · Powered by Supabase`,`color:#555;font-size:12px;`);
