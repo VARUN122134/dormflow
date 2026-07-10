@@ -48,7 +48,7 @@ const roleAccess = {
   '#/mess':    ['student'],    // additionally requires isMessMember check
   '#/warden':  ['boys_warden', 'girls_warden'],
   '#/gate':    ['security', 'mess_incharge'],
-  '#/admin':   ['admin', 'mess_incharge'],
+  '#/admin':   ['admin'],
 };
 
 function getHomeRoute(role) {
@@ -58,7 +58,7 @@ function getHomeRoute(role) {
     girls_warden: '#/warden/dashboard',
     security:     '#/gate/dashboard',
     admin:        '#/admin/dashboard',
-    mess_incharge:'#/admin/dashboard',
+    mess_incharge:'#/gate/dashboard',
   };
   return map[role] || '#/student/dashboard';
 }

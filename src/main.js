@@ -115,5 +115,5 @@ registerRoute('#/admin/manage', adminManage);
 const defaultStyle = document.querySelector('link[href="/src/style.css"]');
 if (defaultStyle) defaultStyle.remove();
 
-console.log('%cUCE IT v3.0.0', 'color:#1a56db;font-size:16px;font-weight:bold;');
+console.log('%cUCE IT v3.0.3', 'color:#1a56db;font-size:16px;font-weight:bold;');
 console.log('%cHostel Management · Mess · Announcements · Powered by Supabase', 'color:#555;font-size:12px;');

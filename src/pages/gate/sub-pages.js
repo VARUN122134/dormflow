@@ -89,7 +89,7 @@ export function gateSystem(app) {
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Version</span>
-          <span class="profile-field-value">v2.4.0</span>
+          <span class="profile-field-value">v3.0.3</span>
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export function gateSystem(app) {
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.0</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.3</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
