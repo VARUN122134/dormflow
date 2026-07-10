@@ -177,7 +177,7 @@ export default async function userManagement(app) {
         if (existing) existing.remove();
         const modal = document.createElement('div');
         modal.id = 'resetPwModal';
-        modal.className = 'modal-overlay';
+        modal.className = 'modal-backdrop';
         modal.innerHTML = `
           <div class="modal">
             <div class="modal-header">

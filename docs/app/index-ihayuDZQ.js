@@ -245,7 +245,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
       <div class="auth-footer">
         <div class="auth-footer-brand">Powered by MooN Software Solutions</div>
-        <div>UCE IT Management System v3.0.6</div>
+        <div>UCE IT Management System v3.0.7</div>
       </div>
     </div>
   `;let t=document.getElementById(`registerForm`),n=document.getElementById(`registerError`);t.addEventListener(`submit`,async r=>{r.preventDefault(),n.style.display=`none`;let i=`${document.getElementById(`regNum`).value.trim()}@ucea.edu.in`,a=document.getElementById(`regPassword`).value,o=t.querySelector(`input[name="gender"]:checked`)?.value;if(!o){n.textContent=`Please select your gender`,n.style.display=`block`;return}let s={name:document.getElementById(`regName`).value.trim(),email:i,role:`student`,gender:o,hostelType:document.getElementById(`regHostel`).value,department:document.getElementById(`regDept`).value,year:document.getElementById(`regYear`).value,roomNumber:document.getElementById(`regRoom`).value.trim(),blockName:document.getElementById(`regBlock`).value.trim(),phone:document.getElementById(`regPhone`).value.trim(),guardianName:document.getElementById(`regGuardian`).value.trim(),guardianPhone:document.getElementById(`regGuardianPhone`).value.trim()},c=document.getElementById(`registerBtn`),l=c.innerHTML;c.disabled=!0,c.innerHTML=`Creating account...`;try{let t=await Ng(i,a,s);t.requiresApproval?e.innerHTML=`
@@ -651,7 +651,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.7</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1052,7 +1052,7 @@ Minimum version required to store current data is: `+c+`.
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.7</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1271,7 +1271,7 @@ Minimum version required to store current data is: `+c+`.
         </div>
         <div class="profile-field">
           <span class="profile-field-label">Version</span>
-          <span class="profile-field-value">v3.0.6</span>
+          <span class="profile-field-value">v3.0.7</span>
         </div>
       </div>
 
@@ -1305,7 +1305,7 @@ Minimum version required to store current data is: `+c+`.
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.7</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1492,7 +1492,7 @@ Minimum version required to store current data is: `+c+`.
         </div>
       </div>
       ${g_(`users`)}
-    `,document.getElementById(`userSearch`)?.addEventListener(`input`,async e=>{n=e.target.value,await a();let t=document.getElementById(`userSearch`);t&&(t.focus(),t.setSelectionRange(t.value.length,t.value.length))}),document.querySelectorAll(`[data-role]`).forEach(e=>{e.addEventListener(`click`,async()=>{r=e.dataset.role,await a()})}),document.querySelectorAll(`[data-tab]`).forEach(e=>{e.addEventListener(`click`,async()=>{i=e.dataset.tab,await a()})}),document.querySelectorAll(`[data-approve]`).forEach(e=>{e.addEventListener(`click`,async()=>{let t=c.find(t=>t.id===e.dataset.approve);t&&b_(`Approve User`,`Approve <strong>${t.name}</strong>? They will be able to log in immediately after approval.`,async()=>{try{await jh(e.dataset.approve),Q(`${t.name} approved successfully`,`success`),await a()}catch(e){Q(`Failed to approve user: `+e.message,`error`)}},`Approve`,`btn-success`)})}),document.querySelectorAll(`[data-delete]`).forEach(e=>{e.addEventListener(`click`,()=>{b_(`Confirm Deletion`,`Are you sure you want to delete <strong>${c.find(t=>t.id===e.dataset.delete)?.name}</strong>? This action is permanent and will remove all associated records from the hostel database.`,async()=>{await Mh(e.dataset.delete),Q(`User deleted`,`info`),await a()},`Delete`,`btn-danger`)})}),document.querySelectorAll(`[data-reset-pw]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=c.find(t=>t.id===e.dataset.resetPw);if(!t)return;let n=document.querySelector(`#resetPwModal`);n&&n.remove();let r=document.createElement(`div`);r.id=`resetPwModal`,r.className=`modal-overlay`,r.innerHTML=`
+    `,document.getElementById(`userSearch`)?.addEventListener(`input`,async e=>{n=e.target.value,await a();let t=document.getElementById(`userSearch`);t&&(t.focus(),t.setSelectionRange(t.value.length,t.value.length))}),document.querySelectorAll(`[data-role]`).forEach(e=>{e.addEventListener(`click`,async()=>{r=e.dataset.role,await a()})}),document.querySelectorAll(`[data-tab]`).forEach(e=>{e.addEventListener(`click`,async()=>{i=e.dataset.tab,await a()})}),document.querySelectorAll(`[data-approve]`).forEach(e=>{e.addEventListener(`click`,async()=>{let t=c.find(t=>t.id===e.dataset.approve);t&&b_(`Approve User`,`Approve <strong>${t.name}</strong>? They will be able to log in immediately after approval.`,async()=>{try{await jh(e.dataset.approve),Q(`${t.name} approved successfully`,`success`),await a()}catch(e){Q(`Failed to approve user: `+e.message,`error`)}},`Approve`,`btn-success`)})}),document.querySelectorAll(`[data-delete]`).forEach(e=>{e.addEventListener(`click`,()=>{b_(`Confirm Deletion`,`Are you sure you want to delete <strong>${c.find(t=>t.id===e.dataset.delete)?.name}</strong>? This action is permanent and will remove all associated records from the hostel database.`,async()=>{await Mh(e.dataset.delete),Q(`User deleted`,`info`),await a()},`Delete`,`btn-danger`)})}),document.querySelectorAll(`[data-reset-pw]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=c.find(t=>t.id===e.dataset.resetPw);if(!t)return;let n=document.querySelector(`#resetPwModal`);n&&n.remove();let r=document.createElement(`div`);r.id=`resetPwModal`,r.className=`modal-backdrop`,r.innerHTML=`
           <div class="modal">
             <div class="modal-header">
               <h3>Reset Password</h3>
@@ -1582,7 +1582,7 @@ Minimum version required to store current data is: `+c+`.
           <div style="font-weight:600;font-size:14px;">Varun C</div>
           <div style="font-size:12px;color:var(--on-surface-variant);">Lead Developer</div>
           <div style="margin-top:8px;padding:6px 16px;background:var(--surface-container);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--primary-container);letter-spacing:0.05em;text-transform:uppercase;">MooN Software Solutions</div>
-          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.6</div>
+          <div style="font-size:10px;color:var(--outline);margin-top:6px;">UCE IT v3.0.7</div>
           <a href="https://www.instagram.com/mr_varun_c/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;color:var(--primary-container);text-decoration:none;">
             <span class="material-icons-outlined" style="font-size:16px;">camera_alt</span>
             @mr_varun_c
@@ -1683,7 +1683,7 @@ Minimum version required to store current data is: `+c+`.
           </div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:var(--on-surface-variant);">Version</span>
-            <span style="font-weight:600;">v3.0.6</span>
+            <span style="font-weight:600;">v3.0.7</span>
           </div>
           <div style="display:flex;justify-content:space-between;">
             <span style="color:var(--on-surface-variant);">Developer</span>
@@ -1714,7 +1714,7 @@ Minimum version required to store current data is: `+c+`.
         <button class="btn btn-secondary btn-sm" id="refreshStatsBtn" style="margin-bottom:8px;">
           <span class="material-icons-outlined" style="font-size:18px;">refresh</span> Refresh Statistics
         </button>
-        <p style="font-size:11px;color:var(--outline);margin-top:4px;">v3.0.6</p>
+        <p style="font-size:11px;color:var(--outline);margin-top:4px;">v3.0.7</p>
       </div>
     </div>
     ${g_(`settings`)}
@@ -2687,4 +2687,4 @@ Minimum version required to store current data is: `+c+`.
           <button class="btn btn-primary btn-sm" id="modalConfirm">Create Poll</button>
         </div>
       </div>
-    `,document.body.appendChild(e);let r=2;document.getElementById(`addOptionBtn`).onclick=()=>{r++;let e=document.createElement(`input`);e.className=`form-input`,e.style.marginBottom=`6px`,e.placeholder=`Option ${r}`,document.getElementById(`pollOptions`).appendChild(e)},e.querySelector(`#modalCancel`).onclick=()=>e.remove(),e.querySelector(`#modalConfirm`).onclick=async()=>{let r=document.getElementById(`pollTitle`).value.trim();if(!r){Q(`Title required`,`warning`);return}let i=document.getElementById(`pollOptions`).querySelectorAll(`input`),a=Array.from(i).map(e=>e.value.trim()).filter(Boolean);if(a.length<2){Q(`At least 2 options`,`warning`);return}try{await dg({title:r,description:document.getElementById(`pollDesc`).value.trim(),authorId:t.id,options:a,expiresAt:document.getElementById(`pollExpires`).value||null}),Q(`Poll created!`,`success`),e.remove(),n()}catch(e){Q(e.message||`Failed`,`error`)}},e.onclick=t=>{t.target===e&&e.remove()}}n()}Vo.register(...Wl);async function fb(){let e=await Ig();e&&(document.addEventListener(`routechange`,()=>{let t=location.hash;t.startsWith(`#/warden`)||t.startsWith(`#/admin`)||t.startsWith(`#/mess`)?cb(e):lb()}),(location.hash.startsWith(`#/warden`)||location.hash.startsWith(`#/admin`)||location.hash.startsWith(`#/mess`))&&cb(e)),$g()}fb(),Gg(`#/splash`,e_),Gg(`#/login`,x_),Gg(`#/register`,S_),Gg(`#/reset-password`,C_),Gg(`#/student/dashboard`,w_),Gg(`#/student/apply`,T_),Gg(`#/student/history`,E_),Gg(`#/student/profile`,D_),Gg(`#/student/outpass`,wy),Gg(`#/warden/dashboard`,Ty),Gg(`#/warden/requests`,Ey),Gg(`#/warden/residents`,Dy),Gg(`#/warden/profile`,Oy),Gg(`#/gate/dashboard`,ky),Gg(`#/gate/history`,Ay),Gg(`#/gate/inhouse`,jy),Gg(`#/gate/system`,My),Gg(`#/admin/dashboard`,Ny),Gg(`#/admin/users`,Py),Gg(`#/admin/leaves`,Fy),Gg(`#/admin/profile`,Iy),Gg(`#/admin/audit`,Ly),Gg(`#/admin/configuration`,Ry),Gg(`#/admin/settings`,zy),Gg(`#/student/mess`,By),Gg(`#/student/announcements`,Vy),Gg(`#/student/polls`,Hy),Gg(`#/mess/dashboard`,Uy),Gg(`#/mess/manage-menu`,Wy),Gg(`#/mess/ratings`,Gy),Gg(`#/warden/announcements`,Ky),Gg(`#/warden/attendance`,qy),Gg(`#/warden/auto-attendance`,nb),Gg(`#/admin/mess`,ub),Gg(`#/admin/manage`,db);var pb=document.querySelector(`link[href="/src/style.css"]`);pb&&pb.remove(),console.log(`%cUCE IT v3.0.6`,`color:#1a56db;font-size:16px;font-weight:bold;`),console.log(`%cHostel Management · Mess · Announcements · Powered by Supabase`,`color:#555;font-size:12px;`);
+    `,document.body.appendChild(e);let r=2;document.getElementById(`addOptionBtn`).onclick=()=>{r++;let e=document.createElement(`input`);e.className=`form-input`,e.style.marginBottom=`6px`,e.placeholder=`Option ${r}`,document.getElementById(`pollOptions`).appendChild(e)},e.querySelector(`#modalCancel`).onclick=()=>e.remove(),e.querySelector(`#modalConfirm`).onclick=async()=>{let r=document.getElementById(`pollTitle`).value.trim();if(!r){Q(`Title required`,`warning`);return}let i=document.getElementById(`pollOptions`).querySelectorAll(`input`),a=Array.from(i).map(e=>e.value.trim()).filter(Boolean);if(a.length<2){Q(`At least 2 options`,`warning`);return}try{await dg({title:r,description:document.getElementById(`pollDesc`).value.trim(),authorId:t.id,options:a,expiresAt:document.getElementById(`pollExpires`).value||null}),Q(`Poll created!`,`success`),e.remove(),n()}catch(e){Q(e.message||`Failed`,`error`)}},e.onclick=t=>{t.target===e&&e.remove()}}n()}Vo.register(...Wl);async function fb(){let e=await Ig();e&&(document.addEventListener(`routechange`,()=>{let t=location.hash;t.startsWith(`#/warden`)||t.startsWith(`#/admin`)||t.startsWith(`#/mess`)?cb(e):lb()}),(location.hash.startsWith(`#/warden`)||location.hash.startsWith(`#/admin`)||location.hash.startsWith(`#/mess`))&&cb(e)),$g()}fb(),Gg(`#/splash`,e_),Gg(`#/login`,x_),Gg(`#/register`,S_),Gg(`#/reset-password`,C_),Gg(`#/student/dashboard`,w_),Gg(`#/student/apply`,T_),Gg(`#/student/history`,E_),Gg(`#/student/profile`,D_),Gg(`#/student/outpass`,wy),Gg(`#/warden/dashboard`,Ty),Gg(`#/warden/requests`,Ey),Gg(`#/warden/residents`,Dy),Gg(`#/warden/profile`,Oy),Gg(`#/gate/dashboard`,ky),Gg(`#/gate/history`,Ay),Gg(`#/gate/inhouse`,jy),Gg(`#/gate/system`,My),Gg(`#/admin/dashboard`,Ny),Gg(`#/admin/users`,Py),Gg(`#/admin/leaves`,Fy),Gg(`#/admin/profile`,Iy),Gg(`#/admin/audit`,Ly),Gg(`#/admin/configuration`,Ry),Gg(`#/admin/settings`,zy),Gg(`#/student/mess`,By),Gg(`#/student/announcements`,Vy),Gg(`#/student/polls`,Hy),Gg(`#/mess/dashboard`,Uy),Gg(`#/mess/manage-menu`,Wy),Gg(`#/mess/ratings`,Gy),Gg(`#/warden/announcements`,Ky),Gg(`#/warden/attendance`,qy),Gg(`#/warden/auto-attendance`,nb),Gg(`#/admin/mess`,ub),Gg(`#/admin/manage`,db);var pb=document.querySelector(`link[href="/src/style.css"]`);pb&&pb.remove(),console.log(`%cUCE IT v3.0.7`,`color:#1a56db;font-size:16px;font-weight:bold;`),console.log(`%cHostel Management · Mess · Announcements · Powered by Supabase`,`color:#555;font-size:12px;`);
