@@ -58,7 +58,7 @@ function getHomeRoute(role) {
     girls_warden: '#/warden/dashboard',
     security:     '#/gate/dashboard',
     admin:        '#/admin/dashboard',
-    mess_incharge:'#/gate/dashboard',
+    mess_incharge:'#/mess/dashboard',
   };
   return map[role] || '#/student/dashboard';
 }
