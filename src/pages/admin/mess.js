@@ -36,16 +36,20 @@ export default async function adminMess(app) {
       </div>
     `;
 
-    document.getElementById('tabStudents').onclick = () => {
+    document.getElementById('tabStudents').onclick = async () => {
       document.getElementById('tabStudents').className = 'btn btn-sm btn-primary';
       document.getElementById('tabMembers').className = 'btn btn-sm btn-ghost';
-      document.getElementById('tabContent').innerHTML = renderStudentsTab(allUsers, messMemberIds);
+      const users = await getUsers();
+      const members = await getMessMembers();
+      const memberIds = new Set(members.map(m => m.id));
+      document.getElementById('tabContent').innerHTML = renderStudentsTab(users, memberIds);
       attachToggleHandlers();
     };
-    document.getElementById('tabMembers').onclick = () => {
+    document.getElementById('tabMembers').onclick = async () => {
       document.getElementById('tabMembers').className = 'btn btn-sm btn-primary';
       document.getElementById('tabStudents').className = 'btn btn-sm btn-ghost';
-      document.getElementById('tabContent').innerHTML = renderMembersTab(messMembers);
+      const members = await getMessMembers();
+      document.getElementById('tabContent').innerHTML = renderMembersTab(members);
     };
 
     attachToggleHandlers();

@@ -45,7 +45,7 @@ function matchRoute(hash) {
 // Role access map
 const roleAccess = {
   '#/student': ['student'],
-  '#/mess':    ['student'],    // additionally requires isMessMember check
+  '#/mess':    ['student', 'mess_incharge'],    // additionally requires isMessMember check
   '#/warden':  ['boys_warden', 'girls_warden'],
   '#/gate':    ['security', 'mess_incharge'],
   '#/admin':   ['admin'],
@@ -69,9 +69,9 @@ function checkAccess(hash, user) {
 
   for (const [prefix, roles] of Object.entries(roleAccess)) {
     if (hash.startsWith(prefix)) {
-      // Mess routes require student role + isMessMember flag
+      // Mess routes require student role + isMessMember flag (mess_incharge bypasses)
       if (prefix === '#/mess') {
-        return roles.includes(user.role) && user.isMessMember === true;
+        return roles.includes(user.role) && (user.role === 'mess_incharge' || user.isMessMember === true);
       }
       return roles.includes(user.role);
     }
