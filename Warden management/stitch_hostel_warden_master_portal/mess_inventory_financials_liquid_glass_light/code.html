@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Warden Portal | Mess Inventory &amp; Financials</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .liquid-glass-card {
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .high-gloss-indicator {
+            position: relative;
+            overflow: hidden;
+        }
+        .high-gloss-indicator::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-border {
+            border-left: 4px solid #005ac2;
+        }
+        .mesh-gradient {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(215, 100%, 95%, 1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(240, 100%, 97%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(190, 100%, 95%, 1) 0, transparent 50%), 
+                radial-gradient(at 0% 50%, hsla(215, 100%, 95%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(215, 100%, 95%, 1) 0, transparent 50%), 
+                radial-gradient(at 0% 100%, hsla(240, 100%, 97%, 1) 0, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#005ac2",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#d8e2ff",
+                        "on-primary-container": "#001a42",
+                        "secondary": "#006d4b",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#91f7c9",
+                        "on-secondary-container": "#002113",
+                        "tertiary": "#825500",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#ffddb8",
+                        "on-tertiary-container": "#2a1700",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "background": "#f8fafc",
+                        "on-background": "#191c1e",
+                        "surface": "#f8fafc",
+                        "on-surface": "#191c1e",
+                        "surface-variant": "#e1e2ec",
+                        "on-surface-variant": "#44474f",
+                        "outline": "#75777f",
+                        "surface-container": "#eceef4"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "20px",
+                        "unit": "8px",
+                        "container-padding": "24px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface mesh-gradient">
+<div class="flex min-h-screen">
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-[280px] bg-white/40 backdrop-blur-[40px] border-r border-black/5 flex flex-col py-container-padding z-50">
+<div class="px-8 mb-10">
+<h1 class="font-headline-lg text-headline-lg font-black bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary">Warden Portal</h1>
+<p class="text-on-surface-variant/70 font-body-sm tracking-wider uppercase text-[10px]">Admin Control</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-black/5 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-lg text-body-lg">Dashboard Overview</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-black/5 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-lg text-body-lg">Student Accounts &amp; Fees</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-primary/10 text-primary font-bold active-nav-border shadow-sm transition-all duration-300" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-lg text-body-lg">Mess Inventory &amp; Financials</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-black/5 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-error/80 hover:text-error hover:bg-error/5 transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-lg text-body-lg">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] w-full min-h-screen px-margin-desktop py-8 relative">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center mb-8 h-20 bg-white/60 backdrop-blur-[16px] px-8 rounded-2xl border border-black/5 shadow-sm">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">inventory_2</span>
+<h2 class="font-title-md text-title-md text-on-surface">Mess Management Hub</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">notifications</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full animate-pulse"></div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">verified</span>
+<div class="flex items-center gap-3 bg-black/5 p-1.5 rounded-full pl-4 border border-black/5">
+<span class="text-body-sm font-medium text-on-surface">Chief Warden</span>
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a mature administrative professional, soft cinematic lighting, studio background, wearing a formal suit, polished and high-end executive look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEgi_PyaZAft0qlFEgOYCkesjvv-BFf5l8hjh5ajis3-EwV0RXMuqKSazw4uh0tLvTUKreYdbz_Ydv2qONs5nlUSjsEqx4WkzTj5QANC-CCPQudzfN_u0jgVrasf4MaoJoYUTN4AnPI8dcdUTCqFX99SyAN5SBKtHwaihE80y3cO9x0aayZL2HYqcL6NaQEGP6cxlXhsWbhVKKBrU5j-XGaaGdwAj2t4OiG7wjIG5seuJ_sC7k-iTVJg"/>
+</div>
+</div>
+</header>
+<!-- Financial Summary Sub-row -->
+<section class="grid grid-cols-3 gap-gutter mb-8">
+<div class="liquid-glass-card p-container-padding rounded-3xl group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary-container rounded-2xl">
+<span class="material-symbols-outlined text-primary">shopping_cart</span>
+</div>
+<span class="text-body-sm text-secondary font-medium">+12% vs last month</span>
+</div>
+<p class="text-on-surface-variant text-body-sm uppercase tracking-widest font-bold mb-1">Total Purchased This Month</p>
+<h3 class="text-headline-lg font-bold text-on-surface">₹56,400</h3>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-3xl group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-tertiary-container rounded-2xl">
+<span class="material-symbols-outlined text-tertiary">trending_down</span>
+</div>
+<span class="text-body-sm text-tertiary font-medium">Burn rate high</span>
+</div>
+<p class="text-on-surface-variant text-body-sm uppercase tracking-widest font-bold mb-1">Today's Daily Cost Burn</p>
+<h3 class="text-headline-lg font-bold text-tertiary">- ₹4,320</h3>
+</div>
+<div class="liquid-glass-card p-container-padding rounded-3xl group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container rounded-2xl">
+<span class="material-symbols-outlined text-secondary">database</span>
+</div>
+<span class="text-body-sm text-secondary font-medium">Asset stable</span>
+</div>
+<p class="text-on-surface-variant text-body-sm uppercase tracking-widest font-bold mb-1">Remaining Food Asset Value</p>
+<h3 class="text-headline-lg font-bold text-primary">₹52,080</h3>
+</div>
+</section>
+<!-- Inventory Action Header -->
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-lg text-headline-lg mb-1 text-on-surface">Live Stock Ledger</h3>
+<p class="text-on-surface-variant">Real-time monitoring of mess commodities and burn rates.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-6 py-3 bg-white/60 border border-black/10 rounded-xl hover:bg-white/90 transition-all active:scale-95 group shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">history_edu</span>
+<span class="font-bold text-on-surface">Log Issue</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+<span>Log Restock</span>
+</button>
+</div>
+</div>
+<!-- Primary Inventory Ledger -->
+<div class="liquid-glass-card rounded-3xl overflow-hidden mb-12">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-black/5 bg-black/5">
+<th class="py-5 px-6 font-semibold text-on-surface-variant">Commodity</th>
+<th class="py-5 px-6 font-semibold text-on-surface-variant">Unit Cost</th>
+<th class="py-5 px-6 font-semibold text-on-surface-variant">Inbound Stock</th>
+<th class="py-5 px-6 font-semibold text-on-surface-variant">Usage (Daily)</th>
+<th class="py-5 px-6 font-semibold text-on-surface-variant">Remaining Balance</th>
+<th class="py-5 px-6 font-semibold text-on-surface-variant">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-black/5">
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="py-5 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-black/5">
+<span class="material-symbols-outlined text-primary">eco</span>
+</div>
+<span class="font-medium text-on-surface">Basmati Rice (Long Grain)</span>
+</td>
+<td class="py-5 px-6 text-on-surface">₹85/kg</td>
+<td class="py-5 px-6 text-on-surface">1,200 kg</td>
+<td class="py-5 px-6 text-error font-medium">42 kg</td>
+<td class="py-5 px-6 font-bold text-on-surface">840 kg</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/50 text-secondary text-xs font-bold border border-secondary/20 high-gloss-indicator">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(0,109,75,0.4)]"></span>
+                            STABLE
+                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="py-5 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-black/5">
+<span class="material-symbols-outlined text-primary">opacity</span>
+</div>
+<span class="font-medium text-on-surface">Sunflower Refined Oil</span>
+</td>
+<td class="py-5 px-6 text-on-surface">₹160/L</td>
+<td class="py-5 px-6 text-on-surface">450 L</td>
+<td class="py-5 px-6 text-error font-medium">12 L</td>
+<td class="py-5 px-6 font-bold text-on-surface">48 L</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-container/50 text-tertiary text-xs font-bold border border-tertiary/20 high-gloss-indicator">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(130,85,0,0.4)] animate-pulse"></span>
+                            LOW STOCK
+                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="py-5 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-black/5">
+<span class="material-symbols-outlined text-primary">set_meal</span>
+</div>
+<span class="font-medium text-on-surface">Frozen Chicken Thighs</span>
+</td>
+<td class="py-5 px-6 text-on-surface">₹220/kg</td>
+<td class="py-5 px-6 text-on-surface">300 kg</td>
+<td class="py-5 px-6 text-error font-medium">85 kg</td>
+<td class="py-5 px-6 font-bold text-on-surface">115 kg</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/50 text-secondary text-xs font-bold border border-secondary/20 high-gloss-indicator">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(0,109,75,0.4)]"></span>
+                            HEALTHY
+                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="py-5 px-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-black/5">
+<span class="material-symbols-outlined text-primary">grain</span>
+</div>
+<span class="font-medium text-on-surface">Whole Wheat Flour (Atta)</span>
+</td>
+<td class="py-5 px-6 text-on-surface">₹42/kg</td>
+<td class="py-5 px-6 text-on-surface">2,000 kg</td>
+<td class="py-5 px-6 text-error font-medium">110 kg</td>
+<td class="py-5 px-6 font-bold text-on-surface">1,420 kg</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/50 text-secondary text-xs font-bold border border-secondary/20 high-gloss-indicator">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(0,109,75,0.4)]"></span>
+                            STABLE
+                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Recent Activity Log Ledger -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="font-title-md text-title-md text-on-surface">Recent Activity Log</h4>
+<button class="text-primary text-body-sm font-bold hover:underline">View All Audit Logs</button>
+</div>
+<div class="space-y-3">
+<div class="liquid-glass-card p-4 rounded-2xl flex items-center justify-between border-black/5 hover:border-black/20 transition-all cursor-default">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Restock: Basmati Rice</p>
+<p class="text-body-sm text-on-surface-variant">Vendor: Shiva Enterprises • Today, 09:14 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<span class="text-secondary font-bold">+ 500 kg</span>
+<button class="flex items-center gap-1 px-4 py-2 bg-black/5 border border-black/10 rounded-lg text-body-sm hover:bg-error/10 hover:text-error hover:border-error/20 transition-all text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">undo</span>
+                            Undo Log
+                        </button>
+</div>
+</div>
+<div class="liquid-glass-card p-4 rounded-2xl flex items-center justify-between border-black/5 hover:border-black/20 transition-all cursor-default">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-error/10 rounded-lg">
+<span class="material-symbols-outlined text-error">restaurant_menu</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Issue: Cooking Oil (Daily Kitchen)</p>
+<p class="text-body-sm text-on-surface-variant">Kitchen Unit A • Today, 06:30 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<span class="text-error font-bold">- 12 L</span>
+<button class="flex items-center gap-1 px-4 py-2 bg-black/5 border border-black/10 rounded-lg text-body-sm hover:bg-error/10 hover:text-error hover:border-error/20 transition-all text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">undo</span>
+                            Undo Log
+                        </button>
+</div>
+</div>
+<div class="liquid-glass-card p-4 rounded-2xl flex items-center justify-between border-black/5 hover:border-black/20 transition-all cursor-default">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-tertiary/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">warning</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Wastage Report: Milk (Spoilage)</p>
+<p class="text-body-sm text-on-surface-variant">Storage Unit 4 • Yesterday, 11:45 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<span class="text-tertiary font-bold">- 4 L</span>
+<button class="flex items-center gap-1 px-4 py-2 bg-black/5 border border-black/10 rounded-lg text-body-sm hover:bg-error/10 hover:text-error hover:border-error/20 transition-all text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">undo</span>
+                            Undo Log
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Contextual FAB for quick logging -->
+<button class="fixed bottom-10 right-10 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group z-[100]">
+<span class="material-symbols-outlined text-3xl group-rotate-90 transition-transform">add</span>
+</button>
+<script>
+    // Micro-interaction for table rows hover sheen
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('mousemove', (e) => {
+            const rect = row.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            row.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0,0,0,0.03) 0%, rgba(255,255,255,0) 60%)`;
+        });
+        row.addEventListener('mouseleave', () => {
+            row.style.background = 'transparent';
+        });
+    });
+
+    console.log("Mess Inventory & Financials Screen Initialized - Light Liquid Glass Engine Active.");
+</script>
+</body></html>

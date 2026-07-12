@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Warden Portal - Log Daily Mess Issue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#adc6ff",
+                    "tertiary-container": "#ca8100",
+                    "surface-container-low": "#f0f4f8",
+                    "surface-dim": "#d9e2ec",
+                    "primary-fixed": "#d8e2ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#6ffbbe",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-container": "#f8f9fa",
+                    "on-surface": "#1d2022",
+                    "primary": "#005ac2",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "surface-variant": "#e1e2ec",
+                    "on-secondary": "#ffffff",
+                    "surface": "#f8f9fa",
+                    "on-secondary-fixed-variant": "#005236",
+                    "secondary-fixed-dim": "#4edea3",
+                    "inverse-on-surface": "#f1f0f4",
+                    "on-primary-fixed": "#001a42",
+                    "on-background": "#191c1e",
+                    "on-error-container": "#410002",
+                    "surface-container-high": "#ebeef2",
+                    "surface-bright": "#f9f9fc",
+                    "primary-container": "#d8e2ff",
+                    "on-secondary-container": "#002113",
+                    "on-primary-container": "#001a42",
+                    "surface-tint": "#005ac2",
+                    "secondary": "#006d4a",
+                    "inverse-primary": "#adc6ff",
+                    "secondary-container": "#9ef8c9",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-tertiary-container": "#2a1700",
+                    "on-surface-variant": "#44474e",
+                    "outline": "#74777f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#2f3033",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e1e3e8",
+                    "outline-variant": "#c4c6d0",
+                    "on-secondary-fixed": "#002113",
+                    "background": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#855300"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "container-padding": "24px",
+                    "margin-desktop": "40px",
+                    "unit": "8px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f8f9fa;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(173, 198, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(111, 251, 190, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 221, 184, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(173, 198, 255, 0.1) 0px, transparent 50%);
+            color: #1d2022;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .liquid-glass {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .liquid-glass-high {
+            backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #1d2022;
+        }
+
+        .glass-input:focus {
+            border-bottom-color: #005ac2;
+            background: rgba(255, 255, 255, 1);
+            outline: none;
+            box-shadow: 0 4px 20px -5px rgba(0, 90, 194, 0.15);
+        }
+
+        .primary-glow {
+            box-shadow: 0 0 20px rgba(0, 90, 194, 0.2);
+            background: linear-gradient(135deg, #005ac2 0%, #4d8eff 100%);
+        }
+
+        .amber-glow {
+            box-shadow: 0 10px 20px -5px rgba(202, 129, 0, 0.4);
+            background: linear-gradient(135deg, #ffb95f 0%, #ca8100 100%);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .status-glow-emerald {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="selection:bg-primary/20">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-screen w-[280px] bg-white/20 backdrop-blur-[40px] border-r border-black/5 flex flex-col py-container-padding z-40 hidden md:flex">
+<div class="px-6 mb-10">
+<h1 class="font-headline-lg text-headline-lg font-black bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary">Warden Portal</h1>
+<p class="text-on-surface-variant font-body-sm">Admin Control</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-black/5 transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-lg text-body-lg">Dashboard Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-black/5 transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-lg text-body-lg">Student Accounts &amp; Fees</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-bold border-l-4 border-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-lg text-body-lg">Mess Inventory &amp; Financials</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-black/5 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-error/80 hover:text-error hover:bg-error/10 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-lg text-body-lg">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-[280px] p-margin-desktop min-h-screen">
+<!-- Top Nav -->
+<header class="flex justify-between items-center w-full px-6 py-4 h-20 bg-white/40 backdrop-blur-[16px] border-b border-black/5 fixed top-0 left-0 md:left-[280px] right-0 z-30">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary">Mess Inventory</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-black/5 border border-black/10 rounded-full focus:outline-none focus:border-primary/50 w-64 transition-all" placeholder="Search inventory..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 text-on-surface-variant"><span class="material-symbols-outlined">notifications</span></button>
+<div class="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Dummy Content -->
+<div class="mt-24 space-y-gutter">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="liquid-glass p-container-padding rounded-3xl col-span-2">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Stock Levels</h3>
+<p class="text-on-surface-variant font-body-sm">Current commodity status</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition-transform">Add Stock</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 rounded-2xl bg-black/5 border border-black/5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">eco</span></div>
+<div>
+<p class="font-bold text-on-surface">Basmati Rice (Grade A)</p>
+<p class="text-body-sm text-on-surface-variant">Last Restock: 2 days ago</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-black text-xl text-primary">455kg</p>
+<span class="status-glow-emerald"></span> <span class="text-xs text-on-surface-variant">Healthy Stock</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl bg-black/5 border border-black/5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center"><span class="material-symbols-outlined text-tertiary">water_drop</span></div>
+<div>
+<p class="font-bold text-on-surface">Refined Sunflower Oil</p>
+<p class="text-body-sm text-on-surface-variant">Last Restock: 1 week ago</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-black text-xl text-tertiary">120L</p>
+<span class="text-xs text-tertiary">Low Stock Alert</span>
+</div>
+</div>
+</div>
+</div>
+<div class="liquid-glass p-container-padding rounded-3xl">
+<h3 class="font-title-md text-title-md text-on-surface mb-6">Recent Issues</h3>
+<div class="space-y-6">
+<div class="border-l-2 border-primary/30 pl-4 py-1">
+<p class="text-body-sm text-on-surface-variant">Today, 08:30 AM</p>
+<p class="font-bold text-on-surface">25kg Rice issued to Hall A</p>
+</div>
+<div class="border-l-2 border-primary/30 pl-4 py-1">
+<p class="text-body-sm text-on-surface-variant">Yesterday, 05:00 PM</p>
+<p class="font-bold text-on-surface">10L Oil issued to Staff Kitchen</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-margin-mobile">
+<!-- Backdrop Blur Layer -->
+<div class="absolute inset-0 bg-white/20 backdrop-blur-xl transition-opacity duration-500"></div>
+<!-- Modal Container -->
+<div class="relative w-full max-w-2xl liquid-glass-high rounded-[32px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 border border-white/50">
+<!-- Modal Header -->
+<div class="p-8 border-b border-black/5 flex justify-between items-center bg-white/30">
+<div>
+<h2 class="font-display-lg text-[28px] leading-tight font-extrabold text-on-surface tracking-tight">Log Daily Mess Issue</h2>
+<p class="text-on-surface-variant font-body-sm mt-1">Deduct stock for daily kitchen operations</p>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Content -->
+<form class="p-8 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Commodity Selection -->
+<div class="space-y-2 col-span-2 md:col-span-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase tracking-widest ml-1">Select Commodity</label>
+<div class="relative">
+<select class="w-full glass-input px-4 py-4 rounded-2xl text-on-surface font-body-lg appearance-none cursor-pointer">
+<option value="rice">Basmati Rice - 455kg remaining</option>
+<option value="oil">Sunflower Oil - 120L remaining</option>
+<option value="wheat">Whole Wheat - 310kg remaining</option>
+<option value="sugar">Refined Sugar - 85kg remaining</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Quantity Input -->
+<div class="space-y-2 col-span-2 md:col-span-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase tracking-widest ml-1">Quantity to Issue</label>
+<div class="relative">
+<input class="w-full glass-input px-4 py-4 rounded-2xl text-on-surface font-body-lg text-lg font-bold" placeholder="0.00" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-body-sm bg-black/5 px-2 py-1 rounded-lg">KG/L</span>
+</div>
+</div>
+<!-- Kitchen Unit -->
+<div class="space-y-2 col-span-2 md:col-span-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase tracking-widest ml-1">Kitchen Unit</label>
+<div class="relative">
+<select class="w-full glass-input px-4 py-4 rounded-2xl text-on-surface font-body-lg appearance-none cursor-pointer">
+<option>Mess Hall A (Undergrad)</option>
+<option>Mess Hall B (Postgrad)</option>
+<option>Staff Kitchen</option>
+<option>Guest House</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">apartment</span>
+</div>
+</div>
+<!-- Issue Date (Auto) -->
+<div class="space-y-2 col-span-2 md:col-span-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase tracking-widest ml-1">Issue Timestamp</label>
+<input class="w-full glass-input px-4 py-4 rounded-2xl text-on-surface-variant/80 font-body-lg bg-black/5 cursor-not-allowed" disabled="" type="text" value="Today, 24 May 2024"/>
+</div>
+<!-- Reason/Notes -->
+<div class="space-y-2 col-span-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase tracking-widest ml-1">Issue Reason / Note</label>
+<textarea class="w-full glass-input px-4 py-4 rounded-2xl text-on-surface font-body-lg resize-none" placeholder="e.g. Daily Lunch Preparation for 500 students..." rows="3"></textarea>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 pt-6">
+<button class="flex-1 amber-glow text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl hover:brightness-105" type="submit">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                    Process Issue
+                </button>
+<button class="sm:w-1/3 text-on-surface-variant hover:text-on-surface border border-black/10 hover:bg-black/5 py-5 rounded-2xl font-bold transition-all" type="button">
+                    Cancel
+                </button>
+</div>
+</form>
+<!-- Bottom Indicator Decoration -->
+<div class="h-2 w-full bg-gradient-to-r from-tertiary via-primary to-secondary opacity-50"></div>
+</div>
+</div>
+<script>
+    document.addEventListener('mousemove', (e) => {
+        const modal = document.querySelector('.liquid-glass-high');
+        if (modal) {
+            const x = (window.innerWidth / 2 - e.clientX) / 80;
+            const y = (window.innerHeight / 2 - e.clientY) / 80;
+            modal.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+        }
+    });
+</script>
+</body></html>

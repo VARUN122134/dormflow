@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Warden Portal - Log Restock Purchase</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                display: inline-block;
+                line-height: 1;
+                text-transform: none;
+                letter-spacing: normal;
+                word-wrap: normal;
+                white-space: nowrap;
+                direction: ltr;
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #101415;
+            color: #e0e3e5;
+            overflow-x: hidden;
+        }
+
+        .liquid-glass {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .liquid-glass-heavy {
+            backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .emerald-glow {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+
+        /* Custom scrollbar for glass containers */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    </style>
+<!-- Include Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#adc6ff",
+                    "tertiary-container": "#ca8100",
+                    "surface-container-low": "#191c1e",
+                    "surface-dim": "#101415",
+                    "primary-fixed": "#d8e2ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "error": "#ffb4ab",
+                    "secondary-fixed": "#6ffbbe",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-container": "#1d2022",
+                    "on-surface": "#e0e3e5",
+                    "primary": "#adc6ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "surface-variant": "#323537",
+                    "on-secondary": "#003824",
+                    "surface": "#101415",
+                    "on-secondary-fixed-variant": "#005236",
+                    "secondary-fixed-dim": "#4edea3",
+                    "inverse-on-surface": "#2d3133",
+                    "on-primary-fixed": "#001a42",
+                    "on-background": "#e0e3e5",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-high": "#272a2c",
+                    "surface-bright": "#363a3b",
+                    "primary-container": "#4d8eff",
+                    "on-secondary-container": "#00311f",
+                    "on-primary-container": "#00285d",
+                    "surface-tint": "#adc6ff",
+                    "secondary": "#4edea3",
+                    "inverse-primary": "#005ac2",
+                    "secondary-container": "#00a572",
+                    "on-primary": "#002e6a",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-tertiary-container": "#3e2400",
+                    "on-surface-variant": "#c2c6d6",
+                    "outline": "#8c909f",
+                    "surface-container-lowest": "#0b0f10",
+                    "on-error": "#690005",
+                    "inverse-surface": "#e0e3e5",
+                    "on-tertiary": "#472a00",
+                    "surface-container-highest": "#323537",
+                    "outline-variant": "#424754",
+                    "on-secondary-fixed": "#002113",
+                    "background": "#101415",
+                    "error-container": "#93000a",
+                    "tertiary": "#ffb95f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "container-padding": "24px",
+                    "margin-desktop": "40px",
+                    "unit": "8px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                    "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                    "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                    "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                    "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-white min-h-screen relative overflow-hidden bg-gradient-to-br from-primary/20 via-white to-secondary/20">
+<!-- Animated Liquid Mesh Background -->
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed left-0 top-0 h-screen w-[280px] bg-white/40 backdrop-blur-[40px] border-r border-black/5 shadow-xl flex flex-col py-container-padding z-10">
+<div class="px-6 mb-10">
+<h1 class="font-headline-lg text-headline-lg font-black bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary">Warden Portal</h1>
+<p class="text-on-surface-variant/60 font-label-caps tracking-widest mt-1">ADMIN CONTROL</p>
+</div>
+<nav class="flex-1 px-4 space-y-2"><div class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-slate-600 hover:text-slate-900 hover:bg-black/5"><span class="material-symbols-outlined" data-icon="dashboard">dashboard</span><span class="font-body-lg text-body-lg">Dashboard Overview</span></div><div class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-slate-600 hover:text-slate-900 hover:bg-black/5"><span class="material-symbols-outlined" data-icon="payments">payments</span><span class="font-body-lg text-body-lg">Student Accounts &amp; Fees</span></div><div class="flex items-center gap-4 px-4 py-3 rounded-xl bg-primary/20 text-primary font-bold border-l-4 border-primary shadow-sm backdrop-blur-[32px] translate-x-1"><span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span><span class="font-body-lg text-body-lg">Mess Inventory &amp; Financials</span></div></nav>
+<div class="px-4 mt-auto pt-10 space-y-2">
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-on-surface-variant/80 hover:text-on-surface hover:bg-white/5">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-error hover:bg-error/10">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-body-lg text-body-lg">Logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas (The "Blurred Background" View) -->
+<main class="ml-[280px] min-h-screen p-margin-desktop">
+<!-- TopNavBar (Authority: JSON) -->
+<header class="flex justify-between items-center w-full px-4 h-20 mb-margin-desktop bg-surface/60 backdrop-blur-[16px] border-b border-white/15 rounded-2xl shadow-sm">
+<div class="flex items-center gap-8">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 w-64 focus:outline-none focus:border-primary transition-colors" placeholder="Search inventory..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="verified">verified</span>
+</button>
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors duration-200 relative">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a senior hostel warden in a modern office setting. The lighting is soft and cinematic, with a color palette of deep blues and cool grays that matches the Warden Portal's liquid glass aesthetic. He is looking towards the camera with a calm and confident expression, evoking leadership and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRXGb3PwVe9123HVhO1Cv701n1mJDV6ciP7QUAy9nMpsgqxK1yGMECAbfEhifBKWm7uZJMBjh5nW4P4LYRr7ymaU96x64RKRzAVRc0qz146ziC0dHO2TsvmVDEEIjWe7lfGw1pZRkLN4Wv6HqzkhSrgC2pxGIsUVCjn8ArMjZ1rgAtj2nHt5buLtWz3Qiq95g4ZFiVG_HcK3TRI1R7689AfS7yOum5su72u1KKaU5KIp1t0CnwCaba5g"/>
+</div>
+</div>
+</header>
+<!-- Mock Background Content: Mess Inventory Stats -->
+<div class="grid grid-cols-3 gap-gutter mb-10">
+<div class="liquid-glass p-container-padding rounded-3xl inner-glow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary bg-secondary/10 p-3 rounded-2xl" data-icon="nutrition">nutrition</span>
+<span class="text-on-surface-variant font-label-caps">Current Stock</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg">1,240 <span class="text-body-lg text-on-surface-variant">kg</span></h3>
+<div class="mt-4 flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span class="text-body-sm font-title-md">+12% from last week</span>
+</div>
+</div>
+<div class="liquid-glass p-container-padding rounded-3xl inner-glow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-tertiary bg-tertiary/10 p-3 rounded-2xl" data-icon="payments">payments</span>
+<span class="text-on-surface-variant font-label-caps">Monthly Spend</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg">₹ 4,82,000</h3>
+<div class="mt-4 flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-sm" data-icon="trending_down">trending_down</span>
+<span class="text-body-sm font-title-md">Remaining Budget: ₹ 1.2L</span>
+</div>
+</div>
+<div class="liquid-glass p-container-padding rounded-3xl inner-glow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-3 rounded-2xl" data-icon="inventory">inventory</span>
+<span class="text-on-surface-variant font-label-caps">Active Vendors</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg">14 <span class="text-body-lg text-on-surface-variant">verified</span></h3>
+<div class="mt-4 flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+<span class="text-body-sm font-title-md">All deliveries on track</span>
+</div>
+</div>
+</div>
+<!-- Inventory List Mock -->
+<div class="liquid-glass rounded-3xl overflow-hidden border border-white/10">
+<div class="p-container-padding flex justify-between items-center border-b border-white/10">
+<h2 class="font-title-md text-title-md">Inventory Tracker</h2>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
+                    Quick View
+                </button>
+</div>
+<div class="p-container-padding space-y-4">
+<div class="flex items-center justify-between p-4 hover:bg-white/5 transition-colors rounded-2xl border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="eco">eco</span>
+</div>
+<div>
+<p class="font-title-md text-on-surface">Basmati Rice</p>
+<p class="text-body-sm text-on-surface-variant">Category: Grains</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md">450 kg</p>
+<p class="text-body-sm text-secondary flex items-center justify-end gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#10b981]"></span> High Stock
+                        </p>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-white/5 transition-colors rounded-2xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="egg">egg</span>
+</div>
+<div>
+<p class="font-title-md text-on-surface">Dairy &amp; Eggs</p>
+<p class="text-body-sm text-on-surface-variant">Category: Perishables</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md">24 Liters</p>
+<p class="text-body-sm text-tertiary flex items-center justify-end gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#f59e0b] animate-pulse"></span> Low Stock
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- MODAL OVERLAY: Log Restock Purchase -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-white/40 backdrop-blur-[40px] animate-in fade-in duration-500" id="restockModal">
+<div class="bg-white/60 backdrop-blur-[40px] w-full max-w-2xl rounded-[32px] overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.1)] border border-white/40 animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
+<!-- Modal Header -->
+<div class="p-8 pb-4 flex justify-between items-center border-b border-black/5">
+<div><h2 class="font-headline-lg text-headline-lg text-slate-900">Log Restock Purchase</h2><p class="text-slate-600 mt-1 font-body-lg">Update inventory and ledger records</p></div>
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors group" onclick="document.getElementById('restockModal').classList.add('hidden')">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-white" data-icon="close">close</span>
+</button>
+</div>
+<!-- Modal Content -->
+<form class="p-8 space-y-8" oninput="calculateTotal()"><div class="grid grid-cols-2 gap-6"><div class="col-span-2 space-y-2"><label class="font-label-caps text-primary pl-1">SELECT COMMODITY</label><div class="relative"><select class="w-full bg-black/5 border-b-2 border-black/10 focus:border-primary rounded-xl py-4 px-4 appearance-none outline-none transition-all font-body-lg text-slate-900 backdrop-blur-md"><option class="bg-white">Basmati Rice (Extra Long)</option><option class="bg-white">Full Cream Milk</option><option class="bg-white">Refined Sunflower Oil</option><option class="bg-white">Lentils (Moong Dal)</option><option class="bg-white">Whole Wheat Flour</option></select><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" data-icon="expand_more">expand_more</span></div></div><div class="space-y-2"><label class="font-label-caps text-primary pl-1">QUANTITY RECEIVED</label><div class="relative"><input class="w-full bg-black/5 border-b-2 border-black/10 focus:border-primary rounded-xl py-4 px-4 outline-none transition-all font-body-lg text-slate-900" id="qtyInput" placeholder="0.00" type="number"/><span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">kg / L</span></div></div><div class="space-y-2"><label class="font-label-caps text-primary pl-1">UNIT PRICE (₹)</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">₹</span><input class="w-full bg-black/5 border-b-2 border-black/10 focus:border-primary rounded-xl py-4 pl-8 pr-4 outline-none transition-all font-body-lg text-slate-900" id="priceInput" placeholder="0.00" type="number"/></div></div><div class="space-y-2"><label class="font-label-caps text-primary pl-1">VENDOR NAME</label><div class="relative"><input class="w-full bg-black/5 border-b-2 border-black/10 focus:border-primary rounded-xl py-4 px-4 outline-none transition-all font-body-lg text-slate-900" placeholder="e.g. Agarwal Wholesale" type="text"/><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" data-icon="store">store</span></div></div><div class="space-y-2"><label class="font-label-caps text-primary pl-1">PURCHASE DATE</label><div class="relative"><input class="w-full bg-black/5 border-b-2 border-black/10 focus:border-primary rounded-xl py-4 px-4 outline-none transition-all font-body-lg text-slate-900" type="date"/></div></div></div><div class="bg-black/5 rounded-2xl p-6 border border-black/5 flex items-center justify-between group"><div class="flex items-center gap-3"><div class="p-3 rounded-full bg-primary/10 text-primary"><span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span></div><span class="font-title-md text-slate-600">Total Investment</span></div><div class="text-right"><span class="font-display-lg text-display-lg text-secondary group-hover:scale-105 transition-transform block" id="totalDisplay">₹ 0.00</span><p class="text-body-sm text-slate-400">Estimated ledger impact</p></div></div><div class="flex gap-4 pt-4"><button class="flex-1 py-4 font-bold text-slate-700 bg-black/5 border border-black/10 rounded-2xl hover:bg-black/10 transition-all active:scale-95" onclick="document.getElementById('restockModal').classList.add('hidden')" type="button">Cancel</button><button class="flex-2 w-full max-w-[280px] py-4 font-bold text-white bg-secondary rounded-2xl emerald-glow inner-glow transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2" type="submit"><span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>Add to Inventory</button></div></form>
+</div>
+</div>
+<script>
+        function calculateTotal() {
+            const qty = parseFloat(document.getElementById('qtyInput').value) || 0;
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+            const total = qty * price;
+            
+            const display = document.getElementById('totalDisplay');
+            display.innerText = '₹ ' + total.toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            // Pulse effect when total changes
+            display.classList.remove('animate-pulse-slow');
+            void display.offsetWidth; // trigger reflow
+            display.classList.add('animate-pulse-slow');
+        }
+
+        // Initialize calculations
+        calculateTotal();
+
+        // Prevent form submission for demo
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Processing...';
+            setTimeout(() => {
+                alert('Restock logged successfully!');
+                document.getElementById('restockModal').classList.add('hidden');
+            }, 1500);
+        });
+    </script>
+</body></html>
