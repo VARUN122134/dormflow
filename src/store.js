@@ -1021,7 +1021,7 @@ function normComplaint(row) {
     id: row.id,
     studentId: row.student_id,
     studentName: row.profiles ? row.profiles.name : null,
-    title: row.title,
+    title: row.subject,
     description: row.description,
     category: row.category,
     status: row.status,
@@ -1071,7 +1071,7 @@ export async function createComplaint(data) {
       headers: { ...(await restHeaders()), Prefer: 'return=minimal' },
       body: JSON.stringify({
         student_id: data.studentId,
-        title: data.title,
+        subject: data.title,
         description: data.description,
         category: data.category,
       }),
@@ -1084,7 +1084,7 @@ export async function createComplaint(data) {
   return {
     id: crypto.randomUUID(),
     student_id: data.studentId,
-    title: data.title,
+    subject: data.title,
     description: data.description,
     category: data.category,
     status: 'Pending',
