@@ -1033,38 +1033,67 @@ function normComplaint(row) {
   };
 }
 
+const SUPABASE_URL = 'https://oekdpzoewzkznxghmgby.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la2Rwem9ld3prem54Z2htZ2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjU1MDMsImV4cCI6MjA5NjMwMTUwM30.r_Im6_fzocAFee9d7KfjKBYfApW1QAktd5MdqWn23Ok';
+
+async function restHeaders() {
+  const session = (await supabase.auth.getSession()).data.session;
+  return {
+    'Content-Type': 'application/json',
+    apikey: SUPABASE_ANON,
+    Authorization: `Bearer ${session?.access_token}`,
+  };
+}
+
 export async function getMyComplaints(studentId) {
-  const { data, error } = await supabase
-    .from('complaints')
-    .select('*')
-    .eq('student_id', studentId)
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return (data || []).map(normComplaint);
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/complaints?student_id=eq.${studentId}&order=created_at.desc`,
+    { headers: await restHeaders() }
+  );
+  if (!res.ok) throw new Error('Failed to fetch complaints');
+  return ((await res.json()) || []).map(normComplaint);
 }
 
 export async function getAllComplaints() {
-  const { data, error } = await supabase
-    .from('complaints')
-    .select('*, profiles!complaints_student_id_fkey(name)')
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return (data || []).map(normComplaint);
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/complaints?select=*,profiles!complaints_student_id_fkey(name)&order=created_at.desc`,
+    { headers: await restHeaders() }
+  );
+  if (!res.ok) throw new Error('Failed to fetch complaints');
+  return ((await res.json()) || []).map(normComplaint);
 }
 
 export async function createComplaint(data) {
-  const { data: result, error } = await supabase
-    .from('complaints')
-    .insert({
-      student_id: data.studentId,
-      title: data.title,
-      description: data.description,
-      category: data.category,
-    })
-    .select()
-    .single();
-  if (error) throw error;
-  return normComplaint(result);
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/complaints`,
+    {
+      method: 'POST',
+      headers: { ...(await restHeaders()), Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        student_id: data.studentId,
+        title: data.title,
+        description: data.description,
+        category: data.category,
+      }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to submit complaint');
+  }
+  return {
+    id: crypto.randomUUID(),
+    student_id: data.studentId,
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    status: 'Pending',
+    admin_response: null,
+    responded_by: null,
+    responded_at: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
 }
 
 export async function updateComplaintStatus(id, status, adminId, response = null) {
@@ -1074,19 +1103,28 @@ export async function updateComplaintStatus(id, status, adminId, response = null
     patch.responded_by = adminId;
     patch.responded_at = new Date().toISOString();
   }
-  const { data: result, error } = await supabase
-    .from('complaints')
-    .update(patch)
-    .eq('id', id)
-    .select()
-    .single();
-  if (error) throw error;
-  return normComplaint(result);
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/complaints?id=eq.${id}`,
+    {
+      method: 'PATCH',
+      headers: { ...(await restHeaders()), Prefer: 'return=representation' },
+      body: JSON.stringify(patch),
+    }
+  );
+  if (!res.ok) throw new Error('Failed to update complaint');
+  const rows = await res.json();
+  return normComplaint(rows?.[0] || patch);
 }
 
 export async function deleteComplaint(id) {
-  const { error } = await supabase.from('complaints').delete().eq('id', id);
-  if (error) throw error;
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/complaints?id=eq.${id}`,
+    {
+      method: 'DELETE',
+      headers: await restHeaders(),
+    }
+  );
+  if (!res.ok) throw new Error('Failed to delete complaint');
 }
 
 /* ========================================
