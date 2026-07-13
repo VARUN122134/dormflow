@@ -91,12 +91,17 @@ export function statusChip(status) {
   const map = {
     'Approved': 'chip-approved',
     'Pending': 'chip-pending',
+    'pending': 'chip-pending',
     'Rejected': 'chip-rejected',
     'Active': 'chip-info',
     'Used': 'chip-pending',
     'Completed': 'chip-neutral',
     'IN': 'chip-in',
     'OUT': 'chip-out',
+    'acknowledged': 'chip-info',
+    'in_progress': 'chip-pending',
+    'resolved': 'chip-approved',
+    'closed': 'chip-neutral',
   };
   return `<span class="chip ${map[status] || 'chip-neutral'}">${escapeHtml(status)}</span>`;
 }

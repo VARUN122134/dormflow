@@ -19,7 +19,7 @@ export default async function adminComplaints(app) {
       ${renderPageHeader('Complaints', 'Student complaints management')}
       <div class="page">
         <div class="filter-tabs" id="statusFilters">
-          ${['All', 'Pending', 'In Review', 'Resolved', 'Rejected'].map(f => `
+          ${['All', 'pending', 'acknowledged', 'in_progress', 'resolved', 'closed'].map(f => `
             <button class="filter-tab ${filter === f ? 'active' : ''}" data-filter="${f}">${f}</button>
           `).join('')}
         </div>
@@ -47,10 +47,11 @@ export default async function adminComplaints(app) {
               ` : ''}
               <div class="leave-card-actions" style="margin-top:8px;">
                 <select class="form-select" data-status="${c.id}" style="padding:6px 10px;font-size:12px;flex:1;">
-                  <option value="Pending" ${c.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                  <option value="In Review" ${c.status === 'In Review' ? 'selected' : ''}>In Review</option>
-                  <option value="Resolved" ${c.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
-                  <option value="Rejected" ${c.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                  <option value="pending" ${c.status === 'pending' ? 'selected' : ''}>Pending</option>
+                  <option value="acknowledged" ${c.status === 'acknowledged' ? 'selected' : ''}>Acknowledged</option>
+                  <option value="in_progress" ${c.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                  <option value="resolved" ${c.status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                  <option value="closed" ${c.status === 'closed' ? 'selected' : ''}>Closed</option>
                 </select>
                 <button class="btn btn-primary btn-sm" data-respond="${c.id}" style="padding:6px 12px;font-size:12px;">Respond</button>
               </div>
@@ -125,7 +126,7 @@ export default async function adminComplaints(app) {
       btn.textContent = 'Submitting...';
 
       try {
-        await updateComplaintStatus(complaintId, 'Resolved', user.id, response);
+        await updateComplaintStatus(complaintId, 'resolved', user.id, response);
         showToast('Response submitted', 'success');
         overlay.remove();
         await render();
