@@ -40,10 +40,12 @@ import { adminSettings } from './pages/admin/settings.js';
 import studentMessPage from './pages/student/mess.js';
 import studentAnnouncementsPage from './pages/student/announcements.js';
 import studentPollsPage from './pages/student/polls.js';
+import studentComplaintsPage from './pages/student/complaints.js';
 
 import messDashboard from './pages/mess/dashboard.js';
 import messManageMenu from './pages/mess/manage-menu.js';
 import messRatings from './pages/mess/ratings.js';
+import messProfile from './pages/mess/profile.js';
 
 import wardenAnnouncements from './pages/warden/announcements.js';
 import wardenAttendance from './pages/warden/attendance.js';
@@ -52,6 +54,7 @@ import { startAutoAttendanceScheduler, stopAutoAttendanceScheduler } from './aut
 
 import adminMess from './pages/admin/mess.js';
 import adminManage from './pages/admin/manage.js';
+import adminComplaints from './pages/admin/complaints.js';
 
 async function boot() {
   const user = await loadCurrentUser();
@@ -105,11 +108,13 @@ registerRoute('#/admin/settings', adminSettings);
 registerRoute('#/student/mess', studentMessPage);
 registerRoute('#/student/announcements', studentAnnouncementsPage);
 registerRoute('#/student/polls', studentPollsPage);
+registerRoute('#/student/complaints', studentComplaintsPage);
 
 // Mess member routes
 registerRoute('#/mess/dashboard', messDashboard);
 registerRoute('#/mess/manage-menu', messManageMenu);
 registerRoute('#/mess/ratings', messRatings);
+registerRoute('#/mess/profile', messProfile);
 
 // Warden new routes
 registerRoute('#/warden/announcements', wardenAnnouncements);
@@ -119,9 +124,10 @@ registerRoute('#/warden/auto-attendance', wardenAutoAttendance);
 // Admin new routes
 registerRoute('#/admin/mess', adminMess);
 registerRoute('#/admin/manage', adminManage);
+registerRoute('#/admin/complaints', adminComplaints);
 
 const defaultStyle = document.querySelector('link[href="/src/style.css"]');
 if (defaultStyle) defaultStyle.remove();
 
-console.log('%cUCE IT v3.0.8', 'color:#1a56db;font-size:16px;font-weight:bold;');
+console.log('%cUCE IT v3.0.9', 'color:#1a56db;font-size:16px;font-weight:bold;');
 console.log('%cHostel Management · Mess · Announcements · Powered by Supabase', 'color:#555;font-size:12px;');

@@ -1012,6 +1012,84 @@ export async function updateAppConfig(key, value, userId) {
 }
 
 /* ========================================
+   COMPLAINTS OPERATIONS
+   ======================================== */
+
+function normComplaint(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    studentId: row.student_id,
+    studentName: row.profiles ? row.profiles.name : null,
+    title: row.title,
+    description: row.description,
+    category: row.category,
+    status: row.status,
+    adminResponse: row.admin_response,
+    respondedBy: row.responded_by,
+    respondedAt: row.responded_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function getMyComplaints(studentId) {
+  const { data, error } = await supabase
+    .from('complaints')
+    .select('*')
+    .eq('student_id', studentId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(normComplaint);
+}
+
+export async function getAllComplaints() {
+  const { data, error } = await supabase
+    .from('complaints')
+    .select('*, profiles!complaints_student_id_fkey(name)')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(normComplaint);
+}
+
+export async function createComplaint(data) {
+  const { data: result, error } = await supabase
+    .from('complaints')
+    .insert({
+      student_id: data.studentId,
+      title: data.title,
+      description: data.description,
+      category: data.category,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return normComplaint(result);
+}
+
+export async function updateComplaintStatus(id, status, adminId, response = null) {
+  const patch = { status };
+  if (response) {
+    patch.admin_response = response;
+    patch.responded_by = adminId;
+    patch.responded_at = new Date().toISOString();
+  }
+  const { data: result, error } = await supabase
+    .from('complaints')
+    .update(patch)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return normComplaint(result);
+}
+
+export async function deleteComplaint(id) {
+  const { error } = await supabase.from('complaints').delete().eq('id', id);
+  if (error) throw error;
+}
+
+/* ========================================
    MONTHLY LEAVE TRENDS (for chart)
    ======================================== */
 

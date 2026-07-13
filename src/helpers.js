@@ -119,6 +119,7 @@ export function studentNav(active) {
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/student/dashboard' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/student/mess' },
     { id: 'updates', icon: 'campaign', label: 'Updates', route: '#/student/announcements' },
+    { id: 'complaints', icon: 'report_problem', label: 'Complaints', route: '#/student/complaints' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/student/profile' },
   ]);
 }
@@ -128,6 +129,7 @@ export function messMemberNav(active) {
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/mess/dashboard' },
     { id: 'menu', icon: 'edit_note', label: 'Menu', route: '#/mess/manage-menu' },
     { id: 'ratings', icon: 'star_half', label: 'Ratings', route: '#/mess/ratings' },
+    { id: 'profile', icon: 'person', label: 'Profile', route: '#/mess/profile' },
   ]);
 }
 
@@ -155,6 +157,7 @@ export function adminNav(active) {
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/admin/dashboard' },
     { id: 'users', icon: 'group', label: 'Users', route: '#/admin/users' },
     { id: 'mess', icon: 'restaurant_menu', label: 'Mess', route: '#/admin/mess' },
+    { id: 'complaints', icon: 'report_problem', label: 'Complaints', route: '#/admin/complaints' },
     { id: 'manage', icon: 'manage_accounts', label: 'Manage', route: '#/admin/manage' },
     { id: 'profile', icon: 'person', label: 'Profile', route: '#/admin/profile' },
   ]);

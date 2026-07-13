@@ -72,6 +72,13 @@ export default async function wardenRequests(app) {
                 </div>
                 ${l.reason ? `<div class="leave-card-reason">"${escapeHtml(l.reason)}"</div>` : ''}
                 ${l.approvalStatus === 'Pending' ? `
+                  ${student.guardianName ? `
+                    <div class="leave-card-guardian">
+                      <span class="material-icons-outlined" style="font-size:16px;">phone_in_talk</span>
+                      <span>${escapeHtml(student.guardianName)} ${student.guardianPhone ? `• ${escapeHtml(student.guardianPhone)}` : ''}</span>
+                      ${student.guardianPhone ? `<a href="tel:${escapeHtml(student.guardianPhone)}" class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:11px;margin-left:auto;text-decoration:none;display:flex;align-items:center;gap:4px;"><span class="material-icons-outlined" style="font-size:14px;">call</span> Call</a>` : ''}
+                    </div>
+                  ` : ''}
                   <div class="leave-card-actions">
                     <button class="btn btn-success btn-sm" style="flex:1;" data-approve="${l.leaveId}">Approve</button>
                     <button class="btn btn-danger btn-sm" style="flex:1;" data-reject="${l.leaveId}">Reject</button>
