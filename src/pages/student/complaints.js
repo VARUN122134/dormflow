@@ -68,11 +68,12 @@ export default async function complaintsPage(app) {
           <div class="form-group">
             <label class="form-label">Category</label>
             <select class="form-select" id="complaintCategory">
-              <option value="Food">Food</option>
-              <option value="Hygiene">Hygiene</option>
-              <option value="Maintenance">Maintenance</option>
-              <option value="Staff">Staff</option>
-              <option value="Other">Other</option>
+              <option value="food">Food</option>
+              <option value="hygiene">Hygiene</option>
+              <option value="infrastructure">Infrastructure</option>
+              <option value="security">Security</option>
+              <option value="staff">Staff</option>
+              <option value="other">Other</option>
             </select>
           </div>
           <div class="form-group">
