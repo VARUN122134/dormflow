@@ -1,16 +1,16 @@
 /* ========================================
-   Warden - Leave Requests List (Supabase)
+   Caretaker - Leave Requests List (Supabase)
    ======================================== */
 
 import { getCurrentUser } from '../../auth.js';
 import { getLeavesByHostel, approveLeave, rejectLeave } from '../../store.js';
-import { wardenNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
+import { caretakerNav, statusChip, formatDateRange, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
-export default async function wardenRequests(app) {
+export default async function caretakerRequests(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const hostelType = user.hostelType || (user.role === 'boys_warden' ? 'Boys' : 'Girls');
+  const hostelType = user.hostelType || (user.role === 'boys_caretaker' ? 'Boys' : 'Girls');
   let filter = 'All';
   let deptFilter = 'All';
 
@@ -95,7 +95,7 @@ export default async function wardenRequests(app) {
           `}
         </div>
       </div>
-      ${wardenNav('leaves')}
+      ${caretakerNav('leaves')}
     `;
 
     // Filter handlers

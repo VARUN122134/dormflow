@@ -39,9 +39,9 @@ export function adminProfile(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const roleLabels = {admin:'Super Admin',mess_incharge:'Mess Incharge',security:'Gate Security',boys_warden:'Boys Warden',girls_warden:'Girls Warden',student:'Student'};
+  const roleLabels = {admin:'Super Admin',mess_incharge:'Mess Incharge',security:'Gate Security',boys_caretaker:'Boys Caretaker',girls_caretaker:'Girls Caretaker',student:'Student'};
   const roleLabel = roleLabels[user.role] || user.role.replace('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
-  const locationLabels = {admin:'System Administrator • University Central',mess_incharge:'Mess Stock Manager • Hostel Kitchen',security:'Gate Security • Main Entrance',boys_warden:'Boys Hostel Warden',girls_warden:'Girls Hostel Warden',student:'Student • Resident'};
+  const locationLabels = {admin:'System Administrator • University Central',mess_incharge:'Mess Stock Manager • Hostel Kitchen',security:'Gate Security • Main Entrance',boys_caretaker:'Boys Hostel Caretaker',girls_caretaker:'Girls Hostel Caretaker',student:'Student • Resident'};
   const locationLabel = locationLabels[user.role] || 'UCE Ariyalur';
 
   app.innerHTML = `

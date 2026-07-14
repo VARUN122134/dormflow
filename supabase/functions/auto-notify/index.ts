@@ -25,7 +25,7 @@ serve(async (req) => {
       const { data: admins } = await supabase
         .from('profiles')
         .select('id')
-        .in('role', ['admin', 'boys_warden', 'girls_warden']);
+        .in('role', ['admin', 'boys_caretaker', 'girls_caretaker']);
 
       const notifications = (admins || []).map(a => ({
         user_id: a.id,
@@ -49,12 +49,12 @@ serve(async (req) => {
         .eq('id', record.room_id)
         .single();
 
-      const wardenRoles = room?.gender_type === 'Girls' ? ['girls_warden'] : ['boys_warden'];
+      const caretakerRoles = room?.gender_type === 'Girls' ? ['girls_caretaker'] : ['boys_caretaker'];
 
       const { data: wardens } = await supabase
         .from('profiles')
         .select('id')
-        .in('role', [...wardenRoles, 'admin']);
+        .in('role', [...caretakerRoles, 'admin']);
 
       const notifications = (wardens || []).map(w => ({
         user_id: w.id,

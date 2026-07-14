@@ -1,8 +1,8 @@
 import { getCurrentUser } from '../../auth.js';
 import { getAnnouncements, createAnnouncement, deleteAnnouncement, getPolls, createPoll, deletePoll, getPollOptions, getPollResults, hasVoted } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, formatDate, showModal } from '../../helpers.js';
+import { caretakerNav, showToast, escapeHtml, formatDate, showModal } from '../../helpers.js';
 
-export default async function wardenAnnouncements(app) {
+export default async function caretakerAnnouncements(app) {
   const user = getCurrentUser();
   if (!user) return;
 
@@ -79,7 +79,7 @@ export default async function wardenAnnouncements(app) {
           </div>
         </div>
 
-        ${wardenNav('announce')}
+        ${caretakerNav('announce')}
       </div>
     `;
 

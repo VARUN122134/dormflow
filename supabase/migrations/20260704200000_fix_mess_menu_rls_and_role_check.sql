@@ -43,5 +43,5 @@ begin
 
   -- Add new check constraint with mess_incharge included
   alter table public.profiles add constraint profiles_role_check
-    check (role = any (array['student', 'boys_warden', 'girls_warden', 'security', 'admin', 'mess_incharge']));
+    check (role = any (array['student', 'boys_caretaker', 'girls_caretaker', 'security', 'admin', 'mess_incharge']));
 end $$;

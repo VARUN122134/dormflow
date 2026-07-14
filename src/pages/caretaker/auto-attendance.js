@@ -1,12 +1,12 @@
 ﻿import { getCurrentUser } from '../../auth.js';
 import { getUsers, saveAttendanceSnapshot } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, renderAvatar, renderLogoutIcon } from '../../helpers.js';
+import { caretakerNav, showToast, escapeHtml, renderAvatar, renderLogoutIcon } from '../../helpers.js';
 import { supabase } from '../../supabase.js';
 
-export default async function wardenAutoAttendance(app) {
+export default async function caretakerAutoAttendance(app) {
   const user = getCurrentUser();
   if (!user) return;
-  const hostelType = user.role === 'boys_warden' ? 'Boys' : 'Girls';
+  const hostelType = user.role === 'boys_caretaker' ? 'Boys' : 'Girls';
 
   let cachedStudents = [];
 
@@ -56,7 +56,7 @@ export default async function wardenAutoAttendance(app) {
           </div>
           <div class="flex items-center gap-sm">
             ${renderLogoutIcon()}
-            <a href="#/warden/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
+            <a href="#/caretaker/profile" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">${renderAvatar(user, 'stitch-avatar-sm')}</a>
           </div>
         </header>
 
@@ -118,7 +118,7 @@ export default async function wardenAutoAttendance(app) {
             `;
           }).join('')}
         </div>
-        ${wardenNav('attendance')}
+        ${caretakerNav('attendance')}
       </div>
     `;
 

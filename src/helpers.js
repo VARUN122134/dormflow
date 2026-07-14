@@ -138,13 +138,13 @@ export function messMemberNav(active) {
   ]);
 }
 
-export function wardenNav(active) {
+export function caretakerNav(active) {
   return renderBottomNav(active, [
-    { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/warden/dashboard' },
-    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/warden/attendance' },
-    { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/warden/requests' },
-    { id: 'announce', icon: 'campaign', label: 'Announce', route: '#/warden/announcements' },
-    { id: 'profile', icon: 'person', label: 'Profile', route: '#/warden/profile' },
+    { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', route: '#/caretaker/dashboard' },
+    { id: 'attendance', icon: 'fact_check', label: 'Attendance', route: '#/caretaker/attendance' },
+    { id: 'leaves', icon: 'event_available', label: 'Leaves', route: '#/caretaker/requests' },
+    { id: 'announce', icon: 'campaign', label: 'Announce', route: '#/caretaker/announcements' },
+    { id: 'profile', icon: 'person', label: 'Profile', route: '#/caretaker/profile' },
   ]);
 }
 

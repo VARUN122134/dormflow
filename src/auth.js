@@ -196,7 +196,7 @@ export function getHomeRoute(role) {
   if (role === 'admin') return '#/admin/dashboard';
   if (role === 'security') return '#/gate/dashboard';
   if (role === 'mess_incharge') return '#/mess/dashboard';
-  if (role === 'boys_warden' || role === 'girls_warden') return '#/warden/dashboard';
+  if (role === 'boys_caretaker' || role === 'girls_caretaker') return '#/caretaker/dashboard';
   return '#/student/dashboard';
 }
 

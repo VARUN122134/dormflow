@@ -13,7 +13,7 @@ export default async function adminDashboard(app) {
     getUsers(),
     getMonthlyLeaveTrends(6),
   ]);
-  const wardens = allUsers.filter(u => u.role === 'boys_warden' || u.role === 'girls_warden');
+  const caretakers = allUsers.filter(u => u.role === 'boys_caretaker' || u.role === 'girls_caretaker');
   const security = allUsers.filter(u => u.role === 'security');
   let chartInstance = null;
 
@@ -85,10 +85,10 @@ export default async function adminDashboard(app) {
       <div class="section-title">Staff Capacity</div>
       <div class="card animate-fade-in" style="margin-bottom:var(--space-lg);">
         <p class="body-md text-muted">
-          Managing <strong>${wardens.length}</strong> active Wardens and <strong>${security.length}</strong> Gate Security Officers across campus.
+          Managing <strong>${caretakers.length}</strong> active Caretakers and <strong>${security.length}</strong> Gate Security Officers across campus.
         </p>
         <div style="display:flex;gap:var(--space-sm);margin-top:var(--space-md);flex-wrap:wrap;">
-          ${wardens.map(w => `
+          ${caretakers.map(w => `
             <div class="chip chip-info">${escapeHtml(w.name)} — ${escapeHtml(w.hostelType || 'Staff')}</div>
           `).join('')}
           ${security.map(s => `

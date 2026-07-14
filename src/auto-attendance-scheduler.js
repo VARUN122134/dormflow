@@ -9,7 +9,7 @@ let lastDateStr = '';
 
 export function startAutoAttendanceScheduler(user) {
   if (!user) return;
-  if (user.role !== 'boys_warden' && user.role !== 'girls_warden' && user.role !== 'admin' && user.role !== 'mess_incharge') return;
+  if (user.role !== 'boys_caretaker' && user.role !== 'girls_caretaker' && user.role !== 'admin' && user.role !== 'mess_incharge') return;
   if (intervalId) return;
 
   const types = ['Boys', 'Girls'];

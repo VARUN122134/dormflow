@@ -31,8 +31,8 @@ export default async function userManagement(app) {
 
     const roleLabel = (role) => ({
       student: 'Student',
-      boys_warden: 'Boys Warden',
-      girls_warden: 'Girls Warden',
+      boys_caretaker: 'Boys Caretaker',
+      girls_caretaker: 'Girls Caretaker',
       security: 'Gate Security',
       admin: 'Admin',
     }[role] || role);
@@ -70,7 +70,7 @@ export default async function userManagement(app) {
         </div>
 
         <div class="filter-tabs" id="roleFilters" style="margin-bottom:var(--space-md);">
-          ${['All', 'student', 'boys_warden', 'girls_warden', 'security', 'admin'].map(r => `
+          ${['All', 'student', 'boys_caretaker', 'girls_caretaker', 'security', 'admin'].map(r => `
             <button class="filter-tab ${roleFilter === r ? 'active' : ''}" data-role="${r}">
               ${r === 'All' ? 'All' : roleLabel(r)}
             </button>

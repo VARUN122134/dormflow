@@ -21,7 +21,7 @@ export default function loginPage(app) {
         </div>
         <div class="role-tabs" id="roleTabs">
           <button class="role-tab active" data-role="student">Student</button>
-          <button class="role-tab" data-role="warden">Warden</button>
+          <button class="role-tab" data-role="caretaker">Caretaker</button>
           <button class="role-tab" data-role="security">Gate Staff</button>
           <button class="role-tab" data-role="admin">Admin</button>
         </div>
@@ -128,8 +128,8 @@ export default function loginPage(app) {
       showToast(`Welcome back, ${profile.name.split(' ')[0]}!`, 'success');
       const homeRoutes = {
         student:      '#/student/dashboard',
-        boys_warden:  '#/warden/dashboard',
-        girls_warden: '#/warden/dashboard',
+        boys_caretaker:  '#/caretaker/dashboard',
+        girls_caretaker: '#/caretaker/dashboard',
         security:     '#/gate/dashboard',
         admin:        '#/admin/dashboard',
       };

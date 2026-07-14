@@ -1,16 +1,16 @@
 /* ========================================
-   Warden - Residents Directory (Supabase)
+   Caretaker - Residents Directory (Supabase)
    ======================================== */
 
 import { getCurrentUser } from '../../auth.js';
 import { getUsers } from '../../store.js';
-import { wardenNav, statusChip, getInitials, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
+import { caretakerNav, statusChip, getInitials, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
-export default async function wardenResidents(app) {
+export default async function caretakerResidents(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const hostelType = user.hostelType || (user.role === 'boys_warden' ? 'Boys' : 'Girls');
+  const hostelType = user.hostelType || (user.role === 'boys_caretaker' ? 'Boys' : 'Girls');
   let search = '';
   let yearFilter = 'All';
 
@@ -71,7 +71,7 @@ export default async function wardenResidents(app) {
           `}
         </div>
       </div>
-      ${wardenNav('residents')}
+      ${caretakerNav('residents')}
     `;
 
     document.getElementById('searchInput')?.addEventListener('input', async (e) => {

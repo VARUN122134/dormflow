@@ -32,9 +32,9 @@ create policy "Allow update rooms for admin"
 on public.rooms for update to authenticated
 using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin');
 
-create policy "Allow update rooms for wardens"
+create policy "Allow update rooms for caretakers"
 on public.rooms for update to authenticated
-using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_warden', 'girls_warden'));
+using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_caretaker', 'girls_caretaker'));
 
 create policy "Allow delete rooms for admin"
 on public.rooms for delete to authenticated
@@ -63,17 +63,17 @@ create policy "Allow insert room_allocations for admin"
 on public.room_allocations for insert to authenticated
 with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin');
 
-create policy "Allow insert room_allocations for wardens"
+create policy "Allow insert room_allocations for caretakers"
 on public.room_allocations for insert to authenticated
-with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_warden', 'girls_warden'));
+with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_caretaker', 'girls_caretaker'));
 
 create policy "Allow update room_allocations for admin"
 on public.room_allocations for update to authenticated
 using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin');
 
-create policy "Allow update room_allocations for wardens"
+create policy "Allow update room_allocations for caretakers"
 on public.room_allocations for update to authenticated
-using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_warden', 'girls_warden'));
+using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_caretaker', 'girls_caretaker'));
 
 -- ─────────────────────────────────────────────────────────────────────────
 -- 3. ROOM MAINTENANCE TABLE
@@ -106,9 +106,9 @@ create policy "Allow update room_maintenance for admin"
 on public.room_maintenance for update to authenticated
 using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin');
 
-create policy "Allow update room_maintenance for wardens"
+create policy "Allow update room_maintenance for caretakers"
 on public.room_maintenance for update to authenticated
-using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_warden', 'girls_warden'));
+using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_caretaker', 'girls_caretaker'));
 
 -- ─────────────────────────────────────────────────────────────────────────
 -- 4. COMPLAINTS TABLE
@@ -134,7 +134,7 @@ alter table public.complaints enable row level security;
 
 create policy "Allow select complaints for self"
 on public.complaints for select to authenticated
-using (auth.uid() = student_id or coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('admin', 'boys_warden', 'girls_warden'));
+using (auth.uid() = student_id or coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('admin', 'boys_caretaker', 'girls_caretaker'));
 
 create policy "Allow insert complaints for students"
 on public.complaints for insert to authenticated
@@ -144,9 +144,9 @@ create policy "Allow update complaints for admin"
 on public.complaints for update to authenticated
 using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin');
 
-create policy "Allow update complaints for wardens"
+create policy "Allow update complaints for caretakers"
 on public.complaints for update to authenticated
-using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_warden', 'girls_warden'));
+using (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_caretaker', 'girls_caretaker'));
 
 -- ─────────────────────────────────────────────────────────────────────────
 -- 5. ATTENDANCE TABLES
@@ -194,9 +194,9 @@ create policy "Allow insert events for admin"
 on public.events for insert to authenticated
 with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') = 'admin');
 
-create policy "Allow insert events for wardens"
+create policy "Allow insert events for caretakers"
 on public.events for insert to authenticated
-with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_warden', 'girls_warden'));
+with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('boys_caretaker', 'girls_caretaker'));
 
 create policy "Allow delete events for admin"
 on public.events for delete to authenticated
@@ -217,9 +217,9 @@ alter table public.event_attendance enable row level security;
 create policy "Allow select event_attendance for authenticated"
 on public.event_attendance for select to authenticated using (true);
 
-create policy "Allow insert event_attendance for admin/warden"
+create policy "Allow insert event_attendance for admin/caretaker"
 on public.event_attendance for insert to authenticated
-with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('admin', 'boys_warden', 'girls_warden'));
+with check (coalesce(auth.jwt() -> 'user_metadata' ->> 'role', '') in ('admin', 'boys_caretaker', 'girls_caretaker'));
 
 -- ─────────────────────────────────────────────────────────────────────────
 -- 6. NOTIFICATIONS TABLE

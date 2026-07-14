@@ -1,12 +1,12 @@
 import { getCurrentUser } from '../../auth.js';
 import { markAttendance, getAttendance, hasAttendanceForDate, getMonthlyAttendance } from '../../store.js';
-import { wardenNav, showToast, escapeHtml, renderPageHeader } from '../../helpers.js';
+import { caretakerNav, showToast, escapeHtml, renderPageHeader } from '../../helpers.js';
 
-export default async function wardenAttendance(app) {
+export default async function caretakerAttendance(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const hostelType = user.hostelType || (user.role === 'boys_warden' ? 'Boys' : 'Girls');
+  const hostelType = user.hostelType || (user.role === 'boys_caretaker' ? 'Boys' : 'Girls');
   const today = new Date().toISOString().slice(0, 10);
   const now = new Date();
   const curYear = now.getFullYear();
@@ -198,7 +198,7 @@ export default async function wardenAttendance(app) {
           `}
         ` : ''}
       </div>
-      ${wardenNav('attendance')}
+      ${caretakerNav('attendance')}
     `;
 
     document.getElementById('viewTabs')?.querySelectorAll('[data-view]').forEach(tab => {

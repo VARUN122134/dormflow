@@ -46,7 +46,7 @@ function matchRoute(hash) {
 const roleAccess = {
   '#/student': ['student'],
   '#/mess':    ['student', 'mess_incharge'],    // additionally requires isMessMember check
-  '#/warden':  ['boys_warden', 'girls_warden'],
+  '#/caretaker':  ['boys_caretaker', 'girls_caretaker'],
   '#/gate':    ['security', 'mess_incharge'],
   '#/admin':   ['admin'],
 };
@@ -54,8 +54,8 @@ const roleAccess = {
 function getHomeRoute(role) {
   const map = {
     student:      '#/student/dashboard',
-    boys_warden:  '#/warden/dashboard',
-    girls_warden: '#/warden/dashboard',
+    boys_caretaker:  '#/caretaker/dashboard',
+    girls_caretaker: '#/caretaker/dashboard',
     security:     '#/gate/dashboard',
     admin:        '#/admin/dashboard',
     mess_incharge:'#/mess/dashboard',

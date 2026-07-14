@@ -1,12 +1,12 @@
 import { getCurrentUser, logout, changePassword } from '../../auth.js';
 import { navigate } from '../../router.js';
-import { wardenNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
+import { caretakerNav, getInitials, showToast, showModal, renderPageHeader, renderAvatar, escapeHtml } from '../../helpers.js';
 
-export default function wardenProfile(app) {
+export default function caretakerProfile(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const hostelType = user.hostelType || (user.role === 'boys_warden' ? 'Boys' : 'Girls');
+  const hostelType = user.hostelType || (user.role === 'boys_caretaker' ? 'Boys' : 'Girls');
 
   app.innerHTML = `
     ${renderPageHeader('UCE IT', '')}
@@ -20,12 +20,12 @@ export default function wardenProfile(app) {
       </div>
 
       <div class="profile-name">${escapeHtml(user.name)}</div>
-      <div class="profile-location">${hostelType} Hostel Warden • ${escapeHtml(user.blockName)}</div>
+      <div class="profile-location">${hostelType} Hostel Caretaker • ${escapeHtml(user.blockName)}</div>
 
       <div class="profile-section card animate-fade-in">
-        <div class="profile-section-title">Warden Details</div>
+        <div class="profile-section-title">Caretaker Details</div>
         <div class="profile-field">
-          <span class="profile-field-label">Warden ID</span>
+          <span class="profile-field-label">Caretaker ID</span>
           <span class="profile-field-value">${escapeHtml(user.id)}</span>
         </div>
         <div class="profile-field">
@@ -89,7 +89,7 @@ export default function wardenProfile(app) {
         Sign Out
       </button>
     </div>
-    ${wardenNav('profile')}
+    ${caretakerNav('profile')}
   `;
 
   const devPhoto = app.querySelector('#dev-photo');
@@ -122,7 +122,7 @@ export default function wardenProfile(app) {
 
         user.avatarUrl = newUrl;
         
-        wardenProfile(app);
+        caretakerProfile(app);
         showToast('Profile picture updated successfully', 'success');
       } catch (err) {
         console.error(err);

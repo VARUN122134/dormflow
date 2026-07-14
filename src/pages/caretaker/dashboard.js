@@ -3,14 +3,14 @@ import {
   getLeavesByHostel, approveLeave, rejectLeave,
   getHostelStats, getUsers
 } from '../../store.js';
-import { wardenNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, escapeHtml } from '../../helpers.js';
+import { caretakerNav, formatDateRange, getInitials, showToast, showModal, renderAvatar, escapeHtml } from '../../helpers.js';
 import { Chart } from 'chart.js';
 
-export default async function wardenDashboard(app) {
+export default async function caretakerDashboard(app) {
   const user = getCurrentUser();
   if (!user) return;
 
-  const hostelType = user.role === 'boys_warden' ? 'Boys' : 'Girls';
+  const hostelType = user.role === 'boys_caretaker' ? 'Boys' : 'Girls';
   let chartInstance = null;
 
   await render();
@@ -29,10 +29,10 @@ export default async function wardenDashboard(app) {
         ${renderAvatar(user, 'stitch-avatar-sm')}
       </header>
 
-      <div class="page page-warden">
+      <div class="page page-caretaker">
         <div class="warden-page-title">
           <h2 class="headline-md">Dashboard Overview</h2>
-          <p class="body-md text-muted">Welcome back, Warden. Here's what's happening today.</p>
+          <p class="body-md text-muted">Welcome back, Caretaker. Here's what's happening today.</p>
         </div>
 
         <div class="warden-stats-banner">
@@ -62,7 +62,7 @@ export default async function wardenDashboard(app) {
 
         <div class="section-row" style="margin-top:var(--space-lg);">
           <span class="section-title">Action Required</span>
-          ${freshPending.length > 0 ? `<a href="#/warden/requests" style="font-size:13px;color:var(--primary-container);font-weight:500;">View All</a>` : ''}
+          ${freshPending.length > 0 ? `<a href="#/caretaker/requests" style="font-size:13px;color:var(--primary-container);font-weight:500;">View All</a>` : ''}
         </div>
 
         ${freshPending.length > 0 ? `
@@ -97,12 +97,12 @@ export default async function wardenDashboard(app) {
 
         <div style="position:relative;margin-bottom:var(--space-lg);">
           <span class="material-icons-outlined" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--outline);">search</span>
-          <input class="form-input" type="text" placeholder="Search students by name or ID..." style="padding-left:36px;cursor:pointer;" readonly onclick="window.location.hash='#/warden/residents'"/>
+          <input class="form-input" type="text" placeholder="Search students by name or ID..." style="padding-left:36px;cursor:pointer;" readonly onclick="window.location.hash='#/caretaker/residents'"/>
         </div>
 
         <div class="section-title">Weekly Leave Trends</div>
         <div class="card animate-fade-in" style="padding:var(--space-md);margin-bottom:var(--space-lg);">
-          <canvas id="wardenChart" height="150"></canvas>
+          <canvas id="caretakerChart" height="150"></canvas>
         </div>
 
         <div class="section-title">Quick Announcements</div>
@@ -122,11 +122,11 @@ export default async function wardenDashboard(app) {
         </a>
       </div>
 
-      <button class="fab" onclick="window.location.hash='#/warden/requests'" title="Leave Requests">
+      <button class="fab" onclick="window.location.hash='#/caretaker/requests'" title="Leave Requests">
         <span class="material-icons-outlined">event_available</span>
       </button>
 
-      ${wardenNav('dashboard')}
+      ${caretakerNav('dashboard')}
     `;
 
     renderChart();
@@ -134,7 +134,7 @@ export default async function wardenDashboard(app) {
   }
 
   function renderChart() {
-    const canvas = document.getElementById('wardenChart');
+    const canvas = document.getElementById('caretakerChart');
     if (!canvas) return;
 
     if (chartInstance) {

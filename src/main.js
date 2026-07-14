@@ -21,10 +21,10 @@ import leaveHistoryPage from './pages/student/leave-history.js';
 import profilePage from './pages/student/profile.js';
 import outpassPage from './pages/student/outpass.js';
 
-import wardenDashboard from './pages/warden/dashboard.js';
-import wardenRequests from './pages/warden/requests.js';
-import wardenResidents from './pages/warden/residents.js';
-import wardenProfile from './pages/warden/profile.js';
+import caretakerDashboard from './pages/caretaker/dashboard.js';
+import caretakerRequests from './pages/caretaker/requests.js';
+import caretakerResidents from './pages/caretaker/residents.js';
+import caretakerProfile from './pages/caretaker/profile.js';
 
 import gateDashboard from './pages/gate/dashboard.js';
 import { gateHistory, gateInHouse, gateSystem } from './pages/gate/sub-pages.js';
@@ -47,9 +47,9 @@ import messManageMenu from './pages/mess/manage-menu.js';
 import messRatings from './pages/mess/ratings.js';
 import messProfile from './pages/mess/profile.js';
 
-import wardenAnnouncements from './pages/warden/announcements.js';
-import wardenAttendance from './pages/warden/attendance.js';
-import wardenAutoAttendance from './pages/warden/auto-attendance.js';
+import caretakerAnnouncements from './pages/caretaker/announcements.js';
+import caretakerAttendance from './pages/caretaker/attendance.js';
+import caretakerAutoAttendance from './pages/caretaker/auto-attendance.js';
 import { startAutoAttendanceScheduler, stopAutoAttendanceScheduler } from './auto-attendance-scheduler.js';
 
 import adminMess from './pages/admin/mess.js';
@@ -61,13 +61,13 @@ async function boot() {
   if (user) {
     document.addEventListener('routechange', () => {
       const hash = location.hash;
-      if (hash.startsWith('#/warden') || hash.startsWith('#/admin') || hash.startsWith('#/mess')) {
+      if (hash.startsWith('#/caretaker') || hash.startsWith('#/admin') || hash.startsWith('#/mess')) {
         startAutoAttendanceScheduler(user);
       } else {
         stopAutoAttendanceScheduler();
       }
     });
-    if (location.hash.startsWith('#/warden') || location.hash.startsWith('#/admin') || location.hash.startsWith('#/mess')) {
+    if (location.hash.startsWith('#/caretaker') || location.hash.startsWith('#/admin') || location.hash.startsWith('#/mess')) {
       startAutoAttendanceScheduler(user);
     }
   }
@@ -86,10 +86,10 @@ registerRoute('#/student/history', leaveHistoryPage);
 registerRoute('#/student/profile', profilePage);
 registerRoute('#/student/outpass', outpassPage);
 
-registerRoute('#/warden/dashboard', wardenDashboard);
-registerRoute('#/warden/requests', wardenRequests);
-registerRoute('#/warden/residents', wardenResidents);
-registerRoute('#/warden/profile', wardenProfile);
+registerRoute('#/caretaker/dashboard', caretakerDashboard);
+registerRoute('#/caretaker/requests', caretakerRequests);
+registerRoute('#/caretaker/residents', caretakerResidents);
+registerRoute('#/caretaker/profile', caretakerProfile);
 
 registerRoute('#/gate/dashboard', gateDashboard);
 registerRoute('#/gate/history', gateHistory);
@@ -116,10 +116,10 @@ registerRoute('#/mess/manage-menu', messManageMenu);
 registerRoute('#/mess/ratings', messRatings);
 registerRoute('#/mess/profile', messProfile);
 
-// Warden new routes
-registerRoute('#/warden/announcements', wardenAnnouncements);
-registerRoute('#/warden/attendance', wardenAttendance);
-registerRoute('#/warden/auto-attendance', wardenAutoAttendance);
+// Caretaker new routes
+registerRoute('#/caretaker/announcements', caretakerAnnouncements);
+registerRoute('#/caretaker/attendance', caretakerAttendance);
+registerRoute('#/caretaker/auto-attendance', caretakerAutoAttendance);
 
 // Admin new routes
 registerRoute('#/admin/mess', adminMess);

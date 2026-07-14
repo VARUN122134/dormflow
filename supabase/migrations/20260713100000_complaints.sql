@@ -32,7 +32,7 @@ CREATE POLICY "Admins update complaints"
   ON complaints FOR UPDATE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
--- Warden / mess_incharge / security can also view complaints related to their area
+-- Caretaker / mess_incharge / security can also view complaints related to their area
 CREATE POLICY "Staff view complaints"
   ON complaints FOR SELECT
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('boys_warden', 'girls_warden', 'mess_incharge', 'security')));
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('boys_caretaker', 'girls_caretaker', 'mess_incharge', 'security')));
